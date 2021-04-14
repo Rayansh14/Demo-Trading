@@ -11,7 +11,10 @@ import SwiftUI
 struct Demo_TradingApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainTabView()
+                .onAppear(perform: {
+                    DataController.shared.getStocksData()
+                })
         }
     }
 }
