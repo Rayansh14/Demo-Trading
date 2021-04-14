@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct HoldingsView: View {
+    
+    @ObservedObject var data = DataController.shared
+    
     var body: some View {
         Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }

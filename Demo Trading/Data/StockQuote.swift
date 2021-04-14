@@ -47,3 +47,14 @@ class StockQuote: ObservableObject, Identifiable, Codable {
     init() {
     }
 }
+
+var testStockQuote: StockQuote {
+    let stockQuote = StockQuote()
+    stockQuote.id = "1"
+    stockQuote.symbol = "RELIANCE"
+    stockQuote.lastPrice = 1932.3
+    stockQuote.change = 21.15
+    stockQuote.pChange = 1.11
+    
+    return stockQuote
+}

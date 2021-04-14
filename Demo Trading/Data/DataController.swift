@@ -12,6 +12,7 @@ class DataController: ObservableObject {
     
     static var shared = DataController()
     @Published var stockQuotes: [StockQuote] = []
+    let stockQuotesOrder = ["RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT", "SBIN", "BAJFINANCE", "BHARTIARTL", "ASIANPAINT", "HCLTECH", "MARUTI", "M&M", "ULTRACEMCO", "SUNPHARMA", "WIPRO", "INDUSINDBK", "TITAN", "BAJAJFINSV", "NESTLEIND", "TATAMOTORS", "TECHM", "HDFCLIFE", "POWERGRID", "DRREDDY", "TATASTEEL", "NTPC", "BAJAJ-AUTO", "ADANIPORTS", "HINDALCO", "GRASIM", "DIVISLAB", "HEROMOTOCO", "ONGC", "CIPLA", "BRITANNIA", "JSWSTEEL", "BPCL", "EICHERMOT", "SHREECEM", "SBILIFE", "COALINDIA", "UPL", "IOC", "TATACONSUM"]
     
     
     func getStocksData() {
@@ -36,6 +37,10 @@ class DataController: ObservableObject {
                             if let lastPrice = jsonStockQuote["lastPrice"] as? Double {
                                 stockQuote.lastPrice = lastPrice
                                 print(String(lastPrice))
+                            }
+                            if let change = jsonStockQuote["change"] as? Double {
+                                stockQuote.change = change
+                                print(String(change))
                             }
                             if let pChange = jsonStockQuote["pChange"] as? Double {
                                 stockQuote.pChange = pChange

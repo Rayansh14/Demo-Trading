@@ -8,47 +8,29 @@
 import SwiftUI
 
 struct MainTabView: View {
-    
-    @ObservedObject var data = DataController.shared
-    
     var body: some View {
         TabView {
-            Text("The First Tab")
+            WatchlistView()
                 .tabItem {
                     Image(systemName: "list.bullet")
                     Text("Watchlist")
                 }
-            Text("Another Tab")
+            HoldingsView()
                 .tabItem {
                     Image(systemName: "bag.fill")
                     Text("Holdings")
                 }
-            Text("The Last Tab")
+            PositionsView()
                 .tabItem {
                     Image(systemName: "location.fill")
                     Text("Positions")
                 }
-            Text("The Last Tab")
+            FundsView()
                 .tabItem {
                     Image(systemName: "indianrupeesign.circle.fill")
                     Text("Funds")
                 }
         }
-//        ScrollView {
-//            VStack {
-//                if DataController.shared.stockQuotes.count == 0 {
-//                    Text("No quotes to display")
-//                        .bold()
-//                        .padding()
-//                        .padding(.bottom, 50)
-//                        .multilineTextAlignment(.center)
-//                } else {
-//                    ForEach(DataController.shared.stockQuotes) { stockQuote in
-//                        Text("1")
-//                    }
-//                }
-//            }
-//        }
     }
 }
 
