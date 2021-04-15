@@ -6,13 +6,25 @@
 //
 
 import Foundation
-import SwiftUI
+import SwiftDate
 
 class DataController: ObservableObject {
     
     static var shared = DataController()
     @Published var stockQuotes: [StockQuote] = []
     let stockQuotesOrder = ["RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT", "SBIN", "BAJFINANCE", "BHARTIARTL", "ASIANPAINT", "HCLTECH", "MARUTI", "M&M", "ULTRACEMCO", "SUNPHARMA", "WIPRO", "INDUSINDBK", "TITAN", "BAJAJFINSV", "NESTLEIND", "TATAMOTORS", "TECHM", "HDFCLIFE", "POWERGRID", "DRREDDY", "TATASTEEL", "NTPC", "BAJAJ-AUTO", "ADANIPORTS", "HINDALCO", "GRASIM", "DIVISLAB", "HEROMOTOCO", "ONGC", "CIPLA", "BRITANNIA", "JSWSTEEL", "BPCL", "EICHERMOT", "SHREECEM", "SBILIFE", "COALINDIA", "UPL", "IOC", "TATACONSUM"]
+    
+    @Published var portfolio: [StockOwned] = []
+    var positions: [StockOwned] {
+        return portfolio.filter { $0.timeBought > Date().dateAt(.startOfDay) }
+    }
+    var holdings: [StockOwned] {
+        return portfolio.filter { $0.timeBought < Date().dateAt(.startOfDay) }
+    }
+    
+    @Published var orderList: [Order] = []
+    
+    @Published var funds: Double = 100000.0
     
     
     func getStocksData() {
@@ -46,6 +58,26 @@ class DataController: ObservableObject {
                                 stockQuote.pChange = pChange
                                 print(String(pChange))
                             }
+                            if let dayHigh = jsonStockQuote["dayHigh"] as? Double {
+                                stockQuote.dayHigh = dayHigh
+                                print(String(dayHigh))
+                            }
+                            if let dayLow = jsonStockQuote["dayLow"] as? Double {
+                                stockQuote.dayLow = dayLow
+                                print(String(dayLow))
+                            }
+                            if let previousClose = jsonStockQuote["previousClose"] as? Double {
+                                stockQuote.previousClose = previousClose
+                                print(String(previousClose))
+                            }
+                            if let open = jsonStockQuote["open"] as? Double {
+                                stockQuote.open = open
+                                print(String(open))
+                            }
+                            if let totalTradedVolume = jsonStockQuote["totalTradedVolume"] as? Int {
+                                stockQuote.totalTradedVolume = totalTradedVolume
+                                print(String(totalTradedVolume))
+                            }
                             
                             stockQuotesToAdd.append(stockQuote)
                         }
@@ -55,6 +87,25 @@ class DataController: ObservableObject {
                     }
                 }
             }.resume()
+        }
+    }
+    
+    
+    func processOrder(order: Order) {
+        if order.type == .buy {
+            if self.funds >= (order.sharePrice * Double(order.numberOfShares)) {
+                funds -= (order.sharePrice * Double(order.numberOfShares))
+                let stockOwned = StockOwned()
+                stockOwned.numberOfShares = order.numberOfShares
+                stockOwned.priceBought = order.sharePrice
+                stockOwned.stockSymbol = order.stockSymbol
+                stockOwned.timeBought = order.time
+                self.orderList.append(order)
+                self.portfolio.append(stockOwned)
+                print(String(funds))
+            } else {
+                print("Not enough funds! Sell some holdings or reduce the number of shares.")
+            }
         }
     }
 }

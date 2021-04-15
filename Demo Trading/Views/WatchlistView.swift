@@ -12,20 +12,29 @@ struct WatchlistView: View {
     @ObservedObject var data = DataController.shared
     
     var body: some View {
-        ScrollView {
-            VStack {
-                if data.stockQuotes.count == 0 {
-                    Text("No quotes to display")
-                        .bold()
-                        .padding()
-                        .padding(.bottom, 50)
-                        .multilineTextAlignment(.center)
-                } else {
-                    ForEach(data.stockQuotes) { stockQuote in
-                        WatchlistTileView(stockQuote: stockQuote)
+        NavigationView {
+            ScrollView {
+                VStack(spacing: 0) {
+                    if data.stockQuotes.count == 0 {
+                        Text("Loading...")
+                            .bold()
+                            .padding()
+                            .padding(.bottom, 50)
+                    } else {
+                        ForEach(data.stockQuotesOrder, id: \.self) { stock in
+                            ForEach(data.stockQuotes) { stockQuote in
+                                if stockQuote.symbol == stock {
+                                    Divider()
+                                    NavigationLink(destination: StockDetailView(stockQuote: stockQuote)) {
+                                    WatchlistTileView(stockQuote: stockQuote)
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
+            .navigationTitle("Watchlist")
         }
     }
 }
@@ -35,11 +44,16 @@ struct WatchlistTileView: View {
     @State var stockQuote: StockQuote
     
     var body: some View {
-        HStack {
-            Spacer()
-            Text(stockQuote.symbol)
-                .padding()
-            Spacer()
+        ZStack {
+            Color("White Black")
+            HStack {
+                Text(stockQuote.symbol)
+                    .padding(15)
+                Spacer()
+                Text(String(stockQuote.lastPrice))
+                    .padding()
+            }
+            .foregroundColor(stockQuote.pChange >= 0 ? .green : .red)
         }
     }
 }

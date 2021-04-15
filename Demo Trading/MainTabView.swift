@@ -15,6 +15,11 @@ struct MainTabView: View {
                     Image(systemName: "list.bullet")
                     Text("Watchlist")
                 }
+            OrdersView()
+                .tabItem {
+                    Image(systemName: "text.book.closed")
+                    Text("Orders")
+                }
             HoldingsView()
                 .tabItem {
                     Image(systemName: "bag.fill")

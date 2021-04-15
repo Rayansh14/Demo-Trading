@@ -12,7 +12,19 @@ struct PositionsView: View {
     @ObservedObject var data = DataController.shared
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            if data.positions.count == 0 {
+                Text("No Holdings 😭")
+            } else {
+                ScrollView {
+                    ForEach(data.positions) {position in
+                        Text(position.stockSymbol)
+                        Text(String(position.numberOfShares))
+                        Text(String(position.priceBought))
+                    }
+                }
+            }
+        }
     }
 }
 
