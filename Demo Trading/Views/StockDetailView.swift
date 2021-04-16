@@ -10,13 +10,16 @@ import SwiftUI
 struct StockDetailView: View {
     
     @State var stockQuote: StockQuote
-    @State var showBuyView = false
-    @State var showSellView = false
+    @State var showTransactView = false
+    @State var orderType = OrderType.buy
     
     var body: some View {
         HStack {
             Spacer()
-            Button(action: {showBuyView = true}) {
+            Button(action: {
+                showTransactView = true
+                orderType = .buy
+            }) {
                 Text("Buy")
                     .foregroundColor(.white)
                     .font(.title)
@@ -25,7 +28,10 @@ struct StockDetailView: View {
                     .background(Color.green)
                     .cornerRadius(10)
             }
-            Button(action: {showSellView = true}) {
+            Button(action: {
+                showTransactView = true
+                orderType = .sell
+            }) {
                 Text("Sell")
                     .foregroundColor(.white)
                     .font(.title)
@@ -36,24 +42,26 @@ struct StockDetailView: View {
             }
             Spacer()
         }
-        .sheet(isPresented: $showBuyView) {
-            BuyStockView(stockQuote: stockQuote)
+        .sheet(isPresented: $showTransactView) {
+            TransactStockView(stockQuote: stockQuote, orderType: orderType)
         }
         .navigationTitle(stockQuote.symbol)
     }
 }
 
 
-struct BuyStockView: View {
+struct TransactStockView: View {
     
     @State var stockQuote: StockQuote
     @StateObject var order = Order()
     @State var numberOfShares = ""
     @Environment(\.presentationMode) var presentationMode
+    @State var orderType: OrderType
     
     var body: some View {
         NavigationView {
             VStack {
+                Text(orderType == .buy ? "Buy" : "Sell")
                 Text(String(stockQuote.lastPrice))
                 TextField("Number of shares", text: $numberOfShares)
                     .padding(5)
@@ -61,7 +69,7 @@ struct BuyStockView: View {
                     .padding()
                     .keyboardType(.numberPad)
                 Button(action: {
-                    order.type = .buy
+                    order.type = orderType
                     order.sharePrice = stockQuote.lastPrice
                     order.stockSymbol = stockQuote.symbol
                     order.numberOfShares = Int(numberOfShares)!

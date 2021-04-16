@@ -14,7 +14,7 @@ struct PositionsView: View {
     var body: some View {
         VStack {
             if data.positions.count == 0 {
-                Text("No Holdings 😭")
+                Text("No Positions 😭")
             } else {
                 ScrollView {
                     ForEach(data.positions) {position in

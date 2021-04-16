@@ -27,6 +27,46 @@ class DataController: ObservableObject {
     @Published var funds: Double = 100000.0
     
     
+    func saveData() {
+        DispatchQueue.global().async {
+            let encoder = JSONEncoder()
+            if let portfolioData = try? encoder.encode(self.portfolio) {
+                if let orderListData = try? encoder.encode(self.orderList) {
+                    if let fundsData = try? encoder.encode(self.funds) {
+                        UserDefaults.standard.setValue(portfolioData, forKey: "portfolio")
+                        UserDefaults.standard.setValue(orderListData, forKey: "orderList")
+                        UserDefaults.standard.setValue(fundsData, forKey: "funds")
+                        UserDefaults.standard.synchronize()
+                    }
+                }
+            }
+        }
+    }
+    
+    func loadData() {
+        DispatchQueue.global().async {
+            if let portfolioData = UserDefaults.standard.data(forKey: "portfolio") {
+                if let orderListData = UserDefaults.standard.data(forKey: "orderList") {
+                    if let fundsData = UserDefaults.standard.data(forKey: "funds") {
+                        let decoder = JSONDecoder()
+                        if let jsonPortfolio = try? decoder.decode([StockOwned].self, from: portfolioData) {
+                            if let jsonOrderList = try? decoder.decode([Order].self, from: orderListData) {
+                                if let jsonFunds = try? decoder.decode(Double.self, from: fundsData) {
+                                    DispatchQueue.main.async {
+                                        self.portfolio = jsonPortfolio
+                                        self.orderList = jsonOrderList
+                                        self.funds = jsonFunds
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    
     func getStocksData() {
         if let url = URL(string: "https://latest-stock-price.p.rapidapi.com/price?Indices=NIFTY%2050") {
             var request = URLRequest(url: url)
@@ -91,21 +131,76 @@ class DataController: ObservableObject {
     }
     
     
+    func checkIfOwned(stockSymbol: String) -> Bool {
+        for stock in self.portfolio {
+            if stock.stockSymbol == stockSymbol {
+                return true
+            }
+        }
+        return false
+    }
+    
+    
+    func getStockQuote(stockSymbol: String) -> StockQuote {
+        for quote in stockQuotes {
+            if quote.symbol == stockSymbol {
+                return quote
+            }
+        }
+        let newQuote = StockQuote()
+        newQuote.symbol = "ERR"
+        return newQuote
+    }
+    
+    
     func processOrder(order: Order) {
         if order.type == .buy {
             if self.funds >= (order.sharePrice * Double(order.numberOfShares)) {
-                funds -= (order.sharePrice * Double(order.numberOfShares))
-                let stockOwned = StockOwned()
-                stockOwned.numberOfShares = order.numberOfShares
-                stockOwned.priceBought = order.sharePrice
-                stockOwned.stockSymbol = order.stockSymbol
-                stockOwned.timeBought = order.time
                 self.orderList.append(order)
-                self.portfolio.append(stockOwned)
-                print(String(funds))
+                if checkIfOwned(stockSymbol: order.stockSymbol) {
+                    for stock in self.portfolio {
+                        if stock.stockSymbol == order.stockSymbol {
+                            stock.priceBought = (((stock.priceBought * Double(stock.numberOfShares)) + (order.sharePrice * Double(order.numberOfShares)))/Double(order.numberOfShares + stock.numberOfShares))
+                            stock.numberOfShares += order.numberOfShares
+                            funds -= (order.sharePrice * Double(order.numberOfShares))
+                        }
+                    }
+                } else {
+                    let stockOwned = StockOwned()
+                    stockOwned.numberOfShares = order.numberOfShares
+                    stockOwned.priceBought = order.sharePrice
+                    stockOwned.stockSymbol = order.stockSymbol
+                    stockOwned.timeBought = order.time
+                    self.portfolio.append(stockOwned)
+                    funds -= (order.sharePrice * Double(order.numberOfShares))
+                }
             } else {
                 print("Not enough funds! Sell some holdings or reduce the number of shares.")
             }
+        } else {
+            if checkIfOwned(stockSymbol: order.stockSymbol) {
+                for stock in portfolio {
+                    if stock.stockSymbol == order.stockSymbol {
+                        if stock.numberOfShares >= order.numberOfShares {
+                            stock.numberOfShares -= order.numberOfShares
+                            self.funds += (Double(order.numberOfShares) * order.sharePrice)
+                        } else {
+                            print("not enough shares are owned by u.")
+                        }
+                    }
+                }
+            } else {
+                print("you don't own any" + order.stockSymbol)
+            }
         }
+        saveData()
+    }
+    
+    
+    func resetAll() {
+        self.portfolio = []
+        self.orderList = []
+        self.funds = 1_00_000
+        saveData()
     }
 }

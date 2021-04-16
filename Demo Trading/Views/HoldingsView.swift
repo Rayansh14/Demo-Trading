@@ -20,7 +20,7 @@ struct HoldingsView: View {
                     ForEach(data.holdings) {holding in
                         Text(holding.stockSymbol)
                         Text(String(holding.numberOfShares))
-                        Text(String(holding.priceBought))
+                        Text("Avg. \(String(holding.priceBought))")
                     }
                 }
             }

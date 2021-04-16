@@ -10,6 +10,8 @@ import SwiftUI
 struct WatchlistView: View {
     
     @ObservedObject var data = DataController.shared
+    let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
+
     
     var body: some View {
         NavigationView {
@@ -35,7 +37,15 @@ struct WatchlistView: View {
                 }
             }
             .navigationTitle("Watchlist")
+            .navigationBarItems(trailing: Button(action: {
+                data.getStocksData()
+            }) {
+                Image(systemName: "gobackward")
+            })
         }
+        .onReceive(timer, perform: { _ in
+            data.getStocksData()
+        })
     }
 }
 

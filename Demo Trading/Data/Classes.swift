@@ -21,7 +21,6 @@ class StockQuote: ObservableObject, Identifiable, Codable {
     @Published var totalTradedVolume = 0
     
     
-    
     enum CodingKeys: String, CodingKey {
         case id
         case symbol
@@ -34,7 +33,6 @@ class StockQuote: ObservableObject, Identifiable, Codable {
         case open
         case totalTradedVolume
     }
-    
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -49,7 +47,6 @@ class StockQuote: ObservableObject, Identifiable, Codable {
         try container.encode(open, forKey: CodingKeys.open)
         try container.encode(totalTradedVolume, forKey: CodingKeys.totalTradedVolume)
     }
-    
     
     required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -86,24 +83,87 @@ var testStockQuote: StockQuote {
 }
 
 
-enum OrderType {
+enum OrderType: String, Codable {
     case buy, sell
 }
 
-class Order: ObservableObject, Identifiable {
+class Order: ObservableObject, Identifiable, Codable {
     @Published var id = UUID().uuidString
     @Published var stockSymbol = ""
     @Published var numberOfShares: Int = 0
     @Published var sharePrice: Double = 0.0
     @Published var type = OrderType.buy
     @Published var time = Date()
+    
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case stockSymbol
+        case numberOfShares
+        case sharePrice
+        case type
+        case time
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(stockSymbol, forKey: .stockSymbol)
+        try container.encode(numberOfShares, forKey: .numberOfShares)
+        try container.encode(sharePrice, forKey: .sharePrice)
+        try container.encode(type, forKey: .type)
+        try container.encode(time, forKey: .time)
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        id = try values.decode(String.self, forKey: .id)
+        stockSymbol = try values.decode(String.self, forKey: .stockSymbol)
+        numberOfShares = try values.decode(Int.self, forKey: .numberOfShares)
+        sharePrice = try values.decode(Double.self, forKey: .sharePrice)
+        type = try values.decode(OrderType.self, forKey: .type)
+        time = try values.decode(Date.self, forKey: .time)
+    }
+    
+    init() {
+    }
 }
 
 
-class StockOwned: ObservableObject, Identifiable {
+class StockOwned: ObservableObject, Identifiable, Codable {
     @Published var id = UUID().uuidString
     @Published var stockSymbol = ""
     @Published var numberOfShares = 0
     @Published var priceBought: Double = 0.0
     @Published var timeBought = Date()
+    
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case stockSymbol
+        case numberOfShares
+        case priceBought
+        case timeBought
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(stockSymbol, forKey: .stockSymbol)
+        try container.encode(numberOfShares, forKey: .numberOfShares)
+        try container.encode(priceBought, forKey: .priceBought)
+        try container.encode(timeBought, forKey: .timeBought)
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        id = try values.decode(String.self, forKey: .id)
+        stockSymbol = try values.decode(String.self, forKey: .stockSymbol)
+        numberOfShares = try values.decode(Int.self, forKey: .numberOfShares)
+        priceBought = try values.decode(Double.self, forKey: .priceBought)
+        timeBought = try values.decode(Date.self, forKey: .timeBought)
+    }
+    
+    init() {
+    }
 }
