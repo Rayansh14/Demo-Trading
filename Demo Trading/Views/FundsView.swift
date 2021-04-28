@@ -12,7 +12,12 @@ struct FundsView: View {
     @ObservedObject var data = DataController.shared
     
     var body: some View {
-        Text(String(format: "%.2f", data.funds))
+        NavigationView {
+            VStack {
+                Text(String(format: "%.2f", data.funds))
+            }
+            .navigationTitle("Funds")
+        }
     }
 }
 

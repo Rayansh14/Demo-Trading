@@ -7,9 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		44032890262ACB8F0039A0E6 /* ErrorTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4403288F262ACB8F0039A0E6 /* ErrorTileView.swift */; };
+		44032893262D92910039A0E6 /* PortfolioListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44032892262D92910039A0E6 /* PortfolioListView.swift */; };
 		44336BDC2626CD0A00C12CE0 /* StockDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44336BDB2626CD0A00C12CE0 /* StockDetailView.swift */; };
 		44336BDF26272EB800C12CE0 /* OrdersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44336BDE26272EB800C12CE0 /* OrdersView.swift */; };
 		44336BE7262850A500C12CE0 /* SwiftDate in Frameworks */ = {isa = PBXBuildFile; productRef = 44336BE6262850A500C12CE0 /* SwiftDate */; };
+		444879BB2632E6A8000601BF /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444879BA2632E6A8000601BF /* NetworkMonitor.swift */; };
 		44A79A32262451E100652F17 /* Demo_TradingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A79A31262451E100652F17 /* Demo_TradingApp.swift */; };
 		44A79A34262451E100652F17 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A79A33262451E100652F17 /* MainTabView.swift */; };
 		44A79A36262451E200652F17 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44A79A35262451E200652F17 /* Assets.xcassets */; };
@@ -17,14 +20,15 @@
 		44A79A42262451F200652F17 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A79A41262451F200652F17 /* DataController.swift */; };
 		44A79A4626255EEB00652F17 /* Classes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A79A4526255EEB00652F17 /* Classes.swift */; };
 		44A79A532626C27C00652F17 /* WatchlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A79A522626C27C00652F17 /* WatchlistView.swift */; };
-		44A79A572626C2A900652F17 /* HoldingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A79A562626C2A900652F17 /* HoldingsView.swift */; };
-		44A79A5A2626C2BB00652F17 /* PositionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A79A592626C2BB00652F17 /* PositionsView.swift */; };
 		44A79A5D2626C2C900652F17 /* FundsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A79A5C2626C2C900652F17 /* FundsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4403288F262ACB8F0039A0E6 /* ErrorTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorTileView.swift; sourceTree = "<group>"; };
+		44032892262D92910039A0E6 /* PortfolioListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioListView.swift; sourceTree = "<group>"; };
 		44336BDB2626CD0A00C12CE0 /* StockDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetailView.swift; sourceTree = "<group>"; };
 		44336BDE26272EB800C12CE0 /* OrdersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersView.swift; sourceTree = "<group>"; };
+		444879BA2632E6A8000601BF /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		44A79A2E262451E100652F17 /* Demo Trading.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo Trading.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		44A79A31262451E100652F17 /* Demo_TradingApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Demo_TradingApp.swift; sourceTree = "<group>"; };
 		44A79A33262451E100652F17 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
@@ -34,8 +38,6 @@
 		44A79A41262451F200652F17 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		44A79A4526255EEB00652F17 /* Classes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Classes.swift; sourceTree = "<group>"; };
 		44A79A522626C27C00652F17 /* WatchlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistView.swift; sourceTree = "<group>"; };
-		44A79A562626C2A900652F17 /* HoldingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldingsView.swift; sourceTree = "<group>"; };
-		44A79A592626C2BB00652F17 /* PositionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionsView.swift; sourceTree = "<group>"; };
 		44A79A5C2626C2C900652F17 /* FundsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FundsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -94,8 +96,8 @@
 			children = (
 				44A79A522626C27C00652F17 /* WatchlistView.swift */,
 				44336BDB2626CD0A00C12CE0 /* StockDetailView.swift */,
-				44A79A562626C2A900652F17 /* HoldingsView.swift */,
-				44A79A592626C2BB00652F17 /* PositionsView.swift */,
+				4403288F262ACB8F0039A0E6 /* ErrorTileView.swift */,
+				44032892262D92910039A0E6 /* PortfolioListView.swift */,
 				44A79A5C2626C2C900652F17 /* FundsView.swift */,
 				44336BDE26272EB800C12CE0 /* OrdersView.swift */,
 			);
@@ -107,6 +109,7 @@
 			children = (
 				44A79A4526255EEB00652F17 /* Classes.swift */,
 				44A79A41262451F200652F17 /* DataController.swift */,
+				444879BA2632E6A8000601BF /* NetworkMonitor.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -186,16 +189,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				444879BB2632E6A8000601BF /* NetworkMonitor.swift in Sources */,
 				44A79A532626C27C00652F17 /* WatchlistView.swift in Sources */,
 				44A79A34262451E100652F17 /* MainTabView.swift in Sources */,
-				44A79A572626C2A900652F17 /* HoldingsView.swift in Sources */,
-				44A79A5A2626C2BB00652F17 /* PositionsView.swift in Sources */,
 				44A79A4626255EEB00652F17 /* Classes.swift in Sources */,
 				44336BDF26272EB800C12CE0 /* OrdersView.swift in Sources */,
 				44A79A5D2626C2C900652F17 /* FundsView.swift in Sources */,
 				44A79A42262451F200652F17 /* DataController.swift in Sources */,
 				44336BDC2626CD0A00C12CE0 /* StockDetailView.swift in Sources */,
+				44032890262ACB8F0039A0E6 /* ErrorTileView.swift in Sources */,
 				44A79A32262451E100652F17 /* Demo_TradingApp.swift in Sources */,
+				44032893262D92910039A0E6 /* PortfolioListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

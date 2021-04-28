@@ -20,12 +20,12 @@ struct MainTabView: View {
                     Image(systemName: "text.book.closed")
                     Text("Orders")
                 }
-            HoldingsView()
+            PortfolioListView(portfolioType: .holdings)
                 .tabItem {
                     Image(systemName: "bag.fill")
                     Text("Holdings")
                 }
-            PositionsView()
+            PortfolioListView(portfolioType: .positions)
                 .tabItem {
                     Image(systemName: "location.fill")
                     Text("Positions")

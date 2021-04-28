@@ -130,11 +130,22 @@ class Order: ObservableObject, Identifiable, Codable {
 }
 
 
+var testOrder: Order {
+    let order = Order()
+    order.stockSymbol = "RELIANCE"
+    order.numberOfShares = 10
+    order.sharePrice = 2002.30
+    order.type = .buy
+    return order
+}
+
+
 class StockOwned: ObservableObject, Identifiable, Codable {
     @Published var id = UUID().uuidString
     @Published var stockSymbol = ""
     @Published var numberOfShares = 0
-    @Published var priceBought: Double = 0.0
+    @Published var avgPriceBought: Double = 0.0
+    @Published var lastPrice: Double = 0.0
     @Published var timeBought = Date()
     
     
@@ -142,7 +153,8 @@ class StockOwned: ObservableObject, Identifiable, Codable {
         case id
         case stockSymbol
         case numberOfShares
-        case priceBought
+        case avgPriceBought
+        case lastPrice
         case timeBought
     }
     
@@ -151,8 +163,9 @@ class StockOwned: ObservableObject, Identifiable, Codable {
         try container.encode(id, forKey: .id)
         try container.encode(stockSymbol, forKey: .stockSymbol)
         try container.encode(numberOfShares, forKey: .numberOfShares)
-        try container.encode(priceBought, forKey: .priceBought)
+        try container.encode(avgPriceBought, forKey: .avgPriceBought)
         try container.encode(timeBought, forKey: .timeBought)
+        try container.encode(lastPrice, forKey: .lastPrice)
     }
     
     required init(from decoder: Decoder) throws {
@@ -160,10 +173,20 @@ class StockOwned: ObservableObject, Identifiable, Codable {
         id = try values.decode(String.self, forKey: .id)
         stockSymbol = try values.decode(String.self, forKey: .stockSymbol)
         numberOfShares = try values.decode(Int.self, forKey: .numberOfShares)
-        priceBought = try values.decode(Double.self, forKey: .priceBought)
+        avgPriceBought = try values.decode(Double.self, forKey: .avgPriceBought)
         timeBought = try values.decode(Date.self, forKey: .timeBought)
+        lastPrice = try values.decode(Double.self, forKey: .lastPrice)
     }
     
     init() {
     }
+}
+
+var testStockOwned: StockOwned {
+    let stockOwned = StockOwned()
+    stockOwned.stockSymbol = "RELIANCE"
+    stockOwned.numberOfShares = 10
+    stockOwned.avgPriceBought = 2002.30
+    stockOwned.lastPrice = 2004.75
+    return stockOwned
 }
