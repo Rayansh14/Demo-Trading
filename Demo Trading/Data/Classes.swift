@@ -8,7 +8,7 @@
 import Foundation
 
 
-class StockQuote: ObservableObject, Identifiable, Codable {
+class StockQuote: ObservableObject, Identifiable {
     @Published var id = UUID().uuidString
     @Published var symbol = ""
     @Published var lastPrice = 0.0
@@ -19,51 +19,6 @@ class StockQuote: ObservableObject, Identifiable, Codable {
     @Published var previousClose = 0.0
     @Published var open = 0.0
     @Published var totalTradedVolume = 0
-    
-    
-    enum CodingKeys: String, CodingKey {
-        case id
-        case symbol
-        case lastPrice
-        case change
-        case pChange
-        case dayHigh
-        case dayLow
-        case previousClose
-        case open
-        case totalTradedVolume
-    }
-    
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(id, forKey: CodingKeys.id)
-        try container.encode(symbol, forKey: CodingKeys.symbol)
-        try container.encode(lastPrice, forKey: CodingKeys.lastPrice)
-        try container.encode(change, forKey: CodingKeys.change)
-        try container.encode(pChange, forKey: CodingKeys.pChange)
-        try container.encode(dayHigh, forKey: CodingKeys.dayHigh)
-        try container.encode(dayLow, forKey: CodingKeys.dayLow)
-        try container.encode(previousClose, forKey: CodingKeys.previousClose)
-        try container.encode(open, forKey: CodingKeys.open)
-        try container.encode(totalTradedVolume, forKey: CodingKeys.totalTradedVolume)
-    }
-    
-    required init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        id = try values.decode(String.self, forKey: .id)
-        symbol = try values.decode(String.self, forKey: .symbol)
-        lastPrice = try values.decode(Double.self, forKey: .lastPrice)
-        change = try values.decode(Double.self, forKey: .change)
-        pChange = try values.decode(Double.self, forKey: .pChange)
-        dayHigh = try values.decode(Double.self, forKey: .dayHigh)
-        dayLow = try values.decode(Double.self, forKey: .dayLow)
-        previousClose = try values.decode(Double.self, forKey: .previousClose)
-        open = try values.decode(Double.self, forKey: .open)
-        totalTradedVolume = try values.decode(Int.self, forKey: .totalTradedVolume)
-    }
-    
-    init() {
-    }
 }
 
 var testStockQuote: StockQuote {
@@ -127,6 +82,14 @@ class Order: ObservableObject, Identifiable, Codable {
     
     init() {
     }
+    
+    func dateAsString() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM d, H:mm"
+        let dateAsString = formatter.string(from: time)
+        print(dateAsString)
+        return dateAsString
+    }
 }
 
 
@@ -146,6 +109,7 @@ class StockOwned: ObservableObject, Identifiable, Codable {
     @Published var numberOfShares = 0
     @Published var avgPriceBought: Double = 0.0
     @Published var lastPrice: Double = 0.0
+    @Published var dayChange: Double = 0.0
     @Published var timeBought = Date()
     
     
@@ -155,6 +119,7 @@ class StockOwned: ObservableObject, Identifiable, Codable {
         case numberOfShares
         case avgPriceBought
         case lastPrice
+        case dayChange
         case timeBought
     }
     
@@ -164,6 +129,7 @@ class StockOwned: ObservableObject, Identifiable, Codable {
         try container.encode(stockSymbol, forKey: .stockSymbol)
         try container.encode(numberOfShares, forKey: .numberOfShares)
         try container.encode(avgPriceBought, forKey: .avgPriceBought)
+        try container.encode(dayChange, forKey: .dayChange)
         try container.encode(timeBought, forKey: .timeBought)
         try container.encode(lastPrice, forKey: .lastPrice)
     }
@@ -174,6 +140,7 @@ class StockOwned: ObservableObject, Identifiable, Codable {
         stockSymbol = try values.decode(String.self, forKey: .stockSymbol)
         numberOfShares = try values.decode(Int.self, forKey: .numberOfShares)
         avgPriceBought = try values.decode(Double.self, forKey: .avgPriceBought)
+        dayChange = try values.decode(Double.self, forKey: .dayChange)
         timeBought = try values.decode(Date.self, forKey: .timeBought)
         lastPrice = try values.decode(Double.self, forKey: .lastPrice)
     }
@@ -187,6 +154,7 @@ var testStockOwned: StockOwned {
     stockOwned.stockSymbol = "RELIANCE"
     stockOwned.numberOfShares = 10
     stockOwned.avgPriceBought = 2002.30
+    stockOwned.dayChange = 12.20
     stockOwned.lastPrice = 2004.75
     return stockOwned
 }

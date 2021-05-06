@@ -5,10 +5,8 @@
 //  Created by Rayansh Gupta on 12/04/21.
 //
 
-import Foundation
 import SwiftUI
 import SwiftDate
-import Network
 
 class DataController: ObservableObject {
     
@@ -27,6 +25,12 @@ class DataController: ObservableObject {
     }
     
     @Published var orderList: [Order] = []
+    var todayOrders: [Order] {
+        return orderList.filter { $0.time > Date().dateAt(.startOfDay) }.sorted { $0.time > $1.time }
+    }
+    var earlierOrders: [Order] {
+        return orderList.filter { $0.time < Date().dateAt(.startOfDay) }
+    }
     
     @Published var funds: Double = 1_00_000.0
     
@@ -34,15 +38,16 @@ class DataController: ObservableObject {
     @Published var errorMessage = ""
     
     
-    func getMarketStatus() -> Bool{
-        let time = Date()
-        let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "EEEE"
-        let stringDay = timeFormatter.string(from: time)
-        if stringDay != "Sunday" && stringDay != "Saturday" {
-            timeFormatter.dateFormat = "H"
-            let stringHour = timeFormatter.string(from: time)
-            if Int(stringHour)! > 8 && Int(stringHour)! < 16 {
+    func getMarketStatus() -> Bool {
+        let calendar = Calendar.current
+        let now = Date()
+        let nineFifteenToday = calendar.date(bySettingHour: 9, minute: 14, second: 59, of: now)!
+        let threeThirtyToday = calendar.date(bySettingHour: 15, minute: 30, second: 01, of: now)!
+        
+        print(nineFifteenToday)
+        
+        if now.compare(.isWeekday) {
+            if now > nineFifteenToday && now < threeThirtyToday {
                 return true
             }
         }
@@ -72,35 +77,27 @@ class DataController: ObservableObject {
                                 }
                                 if let lastPrice = jsonStockQuote["lastPrice"] as? Double {
                                     stockQuote.lastPrice = lastPrice
-                                    print(String(lastPrice))
                                 }
                                 if let change = jsonStockQuote["change"] as? Double {
                                     stockQuote.change = change
-                                    print(String(change))
                                 }
                                 if let pChange = jsonStockQuote["pChange"] as? Double {
                                     stockQuote.pChange = pChange
-                                    print(String(pChange))
                                 }
                                 if let dayHigh = jsonStockQuote["dayHigh"] as? Double {
                                     stockQuote.dayHigh = dayHigh
-                                    print(String(dayHigh))
                                 }
                                 if let dayLow = jsonStockQuote["dayLow"] as? Double {
                                     stockQuote.dayLow = dayLow
-                                    print(String(dayLow))
                                 }
                                 if let previousClose = jsonStockQuote["previousClose"] as? Double {
                                     stockQuote.previousClose = previousClose
-                                    print(String(previousClose))
                                 }
                                 if let open = jsonStockQuote["open"] as? Double {
                                     stockQuote.open = open
-                                    print(String(open))
                                 }
                                 if let totalTradedVolume = jsonStockQuote["totalTradedVolume"] as? Int {
                                     stockQuote.totalTradedVolume = totalTradedVolume
-                                    print(String(totalTradedVolume))
                                 }
                                 
                                 stockQuotesToAdd.append(stockQuote)
@@ -118,12 +115,13 @@ class DataController: ObservableObject {
     }
     
     
-    func updateStockPrices() {
+    func updateAllStockPricesInPortfolio() {
         stockQuotes.append(StockQuote())
         for stock in portfolio {
             for quote in stockQuotes {
                 if stock.stockSymbol == quote.symbol {
                     stock.lastPrice = quote.lastPrice
+                    stock.dayChange = quote.change
                 }
             }
         }
@@ -148,7 +146,7 @@ class DataController: ObservableObject {
             }
         }
         let newQuote = StockQuote()
-        newQuote.symbol = "ERR"
+        newQuote.symbol = "ERROR 1"
         return newQuote
     }
     
@@ -167,11 +165,13 @@ class DataController: ObservableObject {
             "buyValue" : 0.0,
             "currentValue" : 0.0,
             "profitLoss" : 0.0,
-            "profitLossPercent" : 0.0
+            "profitLossPercent" : 0.0,
+            "dayProfitLoss" : 0.0
         ]
         for stock in portfolio {
             portfolioInfo["buyValue"]! += (stock.avgPriceBought * Double(stock.numberOfShares))
             portfolioInfo["currentValue"]! += (stock.lastPrice * Double(stock.numberOfShares))
+            portfolioInfo["dayProfitLoss"]! += (Double(stock.numberOfShares) * stock.dayChange)
         }
         portfolioInfo["profitLoss"]! = portfolioInfo["currentValue"]! - portfolioInfo["buyValue"]!
         portfolioInfo["profitLossPercent"]! = portfolioInfo["profitLoss"]!/portfolioInfo["buyValue"]! * 100
@@ -209,9 +209,11 @@ class DataController: ObservableObject {
                     for stock in portfolio {
                         if stock.stockSymbol == order.stockSymbol {
                             if stock.numberOfShares > order.numberOfShares {
+                                orderList.append(order)
                                 stock.numberOfShares -= order.numberOfShares
                                 funds += (Double(order.numberOfShares) * order.sharePrice)
                             } else if stock.numberOfShares == order.numberOfShares {
+                                orderList.append(order)
                                 funds += (Double(order.numberOfShares) * order.sharePrice)
                                 if let index = portfolio.firstIndex(where: {loopingStockOwned -> Bool in
                                     return loopingStockOwned.id == stock.id

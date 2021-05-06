@@ -11,7 +11,8 @@
 		44032893262D92910039A0E6 /* PortfolioListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44032892262D92910039A0E6 /* PortfolioListView.swift */; };
 		44336BDC2626CD0A00C12CE0 /* StockDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44336BDB2626CD0A00C12CE0 /* StockDetailView.swift */; };
 		44336BDF26272EB800C12CE0 /* OrdersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44336BDE26272EB800C12CE0 /* OrdersView.swift */; };
-		44336BE7262850A500C12CE0 /* SwiftDate in Frameworks */ = {isa = PBXBuildFile; productRef = 44336BE6262850A500C12CE0 /* SwiftDate */; };
+		4438747126416AD400A35820 /* SwiftDate in Frameworks */ = {isa = PBXBuildFile; productRef = 4438747026416AD400A35820 /* SwiftDate */; };
+		443874732643E3A000A35820 /* PortfolioTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443874722643E3A000A35820 /* PortfolioTileView.swift */; };
 		444879BB2632E6A8000601BF /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444879BA2632E6A8000601BF /* NetworkMonitor.swift */; };
 		44A79A32262451E100652F17 /* Demo_TradingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A79A31262451E100652F17 /* Demo_TradingApp.swift */; };
 		44A79A34262451E100652F17 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A79A33262451E100652F17 /* MainTabView.swift */; };
@@ -23,11 +24,25 @@
 		44A79A5D2626C2C900652F17 /* FundsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A79A5C2626C2C900652F17 /* FundsView.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		44B18D21264166BF00C8F6CA /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		4403288F262ACB8F0039A0E6 /* ErrorTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorTileView.swift; sourceTree = "<group>"; };
 		44032892262D92910039A0E6 /* PortfolioListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioListView.swift; sourceTree = "<group>"; };
 		44336BDB2626CD0A00C12CE0 /* StockDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetailView.swift; sourceTree = "<group>"; };
 		44336BDE26272EB800C12CE0 /* OrdersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersView.swift; sourceTree = "<group>"; };
+		443874722643E3A000A35820 /* PortfolioTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioTileView.swift; sourceTree = "<group>"; };
 		444879BA2632E6A8000601BF /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		44A79A2E262451E100652F17 /* Demo Trading.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo Trading.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		44A79A31262451E100652F17 /* Demo_TradingApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Demo_TradingApp.swift; sourceTree = "<group>"; };
@@ -46,7 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				44336BE7262850A500C12CE0 /* SwiftDate in Frameworks */,
+				4438747126416AD400A35820 /* SwiftDate in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,6 +75,7 @@
 				44A79A2F262451E100652F17 /* Products */,
 			);
 			sourceTree = "<group>";
+			usesTabs = 0;
 		};
 		44A79A2F262451E100652F17 /* Products */ = {
 			isa = PBXGroup;
@@ -98,6 +114,7 @@
 				44336BDB2626CD0A00C12CE0 /* StockDetailView.swift */,
 				4403288F262ACB8F0039A0E6 /* ErrorTileView.swift */,
 				44032892262D92910039A0E6 /* PortfolioListView.swift */,
+				443874722643E3A000A35820 /* PortfolioTileView.swift */,
 				44A79A5C2626C2C900652F17 /* FundsView.swift */,
 				44336BDE26272EB800C12CE0 /* OrdersView.swift */,
 			);
@@ -124,6 +141,7 @@
 				44A79A2A262451E100652F17 /* Sources */,
 				44A79A2B262451E100652F17 /* Frameworks */,
 				44A79A2C262451E100652F17 /* Resources */,
+				44B18D21264166BF00C8F6CA /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -131,7 +149,7 @@
 			);
 			name = "Demo Trading";
 			packageProductDependencies = (
-				44336BE6262850A500C12CE0 /* SwiftDate */,
+				4438747026416AD400A35820 /* SwiftDate */,
 			);
 			productName = "Demo Trading";
 			productReference = 44A79A2E262451E100652F17 /* Demo Trading.app */;
@@ -161,7 +179,7 @@
 			);
 			mainGroup = 44A79A25262451E100652F17;
 			packageReferences = (
-				44336BE5262850A500C12CE0 /* XCRemoteSwiftPackageReference "SwiftDate" */,
+				4438746F26416AD400A35820 /* XCRemoteSwiftPackageReference "SwiftDate" */,
 			);
 			productRefGroup = 44A79A2F262451E100652F17 /* Products */;
 			projectDirPath = "";
@@ -194,6 +212,7 @@
 				44A79A34262451E100652F17 /* MainTabView.swift in Sources */,
 				44A79A4626255EEB00652F17 /* Classes.swift in Sources */,
 				44336BDF26272EB800C12CE0 /* OrdersView.swift in Sources */,
+				443874732643E3A000A35820 /* PortfolioTileView.swift in Sources */,
 				44A79A5D2626C2C900652F17 /* FundsView.swift in Sources */,
 				44A79A42262451F200652F17 /* DataController.swift in Sources */,
 				44336BDC2626CD0A00C12CE0 /* StockDetailView.swift in Sources */,
@@ -390,7 +409,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		44336BE5262850A500C12CE0 /* XCRemoteSwiftPackageReference "SwiftDate" */ = {
+		4438746F26416AD400A35820 /* XCRemoteSwiftPackageReference "SwiftDate" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/malcommac/SwiftDate.git";
 			requirement = {
@@ -401,9 +420,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		44336BE6262850A500C12CE0 /* SwiftDate */ = {
+		4438747026416AD400A35820 /* SwiftDate */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 44336BE5262850A500C12CE0 /* XCRemoteSwiftPackageReference "SwiftDate" */;
+			package = 4438746F26416AD400A35820 /* XCRemoteSwiftPackageReference "SwiftDate" */;
 			productName = SwiftDate;
 		};
 /* End XCSwiftPackageProductDependency section */
