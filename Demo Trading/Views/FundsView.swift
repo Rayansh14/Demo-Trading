@@ -14,10 +14,25 @@ struct FundsView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text(String(format: "%.2f", data.funds))
+                Text("Starting balance: 1,00,000")
+                Text("Available funds :\(data.funds.withCommas())")
+                Text("Total Net Worth :\(getTotalNetWorth().withCommas())")
             }
             .navigationTitle("Funds")
         }
+    }
+    
+    
+    func getTotalNetWorth() -> Double {
+        let holdingsInfo = data.getPorfolioInfo(portfolio: data.holdings)
+        let positionsInfo = data.getPorfolioInfo(portfolio: data.positions)
+        var totalValue = 0.0
+        
+        totalValue += holdingsInfo["currentValue"]!
+        totalValue += positionsInfo["currentValue"]!
+        totalValue += data.funds
+        
+        return totalValue
     }
 }
 

@@ -15,50 +15,59 @@ struct StockDetailView: View {
     @ObservedObject var data = DataController.shared
     
     var body: some View {
-        ZStack {
-            HStack {
-                Spacer()
-                Button(action: {
-                    showBuyView = true
-                }) {
-                    Text("Buy")
-                        .foregroundColor(.white)
-                        .font(.title)
-                        .padding(.vertical, 10)
-                        .padding(.horizontal)
-                        .background(Color.green)
-                        .cornerRadius(10)
+        NavigationView {
+            ZStack {
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        showBuyView = true
+                    }) {
+                        Text("Buy")
+                            .foregroundColor(.white)
+                            .font(.title)
+                            .padding(.vertical, 10)
+                            .padding(.horizontal)
+                            .background(Color.green)
+                            .cornerRadius(10)
+                    }
+                    .sheet(isPresented: $showBuyView) {
+                        BuyStockView(stockQuote: stockQuote)
+                    }
+                    Button(action: {
+                        showSellView = true
+                    }) {
+                        Text("Sell")
+                            .foregroundColor(.white)
+                            .font(.title)
+                            .padding(.vertical, 10)
+                            .padding(.horizontal)
+                            .background(Color.red)
+                            .cornerRadius(10)
+                    }
+                    .sheet(isPresented: $showSellView) {
+                        SellStockView(stockQuote: stockQuote)
+                    }
+                    Spacer()
                 }
-                .sheet(isPresented: $showBuyView) {
-                    BuyStockView(stockQuote: stockQuote)
+                VStack {
+                    Spacer()
+                    ErrorTileView(error: data.errorMessage)
+                        .opacity(data.showError ? 1.0 : 0.0)
+                        .animation(.easeInOut)
+                        .padding(.bottom)
                 }
-                Button(action: {
-                    showSellView = true
-                }) {
-                    Text("Sell")
-                        .foregroundColor(.white)
-                        .font(.title)
-                        .padding(.vertical, 10)
-                        .padding(.horizontal)
-                        .background(Color.red)
-                        .cornerRadius(10)
-                }
-                .sheet(isPresented: $showSellView) {
-                    SellStockView(stockQuote: stockQuote)
-                }
-                Spacer()
             }
-            VStack {
-                Spacer()
-                ErrorTileView(error: data.errorMessage)
-                    .opacity(data.showError ? 1.0 : 0.0)
-                    .animation(.easeInOut)
-                    .padding(.bottom)
-            }
+            .navigationTitle(stockQuote.symbol)
         }
-        .navigationTitle(stockQuote.symbol)
     }
 }
+
+
+
+
+
+
+
 
 
 struct BuyStockView: View {
@@ -102,6 +111,13 @@ struct BuyStockView: View {
         
     }
 }
+
+
+
+
+
+
+
 
 struct SellStockView: View {
     

@@ -16,33 +16,14 @@ struct OrdersView: View {
     var body: some View {
         NavigationView {
             VStack {
-                DisclosureGroup("Today", isExpanded: $isTodayExpanded) {
-                    VStack {
-                        if data.todayOrders.count == 0 {
-                            Text("You have placed no orders today. Buy or sell a stock by going to your watchlist and selecting the stock that you want to trade.")
-                                .font(.body)
-                        } else {
-                            ScrollView {
-                                ForEach(data.todayOrders) { order in
-                                    Divider()
-                                    OrderTileView(order: order)
-                                }
-                                Divider()
-                            }
-                        }
-                    }
-                }
-                .font(.title2)
-                .foregroundColor(.black)
-                .padding()
-//                .background(Color(#colorLiteral(red: 0.9499999881, green: 0.9499999881, blue: 0.9499999881, alpha: 1)))
-                .cornerRadius(15)
-                
-                if data.earlierOrders.count != 0 {
-                    DisclosureGroup("Earlier", isExpanded: $isEarlierExpanded) {
+                ScrollView {
+                    DisclosureGroup("Today", isExpanded: $isTodayExpanded) {
                         VStack {
-                            ScrollView {
-                                ForEach(data.earlierOrders) { order in
+                            if data.todayOrders.count == 0 {
+                                Text("You have placed no orders today. Buy or sell a stock by going to your watchlist and selecting the stock that you want to trade.")
+                                    .font(.body)
+                            } else {
+                                ForEach(data.todayOrders) { order in
                                     Divider()
                                     OrderTileView(order: order)
                                 }
@@ -53,10 +34,27 @@ struct OrdersView: View {
                     .font(.title2)
                     .foregroundColor(.black)
                     .padding()
-//                    .background(Color(#colorLiteral(red: 0.9499999881, green: 0.9499999881, blue: 0.9499999881, alpha: 1)))
+                    //                .background(Color(#colorLiteral(red: 0.9499999881, green: 0.9499999881, blue: 0.9499999881, alpha: 1)))
                     .cornerRadius(15)
+                    
+                    if data.earlierOrders.count != 0 {
+                        DisclosureGroup("Earlier", isExpanded: $isEarlierExpanded) {
+                            VStack {
+                                ForEach(data.earlierOrders) { order in
+                                    Divider()
+                                    OrderTileView(order: order)
+                                }
+                                Divider()
+                            }
+                        }
+                        .font(.title2)
+                        .foregroundColor(.black)
+                        .padding()
+                        //                    .background(Color(#colorLiteral(red: 0.9499999881, green: 0.9499999881, blue: 0.9499999881, alpha: 1)))
+                        .cornerRadius(15)
+                    }
+                    Spacer()
                 }
-                Spacer()
             }
             .navigationTitle("Orders")
             

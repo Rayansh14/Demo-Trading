@@ -10,6 +10,7 @@ import SwiftUI
 struct WatchlistView: View {
     
     @ObservedObject var data = DataController.shared
+    @State var showSheet = false
     let timer = Timer.publish(every: 30, tolerance: 5, on: .main, in: .common).autoconnect()
     
     var body: some View {
@@ -27,8 +28,11 @@ struct WatchlistView: View {
                                 ForEach(data.stockQuotes) { stockQuote in
                                     if stockQuote.symbol == stock {
                                         Divider()
-                                        NavigationLink(destination: StockDetailView(stockQuote: stockQuote)) {
+                                        Button(action: {showSheet = true}) {
                                             WatchlistTileView(stockQuote: stockQuote)
+                                        }
+                                        .sheet(isPresented: $showSheet) {
+                                            StockDetailView(stockQuote: stockQuote)
                                         }
                                     }
                                 }
@@ -74,7 +78,7 @@ struct WatchlistTileView: View {
         ZStack {
             Color("White Black")
             VStack {
-                //                Divider()
+                //                                Divider()
                 HStack {
                     Text(stockQuote.symbol)
                         .padding(15)

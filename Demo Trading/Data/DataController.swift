@@ -29,7 +29,7 @@ class DataController: ObservableObject {
         return orderList.filter { $0.time > Date().dateAt(.startOfDay) }.sorted { $0.time > $1.time }
     }
     var earlierOrders: [Order] {
-        return orderList.filter { $0.time < Date().dateAt(.startOfDay) }
+        return orderList.filter { $0.time < Date().dateAt(.startOfDay) }.sorted { $0.time > $1.time }
     }
     
     @Published var funds: Double = 1_00_000.0
@@ -281,5 +281,16 @@ class DataController: ObservableObject {
         self.orderList = []
         self.funds = 1_00_000.0
         saveData()
+    }
+}
+
+
+extension Double {
+    func withCommas() -> String {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.groupingSize = 3
+        numberFormatter.secondaryGroupingSize = 2
+        return numberFormatter.string(from: NSNumber(value:self))!
     }
 }
