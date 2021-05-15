@@ -11,7 +11,9 @@ struct WatchlistView: View {
     
     @ObservedObject var data = DataController.shared
     @State var showSheet = false
-    let timer = Timer.publish(every: 30, tolerance: 5, on: .main, in: .common).autoconnect()
+    @State var selectedStock = StockQuote()
+    @State var offset = CGSize(width: 0, height: 750)
+    private let timer = Timer.publish(every: 30, tolerance: 5, on: .main, in: .common).autoconnect()
     
     var body: some View {
         NavigationView {
@@ -24,15 +26,16 @@ struct WatchlistView: View {
                                 .padding()
                                 .padding(.bottom, 50)
                         } else {
-                            ForEach(data.stockQuotesOrder, id: \.self) { stock in
+                            ForEach(data.userStocksOrder, id: \.self) { stock in
                                 ForEach(data.stockQuotes) { stockQuote in
                                     if stockQuote.symbol == stock {
                                         Divider()
-                                        Button(action: {showSheet = true}) {
+                                        Button(action: {
+                                            offset = CGSize.zero
+                                            showSheet = true
+                                            selectedStock = stockQuote
+                                        }) {
                                             WatchlistTileView(stockQuote: stockQuote)
-                                        }
-                                        .sheet(isPresented: $showSheet) {
-                                            StockDetailView(stockQuote: stockQuote)
                                         }
                                     }
                                 }
@@ -53,6 +56,7 @@ struct WatchlistView: View {
                 }) {
                     Image(systemName: "gobackward")
                 })
+                
                 VStack {
                     Spacer()
                     ErrorTileView(error: data.errorMessage)
@@ -60,15 +64,78 @@ struct WatchlistView: View {
                         .animation(.easeInOut)
                         .padding(.bottom)
                 }
+                
+                VStack(spacing: 0) {
+                    Spacer()
+                    VStack(spacing: 0) {
+                        ZStack {
+                            Rectangle()
+                                .foregroundColor(Color(#colorLiteral(red: 0.9574782252, green: 0.9574782252, blue: 0.9574782252, alpha: 1)))
+                                .frame(height: 55)
+                                .cornerRadius(8)
+                            HStack {
+                                Text(selectedStock.symbol)
+                                    .font(.title)
+                                    .padding(.horizontal)
+                                Spacer()
+                                
+                            }
+                        }
+                            .gesture(
+                                DragGesture()
+                                    .onChanged { gesture in
+                                        if self.offset.height > -1.0 {
+                                            self.offset = gesture.translation
+                                        }
+                                    }
+                                    .onEnded { _ in
+                                        if offset.height > 20 {
+                                            offset.height = 750
+                                            showSheet = false
+                                            hideKeyboard()
+                                        } else {
+                                            offset.height = 0
+                                        }
+                                    }
+                            )
+                        NavigationView {
+                            StockDetailView(stockQuote: selectedStock, showTitle: false)
+                        }
+                    }
+                    .frame(height: 400)
+                }
+                .opacity(showSheet ? 1 : 0)
+                .offset(y: offset.height)
+                .animation(.easeInOut(duration: 0.6))
             }
         }
         .onReceive(timer, perform: { _ in
             if data.getMarketStatus() {
                 data.getStocksData()
             }
+            PortfolioListView(portfolioType: .holdings).updateAllPortfolioData()
+            PortfolioListView(portfolioType: .positions).updateAllPortfolioData()
         })
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 struct WatchlistTileView: View {
     

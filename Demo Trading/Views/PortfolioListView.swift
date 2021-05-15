@@ -14,7 +14,7 @@ enum PortfolioType: String {
 struct PortfolioListView: View {
     
     @ObservedObject var data = DataController.shared
-    let timer = Timer.publish(every: 15, on: .main, in: .common).autoconnect()
+    let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
     var portfolioType: PortfolioType
     @State var buyValue = 0.0
     @State var currentValue: Double = 0
@@ -27,8 +27,8 @@ struct PortfolioListView: View {
             VStack {
                 HStack {
                     VStack {
-                        Text("\(String(format: "%.2f", buyValue))")
-                        Text("\(String(format: "%.2f", currentValue))")
+                        Text("\(buyValue.withCommas(withRupeeSymbol: false))")
+                        Text("\(currentValue.withCommas(withRupeeSymbol: false))")
                     }
                     .font(.title)
                     VStack {
@@ -59,20 +59,20 @@ struct PortfolioListView: View {
             }
             .navigationTitle(portfolioType == .holdings ? "Holdings" : "Positions")
             .navigationBarItems(trailing: Button(action: {
-                updateAllData()
+                updateAllPortfolioData()
             }) {
                 Image(systemName: "gobackward")
             })
         }
         .onReceive(timer, perform: { _ in
-            updateAllData()
+            updateAllPortfolioData()
         })
         .onAppear(perform: {
-            updateAllData()
+            updateAllPortfolioData()
         })
     }
     
-    func updateAllData() {
+    func updateAllPortfolioData() {
         data.updateAllStockPricesInPortfolio()
         let portfolioInfo = data.getPorfolioInfo(portfolio: portfolioType == .holdings ? data.holdings : data.positions)
         buyValue = portfolioInfo["buyValue"]!

@@ -16,7 +16,7 @@ struct PortfolioTileView: View {
     var timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
     
     var body: some View {
-        NavigationLink(destination: StockDetailView(stockQuote: data.getStockQuote(stockSymbol: stock.stockSymbol))) {
+        NavigationLink(destination: StockDetailView(stockQuote: data.getStockQuote(stockSymbol: stock.stockSymbol), showTitle: true)) {
             HStack {
                 
                 VStack {

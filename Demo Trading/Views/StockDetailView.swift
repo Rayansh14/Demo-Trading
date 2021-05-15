@@ -10,18 +10,16 @@ import SwiftUI
 struct StockDetailView: View {
     
     var stockQuote: StockQuote
-    @State var showBuyView = false
-    @State var showSellView = false
+    var showTitle: Bool
     @ObservedObject var data = DataController.shared
     
     var body: some View {
-        NavigationView {
-            ZStack {
+        ZStack {
+            VStack {
+                Spacer()
                 HStack {
                     Spacer()
-                    Button(action: {
-                        showBuyView = true
-                    }) {
+                    NavigationLink(destination: TransactStockView(orderType: .buy, stockQuote: stockQuote)) {
                         Text("Buy")
                             .foregroundColor(.white)
                             .font(.title)
@@ -30,12 +28,7 @@ struct StockDetailView: View {
                             .background(Color.green)
                             .cornerRadius(10)
                     }
-                    .sheet(isPresented: $showBuyView) {
-                        BuyStockView(stockQuote: stockQuote)
-                    }
-                    Button(action: {
-                        showSellView = true
-                    }) {
+                    NavigationLink(destination: TransactStockView(orderType: .sell, stockQuote: stockQuote)) {
                         Text("Sell")
                             .foregroundColor(.white)
                             .font(.title)
@@ -44,20 +37,27 @@ struct StockDetailView: View {
                             .background(Color.red)
                             .cornerRadius(10)
                     }
-                    .sheet(isPresented: $showSellView) {
-                        SellStockView(stockQuote: stockQuote)
-                    }
                     Spacer()
                 }
-                VStack {
-                    Spacer()
-                    ErrorTileView(error: data.errorMessage)
-                        .opacity(data.showError ? 1.0 : 0.0)
-                        .animation(.easeInOut)
-                        .padding(.bottom)
-                }
+                Spacer()
             }
-            .navigationTitle(stockQuote.symbol)
+            VStack {
+                Spacer()
+                ErrorTileView(error: data.errorMessage)
+                    .opacity(data.showError ? 1.0 : 0.0)
+                    .animation(.easeInOut)
+                    .padding(.bottom)
+            }
+        }
+        .if({
+            showTitle
+        }()) { view in
+            view.navigationTitle(stockQuote.symbol)
+        }
+        .if({
+            !showTitle
+        }()) { view in
+            view.navigationBarHidden(true)
         }
     }
 }
@@ -65,106 +65,55 @@ struct StockDetailView: View {
 
 
 
-
-
-
-
-
-struct BuyStockView: View {
+struct TransactStockView: View {
     
+    var orderType: OrderType
     var stockQuote: StockQuote
     @StateObject var order = Order()
     @State var numberOfShares = ""
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
-        NavigationView {
-            VStack {
-                Text("Buy")
-                Text(String(stockQuote.lastPrice))
-                TextField("Number of shares", text: $numberOfShares)
-                    .padding(5)
-                    .border(Color("Black White"), width: 1)
-                    .padding()
-                    .keyboardType(.numberPad)
-                Button(action: {
-                    order.type = .buy
-                    order.sharePrice = stockQuote.lastPrice
-                    order.stockSymbol = stockQuote.symbol
-                    order.numberOfShares = Int(numberOfShares)!
-                    order.time = Date()
+        VStack {
+            Text(orderType.rawValue.capitalized)
+            Text(String(stockQuote.lastPrice))
+            TextField("Number of shares", text: $numberOfShares)
+                .padding(5)
+                .border(Color("Black White"), width: 1)
+                .padding()
+                .keyboardType(.numberPad)
+            Button(action: {
+                order.type = orderType
+                order.sharePrice = stockQuote.lastPrice
+                order.stockSymbol = stockQuote.symbol
+                order.time = Date()
+                if let intNumberOfShares = Int(numberOfShares) {
+                    order.numberOfShares = intNumberOfShares
                     DataController.shared.processOrder(order: order)
                     presentationMode.wrappedValue.dismiss()
-                }) {
-                    Text("Execute")
-                        .foregroundColor(.white)
-                        .font(.title)
-                        .padding(.vertical, 10)
-                        .padding(.horizontal)
-                        .background(Color.blue)
-                        .cornerRadius(10)
+                } else {
+                    DataController.shared.showErrorMessage(message: "Pls enter a valid number of shares.")
                 }
-                .disabled(numberOfShares == "" ? true : false)
+            }) {
+                Text("Execute")
+                    .foregroundColor(.white)
+                    .font(.title)
+                    .padding(.vertical, 10)
+                    .padding(.horizontal)
+                    .background(Color.blue)
+                    .cornerRadius(10)
             }
-            .navigationTitle(stockQuote.symbol)
+            .disabled(numberOfShares == "" ? true : false)
         }
-        
+        .navigationTitle(stockQuote.symbol)
     }
 }
 
-
-
-
-
-
-
-
-struct SellStockView: View {
-    
-    @State var stockQuote: StockQuote
-    @StateObject var order = Order()
-    @State var numberOfShares = ""
-    @Environment(\.presentationMode) var presentationMode
-    
-    var body: some View {
-        NavigationView {
-            VStack {
-                Text("Sell")
-                Text(String(stockQuote.lastPrice))
-                TextField("Number of shares", text: $numberOfShares)
-                    .padding(5)
-                    .border(Color("Black White"), width: 1)
-                    .padding()
-                    .keyboardType(.numberPad)
-                Button(action: {
-                    order.type = .sell
-                    order.sharePrice = stockQuote.lastPrice
-                    order.stockSymbol = stockQuote.symbol
-                    order.numberOfShares = Int(numberOfShares)!
-                    order.time = Date()
-                    DataController.shared.processOrder(order: order)
-                    presentationMode.wrappedValue.dismiss()
-                }) {
-                    Text("Execute")
-                        .foregroundColor(.white)
-                        .font(.title)
-                        .padding(.vertical, 10)
-                        .padding(.horizontal)
-                        .background(Color.blue)
-                        .cornerRadius(10)
-                }
-                .disabled(numberOfShares == "" ? true : false)
-            }
-            .navigationTitle(stockQuote.symbol)
-        }
-        
-    }
-}
 
 struct StockDetailView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            StockDetailView(stockQuote: testStockQuote)
+            StockDetailView(stockQuote: testStockQuote, showTitle: true)
         }
     }
 }

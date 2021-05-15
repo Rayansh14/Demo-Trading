@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftDate
+import UIKit
 
 class DataController: ObservableObject {
     
@@ -14,7 +15,9 @@ class DataController: ObservableObject {
     @ObservedObject var monitor = NetworkMonitor()
     
     @Published var stockQuotes: [StockQuote] = []
-    let stockQuotesOrder = ["RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT", "SBIN", "BAJFINANCE", "BHARTIARTL", "ASIANPAINT", "HCLTECH", "MARUTI", "M&M", "ULTRACEMCO", "SUNPHARMA", "WIPRO", "INDUSINDBK", "TITAN", "BAJAJFINSV", "NESTLEIND", "TATAMOTORS", "TECHM", "HDFCLIFE", "POWERGRID", "DRREDDY", "TATASTEEL", "NTPC", "BAJAJ-AUTO", "ADANIPORTS", "HINDALCO", "GRASIM", "DIVISLAB", "HEROMOTOCO", "ONGC", "CIPLA", "BRITANNIA", "JSWSTEEL", "BPCL", "EICHERMOT", "SHREECEM", "SBILIFE", "COALINDIA", "UPL", "IOC", "TATACONSUM"]
+    let userStocksOrder = ["RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT", "SBIN", "BAJFINANCE", "BHARTIARTL", "ASIANPAINT", "HCLTECH", "MARUTI", "M&M", "ULTRACEMCO", "SUNPHARMA", "WIPRO", "INDUSINDBK", "TITAN", "BAJAJFINSV", "NESTLEIND", "TATAMOTORS", "TECHM", "HDFCLIFE", "POWERGRID", "DRREDDY", "TATASTEEL", "NTPC", "BAJAJ-AUTO", "ADANIPORTS", "HINDALCO", "GRASIM", "DIVISLAB", "HEROMOTOCO", "ONGC", "CIPLA", "BRITANNIA", "JSWSTEEL", "BPCL", "EICHERMOT", "SHREECEM", "SBILIFE", "COALINDIA", "UPL", "IOC", "TATACONSUM"]
+    
+    //    let userStocksOrder = ["RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT", "SBIN", "BAJFINANCE", "BHARTIARTL", "ASIANPAINT", "HCLTECH", "MARUTI", "M&M", "ULTRACEMCO", "SUNPHARMA", "WIPRO", "INDUSINDBK", "TITAN", "BAJAJFINSV", "NESTLEIND", "TATAMOTORS", "TECHM", "HDFCLIFE", "POWERGRID", "DRREDDY", "TATASTEEL", "NTPC", "BAJAJ-AUTO", "ADANIPORTS", "HINDALCO", "GRASIM", "DIVISLAB", "HEROMOTOCO", "ONGC", "CIPLA", "BRITANNIA", "JSWSTEEL", "BPCL", "EICHERMOT", "SHREECEM", "SBILIFE", "COALINDIA", "UPL", "IOC", "TATACONSUM"]
     
     @Published var portfolio: [StockOwned] = []
     var positions: [StockOwned] {
@@ -33,6 +36,11 @@ class DataController: ObservableObject {
     }
     
     @Published var funds: Double = 1_00_000.0
+    
+    @Published var deliveryMargin = [
+        "date": Date(),
+        "amount" : 0.0
+    ]
     
     @Published var showError = false
     @Published var errorMessage = ""
@@ -57,7 +65,7 @@ class DataController: ObservableObject {
     
     func getStocksData() {
         if monitor.isConnected {
-            if let url = URL(string: "https://latest-stock-price.p.rapidapi.com/price?Indices=NIFTY%2050") {
+            if let url = URL(string: "https://latest-stock-price.p.rapidapi.com/price?Indices=NIFTY%20500") {
                 var request = URLRequest(url: url)
                 request.addValue("7fb21cb036msh42efbbec95f083fp193e7bjsn0fc5005cafa3", forHTTPHeaderField: "x-rapidapi-key")
                 request.addValue("latest-stock-price.p.rapidapi.com", forHTTPHeaderField: "x-rapidapi-host")
@@ -115,6 +123,19 @@ class DataController: ObservableObject {
     }
     
     
+    func updateDeliveryMargin() {
+        if let date = deliveryMargin["date"]! as? Date {
+            if date > Date().dateAt(.startOfDay) {
+                if let amount = deliveryMargin["amount"] as? Double {
+                    funds += amount
+                    deliveryMargin["amount"]! = 0.0
+                }
+                deliveryMargin["date"] = Date()
+            }
+        }
+    }
+    
+    
     func updateAllStockPricesInPortfolio() {
         stockQuotes.append(StockQuote())
         for stock in portfolio {
@@ -131,6 +152,16 @@ class DataController: ObservableObject {
     
     func checkIfOwned(stockSymbol: String) -> Bool {
         for stock in self.portfolio {
+            if stock.stockSymbol == stockSymbol {
+                return true
+            }
+        }
+        return false
+    }
+    
+    
+    func checkIfInHoldings(stockSymbol: String) -> Bool {
+        for stock in self.holdings {
             if stock.stockSymbol == stockSymbol {
                 return true
             }
@@ -208,17 +239,26 @@ class DataController: ObservableObject {
                 if checkIfOwned(stockSymbol: order.stockSymbol) {
                     for stock in portfolio {
                         if stock.stockSymbol == order.stockSymbol {
-                            if stock.numberOfShares > order.numberOfShares {
+                            if stock.numberOfShares >= order.numberOfShares {
                                 orderList.append(order)
-                                stock.numberOfShares -= order.numberOfShares
-                                funds += (Double(order.numberOfShares) * order.sharePrice)
-                            } else if stock.numberOfShares == order.numberOfShares {
-                                orderList.append(order)
-                                funds += (Double(order.numberOfShares) * order.sharePrice)
-                                if let index = portfolio.firstIndex(where: {loopingStockOwned -> Bool in
-                                    return loopingStockOwned.id == stock.id
-                                }) {
-                                    portfolio.remove(at: index)
+                                
+                                if stock.numberOfShares == order.numberOfShares {
+                                    if let index = portfolio.firstIndex(where: {loopingStockOwned -> Bool in
+                                        return loopingStockOwned.id == stock.id
+                                    }) {
+                                        portfolio.remove(at: index)
+                                    }
+                                } else {
+                                    stock.numberOfShares -= order.numberOfShares
+                                }
+                                
+                                if checkIfInHoldings(stockSymbol: stock.stockSymbol) {
+                                    funds += (Double(order.numberOfShares) * order.sharePrice) * 0.8
+                                    if let amount = deliveryMargin["amount"] as? Double {
+                                        deliveryMargin["amount"]! = amount + ((Double(order.numberOfShares) * order.sharePrice) * 0.2)
+                                    }
+                                } else {
+                                    funds += (Double(order.numberOfShares) * order.sharePrice)
                                 }
                             } else {
                                 showErrorMessage(message: "You don't own enough shares.")
@@ -286,11 +326,37 @@ class DataController: ObservableObject {
 
 
 extension Double {
-    func withCommas() -> String {
+    func withCommas(withRupeeSymbol: Bool) -> String {
         let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .decimal
+        numberFormatter.locale = Locale(identifier: "en_IN")
+        if withRupeeSymbol {
+            numberFormatter.numberStyle = .currency
+        } else {
+            numberFormatter.numberStyle = .decimal
+            numberFormatter.minimumFractionDigits = 2
+            numberFormatter.maximumFractionDigits = 2
+        }
         numberFormatter.groupingSize = 3
         numberFormatter.secondaryGroupingSize = 2
         return numberFormatter.string(from: NSNumber(value:self))!
     }
+}
+
+
+
+extension View {
+    @ViewBuilder func `if`<Content: View>(_ condition: @autoclosure () -> Bool, transform: (Self) -> Content) -> some View {
+        if condition() {
+            transform(self)
+        } else {
+            self
+        }
+    }
+    
+    
+    #if canImport(UIKit)
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+    #endif
 }
