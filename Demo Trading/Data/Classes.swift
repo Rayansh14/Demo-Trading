@@ -87,7 +87,6 @@ class Order: ObservableObject, Identifiable, Codable {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM d, H:mm"
         let dateAsString = formatter.string(from: time)
-        print(dateAsString)
         return dateAsString
     }
 }

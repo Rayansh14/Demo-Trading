@@ -2,16 +2,23 @@ import SwiftUI
 
 struct TestView: View {
     
-    @State private var showSheet = false
+    @State var isEditing = false
+    @State var searchText = ""
+    @ObservedObject var data = DataController.shared
     
     var body: some View {
-        ZStack {
-            Button(action: {showSheet = true}) {
-                Text("click me")
+        VStack {
+            SearchBar(placeholderText: "Search...", searchText: $searchText, isEditing: $isEditing)
+            List(data.stockQuotes.filter({ searchText.isEmpty ? true : $0.symbol.contains(searchText) })) { quote in
+                Text(quote.symbol)
             }
         }
-        .sheet(isPresented: $showSheet) {
-            Text("showing sheet")
-        }
+    }
+}
+
+
+struct TestView_Previews: PreviewProvider {
+    static var previews: some View {
+        TestView()
     }
 }

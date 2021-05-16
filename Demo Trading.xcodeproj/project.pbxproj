@@ -14,6 +14,7 @@
 		4438747126416AD400A35820 /* SwiftDate in Frameworks */ = {isa = PBXBuildFile; productRef = 4438747026416AD400A35820 /* SwiftDate */; };
 		443874732643E3A000A35820 /* PortfolioTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443874722643E3A000A35820 /* PortfolioTileView.swift */; };
 		4438748326468D9100A35820 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4438748226468D9100A35820 /* TestView.swift */; };
+		44387488265054CF00A35820 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44387487265054CF00A35820 /* SearchBar.swift */; };
 		444879BB2632E6A8000601BF /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444879BA2632E6A8000601BF /* NetworkMonitor.swift */; };
 		44A79A32262451E100652F17 /* Demo_TradingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A79A31262451E100652F17 /* Demo_TradingApp.swift */; };
 		44A79A34262451E100652F17 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A79A33262451E100652F17 /* MainTabView.swift */; };
@@ -45,6 +46,7 @@
 		44336BDE26272EB800C12CE0 /* OrdersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersView.swift; sourceTree = "<group>"; };
 		443874722643E3A000A35820 /* PortfolioTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioTileView.swift; sourceTree = "<group>"; };
 		4438748226468D9100A35820 /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
+		44387487265054CF00A35820 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		444879BA2632E6A8000601BF /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		44A79A2E262451E100652F17 /* Demo Trading.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo Trading.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		44A79A31262451E100652F17 /* Demo_TradingApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Demo_TradingApp.swift; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 				443874722643E3A000A35820 /* PortfolioTileView.swift */,
 				44A79A5C2626C2C900652F17 /* FundsView.swift */,
 				44336BDE26272EB800C12CE0 /* OrdersView.swift */,
+				44387487265054CF00A35820 /* SearchBar.swift */,
 				4438748226468D9100A35820 /* TestView.swift */,
 			);
 			path = Views;
@@ -217,6 +220,7 @@
 				44A79A4626255EEB00652F17 /* Classes.swift in Sources */,
 				44336BDF26272EB800C12CE0 /* OrdersView.swift in Sources */,
 				443874732643E3A000A35820 /* PortfolioTileView.swift in Sources */,
+				44387488265054CF00A35820 /* SearchBar.swift in Sources */,
 				44A79A5D2626C2C900652F17 /* FundsView.swift in Sources */,
 				44A79A42262451F200652F17 /* DataController.swift in Sources */,
 				44336BDC2626CD0A00C12CE0 /* StockDetailView.swift in Sources */,

@@ -12,50 +12,63 @@ struct WatchlistView: View {
     @ObservedObject var data = DataController.shared
     @State var showSheet = false
     @State var selectedStock = StockQuote()
-    @State var offset = CGSize(width: 0, height: 750)
-    private let timer = Timer.publish(every: 30, tolerance: 5, on: .main, in: .common).autoconnect()
+    @State var sheetOffset = CGSize(width: 0, height: 750)
+    @State var isAdding = false
+    @State var searchText = ""
+    let timer = Timer.publish(every: 30, tolerance: 5, on: .main, in: .common).autoconnect()
     
     var body: some View {
         NavigationView {
             ZStack {
-                ScrollView {
-                    VStack(spacing: 0) {
-                        if data.stockQuotes.count == 0 {
-                            Text("Loading...")
-                                .bold()
-                                .padding()
-                                .padding(.bottom, 50)
-                        } else {
-                            ForEach(data.userStocksOrder, id: \.self) { stock in
-                                ForEach(data.stockQuotes) { stockQuote in
-                                    if stockQuote.symbol == stock {
-                                        Divider()
-                                        Button(action: {
-                                            offset = CGSize.zero
-                                            showSheet = true
-                                            selectedStock = stockQuote
-                                        }) {
-                                            WatchlistTileView(stockQuote: stockQuote)
+                VStack {
+                    SearchBar(placeholderText: "Add stocks...", searchText: $searchText, isEditing: $isAdding)
+                    
+                    if !(isAdding) {
+                        ScrollView {
+                            VStack(spacing: 0) {
+                                if data.stockQuotes.count == 0 {
+                                    Text("Loading...")
+                                        .bold()
+                                        .padding()
+                                        .padding(.bottom, 50)
+                                } else {
+                                    ForEach(data.userStocksOrder, id: \.self) { stock in
+                                        ForEach(data.stockQuotes) { stockQuote in
+                                            if stockQuote.symbol == stock {
+                                                Divider()
+                                                Button(action: {
+                                                    sheetOffset = CGSize.zero
+                                                    showSheet = true
+                                                    selectedStock = stockQuote
+                                                }) {
+                                                    WatchlistTileView(stockQuote: stockQuote)
+                                                }
+                                            }
                                         }
                                     }
+                                    Divider()
                                 }
                             }
-                            Divider()
                         }
+                    } else {
+                        List(data.stockQuotes.filter { searchText.isEmpty ? true : $0.symbol.contains(searchText) }) { stock in
+                            HStack {
+                                Text(stock.symbol)
+                                Spacer()
+                                Button(action: {
+                                    data.userStocksOrder.append(stock.symbol)
+                                    data.saveData()
+                                }) {
+                                    Image(systemName: "plus.square")
+                                }
+                                .disabled(data.userStocksOrder.contains(stock.symbol))
+                                .buttonStyle(BorderlessButtonStyle())
+                            }
+                        }
+                        .listStyle(PlainListStyle())
                     }
+                    
                 }
-                .navigationTitle("Watchlist")
-                .navigationBarItems(leading: Button(action: {
-                    data.resetAll()
-                }) {
-                    Image(systemName: "0.square")
-                }, trailing: Button(action: {
-                    if data.getMarketStatus() {
-                        data.getStocksData()
-                    }
-                }) {
-                    Image(systemName: "gobackward")
-                })
                 
                 VStack {
                     Spacer()
@@ -81,33 +94,45 @@ struct WatchlistView: View {
                                 
                             }
                         }
-                            .gesture(
-                                DragGesture()
-                                    .onChanged { gesture in
-                                        if self.offset.height > -1.0 {
-                                            self.offset = gesture.translation
-                                        }
+                        .gesture(
+                            DragGesture()
+                                .onChanged { gesture in
+                                    if self.sheetOffset.height > -1.0 {
+                                        self.sheetOffset = gesture.translation
                                     }
-                                    .onEnded { _ in
-                                        if offset.height > 20 {
-                                            offset.height = 750
-                                            showSheet = false
-                                            hideKeyboard()
-                                        } else {
-                                            offset.height = 0
-                                        }
+                                }
+                                .onEnded { _ in
+                                    if sheetOffset.height > 20 {
+                                        sheetOffset.height = 750
+                                        showSheet = false
+                                        dismissKeyboard()
+                                    } else {
+                                        sheetOffset.height = 0
                                     }
-                            )
+                                }
+                        )
                         NavigationView {
                             StockDetailView(stockQuote: selectedStock, showTitle: false)
                         }
                     }
                     .frame(height: 400)
                 }
-                .opacity(showSheet ? 1 : 0)
-                .offset(y: offset.height)
+                .opacity(showSheet && !(isAdding) ? 1 : 0)
+                .offset(y: sheetOffset.height)
                 .animation(.easeInOut(duration: 0.6))
             }
+            .navigationTitle("Watchlist")
+            .navigationBarItems(leading: Button(action: {
+                data.resetAll()
+            }) {
+                Image(systemName: "0.square")
+            }, trailing: Button(action: {
+                if data.getMarketStatus() {
+                    data.getStocksData()
+                }
+            }) {
+                Image(systemName: "gobackward")
+            })
         }
         .onReceive(timer, perform: { _ in
             if data.getMarketStatus() {

@@ -19,7 +19,8 @@ struct StockDetailView: View {
                 Spacer()
                 HStack {
                     Spacer()
-                    NavigationLink(destination: TransactStockView(orderType: .buy, stockQuote: stockQuote)) {
+                    if !(stockQuote.symbol.contains("NIFTY")) {
+                        NavigationLink(destination: TransactStockView(orderType: .buy, stockQuote: stockQuote, showTitle: showTitle)) {
                         Text("Buy")
                             .foregroundColor(.white)
                             .font(.title)
@@ -28,7 +29,7 @@ struct StockDetailView: View {
                             .background(Color.green)
                             .cornerRadius(10)
                     }
-                    NavigationLink(destination: TransactStockView(orderType: .sell, stockQuote: stockQuote)) {
+                        NavigationLink(destination: TransactStockView(orderType: .sell, stockQuote: stockQuote, showTitle: showTitle)) {
                         Text("Sell")
                             .foregroundColor(.white)
                             .font(.title)
@@ -36,6 +37,7 @@ struct StockDetailView: View {
                             .padding(.horizontal)
                             .background(Color.red)
                             .cornerRadius(10)
+                    }
                     }
                     Spacer()
                 }
@@ -69,6 +71,7 @@ struct TransactStockView: View {
     
     var orderType: OrderType
     var stockQuote: StockQuote
+    var showTitle: Bool
     @StateObject var order = Order()
     @State var numberOfShares = ""
     @Environment(\.presentationMode) var presentationMode
@@ -105,7 +108,16 @@ struct TransactStockView: View {
             }
             .disabled(numberOfShares == "" ? true : false)
         }
-        .navigationTitle(stockQuote.symbol)
+        .if({
+            showTitle
+        }()) { view in
+            view.navigationTitle(stockQuote.symbol)
+        }
+        .if({
+            !showTitle
+        }()) { view in
+            view.navigationBarHidden(true)
+        }
     }
 }
 
