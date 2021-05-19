@@ -17,6 +17,8 @@ class DataController: ObservableObject {
     @Published var stockQuotes: [StockQuote] = []
     @Published var userStocksOrder = ["RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT", "SBIN", "BAJFINANCE", "BHARTIARTL", "ASIANPAINT", "HCLTECH", "MARUTI", "M&M", "ULTRACEMCO", "SUNPHARMA", "WIPRO", "INDUSINDBK", "TITAN", "BAJAJFINSV", "NESTLEIND", "TATAMOTORS", "TECHM", "HDFCLIFE", "POWERGRID", "DRREDDY", "TATASTEEL", "NTPC", "BAJAJ-AUTO", "ADANIPORTS", "HINDALCO", "GRASIM", "DIVISLAB", "HEROMOTOCO", "ONGC", "CIPLA", "BRITANNIA", "JSWSTEEL", "BPCL", "EICHERMOT", "SHREECEM", "SBILIFE", "COALINDIA", "UPL", "IOC", "TATACONSUM"]
     
+    //    let userStocksOrder = ["RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT", "SBIN", "BAJFINANCE", "BHARTIARTL", "ASIANPAINT", "HCLTECH", "MARUTI", "M&M", "ULTRACEMCO", "SUNPHARMA", "WIPRO", "INDUSINDBK", "TITAN", "BAJAJFINSV", "NESTLEIND", "TATAMOTORS", "TECHM", "HDFCLIFE", "POWERGRID", "DRREDDY", "TATASTEEL", "NTPC", "BAJAJ-AUTO", "ADANIPORTS", "HINDALCO", "GRASIM", "DIVISLAB", "HEROMOTOCO", "ONGC", "CIPLA", "BRITANNIA", "JSWSTEEL", "BPCL", "EICHERMOT", "SHREECEM", "SBILIFE", "COALINDIA", "UPL", "IOC", "TATACONSUM"]
+    
     @Published var portfolio: [StockOwned] = []
     var positions: [StockOwned] {
         return portfolio.filter { $0.timeBought > Date().dateAt(.startOfDay) }
@@ -50,6 +52,8 @@ class DataController: ObservableObject {
         let nineFifteenToday = calendar.date(bySettingHour: 9, minute: 14, second: 59, of: now)!
         let threeThirtyToday = calendar.date(bySettingHour: 15, minute: 30, second: 01, of: now)!
         
+        print(nineFifteenToday)
+        
         if now.compare(.isWeekday) {
             if now > nineFifteenToday && now < threeThirtyToday {
                 return true
@@ -61,7 +65,7 @@ class DataController: ObservableObject {
     
     func getStocksData() {
         if monitor.isConnected {
-            if let url = URL(string: "https://latest-stock-price.p.rapidapi.com/any") {
+            if let url = URL(string: "https://latest-stock-price.p.rapidapi.com/price?Indices=NIFTY%20500") {
                 var request = URLRequest(url: url)
                 request.addValue("7fb21cb036msh42efbbec95f083fp193e7bjsn0fc5005cafa3", forHTTPHeaderField: "x-rapidapi-key")
                 request.addValue("latest-stock-price.p.rapidapi.com", forHTTPHeaderField: "x-rapidapi-host")
@@ -77,6 +81,7 @@ class DataController: ObservableObject {
                                 
                                 if let symbol = jsonStockQuote["symbol"] as? String {
                                     stockQuote.symbol = symbol
+                                    print(symbol)
                                 }
                                 if let lastPrice = jsonStockQuote["lastPrice"] as? Double {
                                     stockQuote.lastPrice = lastPrice
@@ -277,13 +282,10 @@ class DataController: ObservableObject {
             if let portfolioData = try? encoder.encode(self.portfolio) {
                 if let orderListData = try? encoder.encode(self.orderList) {
                     if let fundsData = try? encoder.encode(self.funds) {
-                        if let userStocksOrderData = try? encoder.encode(self.userStocksOrder) {
-                            UserDefaults.standard.setValue(portfolioData, forKey: "portfolio")
-                            UserDefaults.standard.setValue(orderListData, forKey: "orderList")
-                            UserDefaults.standard.setValue(fundsData, forKey: "funds")
-                            UserDefaults.standard.setValue(userStocksOrderData, forKey: "userStocksOrder")
-                            UserDefaults.standard.synchronize()
-                        }
+                        UserDefaults.standard.setValue(portfolioData, forKey: "portfolio")
+                        UserDefaults.standard.setValue(orderListData, forKey: "orderList")
+                        UserDefaults.standard.setValue(fundsData, forKey: "funds")
+                        UserDefaults.standard.synchronize()
                     }
                 }
             }
@@ -295,19 +297,14 @@ class DataController: ObservableObject {
             if let portfolioData = UserDefaults.standard.data(forKey: "portfolio") {
                 if let orderListData = UserDefaults.standard.data(forKey: "orderList") {
                     if let fundsData = UserDefaults.standard.data(forKey: "funds") {
-                        if let userStocksOrderData = UserDefaults.standard.data(forKey: "userStocksOrder") {
-                            let decoder = JSONDecoder()
-                            if let jsonPortfolio = try? decoder.decode([StockOwned].self, from: portfolioData) {
-                                if let jsonOrderList = try? decoder.decode([Order].self, from: orderListData) {
-                                    if let jsonFunds = try? decoder.decode(Double.self, from: fundsData) {
-                                        if let jsonUserStocksOrderData = try? decoder.decode([String].self, from: userStocksOrderData) {
-                                            DispatchQueue.main.async {
-                                                self.portfolio = jsonPortfolio
-                                                self.orderList = jsonOrderList
-                                                self.funds = jsonFunds
-                                                self.userStocksOrder = jsonUserStocksOrderData
-                                            }
-                                        }
+                        let decoder = JSONDecoder()
+                        if let jsonPortfolio = try? decoder.decode([StockOwned].self, from: portfolioData) {
+                            if let jsonOrderList = try? decoder.decode([Order].self, from: orderListData) {
+                                if let jsonFunds = try? decoder.decode(Double.self, from: fundsData) {
+                                    DispatchQueue.main.async {
+                                        self.portfolio = jsonPortfolio
+                                        self.orderList = jsonOrderList
+                                        self.funds = jsonFunds
                                     }
                                 }
                             }

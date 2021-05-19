@@ -24,32 +24,33 @@ struct WatchlistView: View {
                     SearchBar(placeholderText: "Add stocks...", searchText: $searchText, isEditing: $isAdding)
                     
                     if !(isAdding) {
-                        ScrollView {
-                            VStack(spacing: 0) {
-                                if data.stockQuotes.count == 0 {
-                                    Text("Loading...")
-                                        .bold()
-                                        .padding()
-                                        .padding(.bottom, 50)
-                                } else {
-                                    ForEach(data.userStocksOrder, id: \.self) { stock in
-                                        ForEach(data.stockQuotes) { stockQuote in
-                                            if stockQuote.symbol == stock {
-                                                Divider()
-                                                Button(action: {
-                                                    sheetOffset = CGSize.zero
-                                                    showSheet = true
-                                                    selectedStock = stockQuote
-                                                }) {
-                                                    WatchlistTileView(stockQuote: stockQuote)
-                                                }
+                        List {
+                            if data.stockQuotes.count == 0 {
+                                Text("Loading...")
+                                    .bold()
+                                    .padding()
+                                    .padding(.bottom, 50)
+                            } else {
+                                ForEach(data.userStocksOrder, id: \.self) { stock in
+                                    ForEach(data.stockQuotes) { stockQuote in
+                                        if stockQuote.symbol == stock {
+                                            Button(action: {
+                                                sheetOffset = CGSize.zero
+                                                showSheet = true
+                                                selectedStock = stockQuote
+                                            }) {
+                                                WatchlistTileView(stockQuote: stockQuote)
                                             }
                                         }
                                     }
-                                    Divider()
+                                }
+                                .onDelete { indexSet in
+                                    delete(at: indexSet)
                                 }
                             }
                         }
+                        .listStyle(PlainListStyle())
+                        
                     } else {
                         List(data.stockQuotes.filter { searchText.isEmpty ? true : $0.symbol.contains(searchText) }) { stock in
                             HStack {
@@ -67,7 +68,6 @@ struct WatchlistView: View {
                         }
                         .listStyle(PlainListStyle())
                     }
-                    
                 }
                 
                 VStack {
@@ -117,7 +117,7 @@ struct WatchlistView: View {
                     }
                     .frame(height: 400)
                 }
-                .opacity(showSheet && !(isAdding) ? 1 : 0)
+                .opacity(showSheet ? 1 : 0)
                 .offset(y: sheetOffset.height)
                 .animation(.easeInOut(duration: 0.6))
             }
@@ -127,22 +127,41 @@ struct WatchlistView: View {
             }) {
                 Image(systemName: "0.square")
             }, trailing: Button(action: {
-                if data.getMarketStatus() {
                     data.getStocksData()
-                }
             }) {
                 Image(systemName: "gobackward")
             })
+            .onReceive(timer, perform: { _ in
+                if data.getMarketStatus() {
+                    data.getStocksData()
+                }
+//                PortfolioListView(portfolioType: .holdings).updateAllPortfolioData()
+//                PortfolioListView(portfolioType: .positions).updateAllPortfolioData()
+            })
         }
-        .onReceive(timer, perform: { _ in
-            if data.getMarketStatus() {
-                data.getStocksData()
+    }
+    
+    
+    func delete(at offsets: IndexSet) {
+        for x in offsets {
+            let stockToBeDeleted = data.stockQuotes[x]
+            if let index = data.userStocksOrder.firstIndex(where: { loopingStock -> Bool in
+                return stockToBeDeleted.symbol == loopingStock
+            }) {
+                data.userStocksOrder.remove(at: index)
             }
-            PortfolioListView(portfolioType: .holdings).updateAllPortfolioData()
-            PortfolioListView(portfolioType: .positions).updateAllPortfolioData()
-        })
+        }
+        data.saveData()
     }
 }
+
+/*
+ Button(action: {
+     data.resetAll()
+ }) {
+     Image(systemName: "0.square")
+ }
+ */
 
 
 
@@ -170,7 +189,6 @@ struct WatchlistTileView: View {
         ZStack {
             Color("White Black")
             VStack {
-                //                                Divider()
                 HStack {
                     Text(stockQuote.symbol)
                         .padding(15)
@@ -186,7 +204,6 @@ struct WatchlistTileView: View {
                     }
                 }
                 .foregroundColor(stockQuote.pChange >= 0 ? .green : .red)
-                //                Divider()
             }
         }
     }

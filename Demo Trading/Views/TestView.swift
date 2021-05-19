@@ -2,17 +2,21 @@ import SwiftUI
 
 struct TestView: View {
     
-    @State var isEditing = false
-    @State var searchText = ""
-    @ObservedObject var data = DataController.shared
-    
+    @State private var users = ["Paul", "Taylor", "Adele"]
+
     var body: some View {
-        VStack {
-            SearchBar(placeholderText: "Search...", searchText: $searchText, isEditing: $isEditing)
-            List(data.stockQuotes.filter({ searchText.isEmpty ? true : $0.symbol.contains(searchText) })) { quote in
-                Text(quote.symbol)
+        NavigationView {
+            VStack {
+                ForEach(users, id: \.self) { user in
+                    Text(user)
+                }
+                .onDelete(perform: delete)
             }
         }
+    }
+
+    func delete(at offsets: IndexSet) {
+        users.remove(atOffsets: offsets)
     }
 }
 
