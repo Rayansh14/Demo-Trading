@@ -10,18 +10,19 @@ import SwiftUI
 struct OrdersView: View {
     
     @ObservedObject var data = DataController.shared
-    @State var isTodayExpanded = true
-    @State var isEarlierExpanded = false
+    @State private var isTodayExpanded = true
+    @State private var isEarlierExpanded = false
     
     var body: some View {
         NavigationView {
             VStack {
                 ScrollView {
-                    DisclosureGroup("Today", isExpanded: $isTodayExpanded) {
+                    DisclosureGroup(isExpanded: $isTodayExpanded, content: {
                         VStack {
                             if data.todayOrders.count == 0 {
                                 Text("You have placed no orders today. Buy or sell a stock by going to your watchlist and selecting the stock that you want to trade.")
                                     .font(.body)
+                                    .foregroundColor(Color("Black White"))
                             } else {
                                 ForEach(data.todayOrders) { order in
                                     Divider()
@@ -30,15 +31,14 @@ struct OrdersView: View {
                                 Divider()
                             }
                         }
-                    }
+                    }, label: {Text("Today").foregroundColor(Color("Black White"))})
                     .font(.title2)
                     .foregroundColor(.black)
                     .padding()
-                    //                .background(Color(#colorLiteral(red: 0.9499999881, green: 0.9499999881, blue: 0.9499999881, alpha: 1)))
                     .cornerRadius(15)
                     
                     if data.earlierOrders.count != 0 {
-                        DisclosureGroup("Earlier", isExpanded: $isEarlierExpanded) {
+                        DisclosureGroup(isExpanded: $isEarlierExpanded, content: {
                             VStack {
                                 ForEach(data.earlierOrders) { order in
                                     Divider()
@@ -46,11 +46,10 @@ struct OrdersView: View {
                                 }
                                 Divider()
                             }
-                        }
+                        }, label: {Text("Earlier").foregroundColor(Color("Black White"))})
                         .font(.title2)
                         .foregroundColor(.black)
                         .padding()
-                        //                    .background(Color(#colorLiteral(red: 0.9499999881, green: 0.9499999881, blue: 0.9499999881, alpha: 1)))
                         .cornerRadius(15)
                     }
                     Spacer()
@@ -78,6 +77,7 @@ struct OrderTileView: View {
                 }
                 HStack {
                     Text(order.stockSymbol)
+                        .foregroundColor(Color("Black White"))
                         .font(.system(size: 23))
                     Spacer()
                 }
@@ -90,18 +90,19 @@ struct OrderTileView: View {
                     Spacer()
                     Text("Qty: \(order.numberOfShares)")
                         .font(.body)
-                        .foregroundColor(Color(#colorLiteral(red: 0.2002688944, green: 0.2002688944, blue: 0.2002688944, alpha: 1)))
+                        .foregroundColor(Color("Gray"))
                 }
                 HStack {
                     Spacer()
                     Text("\(String(format: "%.2f", order.sharePrice))")
+                        .foregroundColor(Color("Black White"))
                         .font(.system(size: 22))
                 }
                 HStack {
                     Spacer()
                     Text("\(order.dateAsString())")
                         .font(.body)
-                        .foregroundColor(Color(#colorLiteral(red: 0.2002688944, green: 0.2002688944, blue: 0.2002688944, alpha: 1)))
+                        .foregroundColor(Color("Gray"))
                 }
                 
             }
@@ -111,10 +112,7 @@ struct OrderTileView: View {
 
 struct OrdersView_Previews: PreviewProvider {
     static var previews: some View {
-        VStack {
-            Divider()
-            OrderTileView(order: testOrder)
-            Divider()
-        }
+        OrdersView()
+            .preferredColorScheme(.dark)
     }
 }

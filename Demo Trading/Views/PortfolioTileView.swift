@@ -19,13 +19,13 @@ struct PortfolioTileView: View {
         NavigationLink(destination: StockDetailView(stockQuote: data.getStockQuote(stockSymbol: stock.stockSymbol), showTitle: true)) {
             HStack {
                 
-                VStack {
+                VStack(spacing: 0) {
                     HStack {
                         Text("Avg: \(String(format: "%.2f", stock.avgPriceBought))")
                             .font(.system(size: 16))
                         Spacer()
                     }
-                    .foregroundColor(Color(#colorLiteral(red: 0.2002688944, green: 0.2002688944, blue: 0.2002688944, alpha: 1)))
+                    .foregroundColor(Color("Gray"))
                     HStack {
                         Text(stock.stockSymbol)
                             .font(.system(size: 21))
@@ -37,13 +37,13 @@ struct PortfolioTileView: View {
                             .font(.system(size: 16))
                         Spacer()
                     }
-                    .foregroundColor(Color(#colorLiteral(red: 0.2002688944, green: 0.2002688944, blue: 0.2002688944, alpha: 1)))
+                    .foregroundColor(Color("Gray"))
                 }
                 .padding(.horizontal)
                 
                 Spacer()
                 
-                VStack {
+                VStack(spacing: 0) {
                     HStack {
                         Spacer()
                         Text("\(String(format: "%.2f", profitLossPercent))%")
@@ -52,7 +52,7 @@ struct PortfolioTileView: View {
                     }
                     HStack {
                         Spacer()
-                        Text("\(profitLoss >= 0 ? "+" : "") \(String(format: "%.2f", profitLoss))")
+                        Text("\(profitLoss >= 0 ? "+" : "")\(String(format: "%.2f", profitLoss))")
                             .font(.system(size: 22))
                             .frame(height: 32)
                             .foregroundColor(profitLoss >= 0 ? .green : .red)
@@ -60,16 +60,25 @@ struct PortfolioTileView: View {
                     
                     HStack {
                         Spacer()
-                        Text("LTP. \(String(format: "%.2f", stock.lastPrice))")
+                        
+                        HStack(spacing: 0) {
+                        Text("LTP: \(String(format: "%.2f", stock.lastPrice))")
                             .font(.system(size: 16))
-                            .foregroundColor(Color(#colorLiteral(red: 0.2002688944, green: 0.2002688944, blue: 0.2002688944, alpha: 1)))
+                            .foregroundColor(Color("Gray"))
+                        Text(" (\(stock.dayChange >= 0 ? "+" : "")\(String(format: "%.2f", stock.dayPChange))%)")
+                            .font(.system(size: 16))
+                            .foregroundColor(stock.dayChange >= 0 ? .green : .red)
+                        }
                     }
                 }
-                .padding(.horizontal)
+                .padding(.trailing)
                 
             }
             .foregroundColor(Color("Black White")) // without this, text colour is blue
         }
+        .onDisappear(perform: {
+            print("\(stock.stockSymbol) disappeared")
+        })
         .onAppear(perform: {
             updateProfitLoss()
         })

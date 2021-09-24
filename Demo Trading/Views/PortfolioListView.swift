@@ -38,7 +38,7 @@ struct PortfolioListView: View {
                         Text("\(String(format: "%.2f", profitLossPercent))%")
                             .foregroundColor(profitLoss >= 0 ? .green : .red)
                         if portfolioType == .holdings {
-                            Text("\(dayProfitLoss)")
+                            Text("\(dayProfitLoss.withCommas(withRupeeSymbol: true))")
                         }
                     }
                 }
@@ -90,7 +90,8 @@ struct PortfolioListView: View {
 
 struct PortfolioListView_Previews: PreviewProvider {
     static var previews: some View {
-        Group {PortfolioListView(portfolioType: .positions)
+        Group {
+            PortfolioListView(portfolioType: .holdings)
             VStack {
                 Divider()
                 PortfolioTileView(stock: testStockOwned)

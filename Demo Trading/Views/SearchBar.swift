@@ -20,6 +20,7 @@ struct SearchBar: View {
                 if true {
                     TextField(placeholderText, text: $searchText)
                         .autocapitalization(.allCharacters)
+                        .disableAutocorrection(true)
                         .padding(7)
                         .padding(.horizontal, 25)
                         .background(Color(.systemGray6))
@@ -55,7 +56,7 @@ struct SearchBar: View {
                         dismissKeyboard()
                         
                     }) {
-                        Text("Cancel")
+                        Text("Done")
                     }
                     .padding(.trailing, 10)
                     .transition(.move(edge: .trailing))

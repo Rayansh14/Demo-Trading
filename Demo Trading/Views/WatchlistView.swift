@@ -70,20 +70,20 @@ struct WatchlistView: View {
                     }
                 }
                 
-                VStack {
-                    Spacer()
-                    ErrorTileView(error: data.errorMessage)
-                        .opacity(data.showError ? 1.0 : 0.0)
-                        .animation(.easeInOut)
-                        .padding(.bottom)
-                }
+//                VStack {
+//                    Spacer()
+//                    ErrorTileView(error: data.errorMessage)
+//                        .opacity(data.showError ? 1.0 : 0.0)
+//                        .animation(.easeInOut)
+//                        .padding(.bottom)
+//                }
                 
                 VStack(spacing: 0) {
                     Spacer()
                     VStack(spacing: 0) {
                         ZStack {
                             Rectangle()
-                                .foregroundColor(Color(#colorLiteral(red: 0.9574782252, green: 0.9574782252, blue: 0.9574782252, alpha: 1)))
+                                .foregroundColor(Color("Light Gray"))
                                 .frame(height: 55)
                                 .cornerRadius(8)
                             HStack {
@@ -115,7 +115,7 @@ struct WatchlistView: View {
                             StockDetailView(stockQuote: selectedStock, showTitle: false)
                         }
                     }
-                    .frame(height: 400)
+                    .frame(height: 325)
                 }
                 .opacity(showSheet ? 1 : 0)
                 .offset(y: sheetOffset.height)
@@ -127,7 +127,7 @@ struct WatchlistView: View {
             }) {
                 Image(systemName: "0.square")
             }, trailing: Button(action: {
-                    data.getStocksData()
+//                data.getStocksData()
             }) {
                 Image(systemName: "gobackward")
             })
@@ -135,8 +135,8 @@ struct WatchlistView: View {
                 if data.getMarketStatus() {
                     data.getStocksData()
                 }
-//                PortfolioListView(portfolioType: .holdings).updateAllPortfolioData()
-//                PortfolioListView(portfolioType: .positions).updateAllPortfolioData()
+                //                PortfolioListView(portfolioType: .holdings).updateAllPortfolioData()
+                //                PortfolioListView(portfolioType: .positions).updateAllPortfolioData()
             })
         }
     }
@@ -154,24 +154,6 @@ struct WatchlistView: View {
         data.saveData()
     }
 }
-
-/*
- Button(action: {
-     data.resetAll()
- }) {
-     Image(systemName: "0.square")
- }
- */
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -191,16 +173,21 @@ struct WatchlistTileView: View {
             VStack {
                 HStack {
                     Text(stockQuote.symbol)
-                        .padding(15)
+                        .foregroundColor(Color("Black White"))
+                        .padding(10)
                         .font(.system(size: 20))
                     Spacer()
                     VStack {
-                        Text(String(format: "%.2f", stockQuote.lastPrice))
-                            .padding(.horizontal)
-                            .font(.system(size: 18))
-                        Text("\(String(format: "%.2f", stockQuote.pChange))%")
-                            .padding(.horizontal)
-                            .font(.system(size: 14))
+                        HStack {
+                            Spacer()
+                            Text(String(format: "%.2f", stockQuote.lastPrice))
+                                .font(.system(size: 18))
+                        }
+                        HStack {
+                            Spacer()
+                            Text("\(String(format: "%.2f", stockQuote.pChange))%")
+                                .font(.system(size: 14))
+                        }
                     }
                 }
                 .foregroundColor(stockQuote.pChange >= 0 ? .green : .red)

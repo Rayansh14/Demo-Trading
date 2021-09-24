@@ -109,6 +109,7 @@ class StockOwned: ObservableObject, Identifiable, Codable {
     @Published var avgPriceBought: Double = 0.0
     @Published var lastPrice: Double = 0.0
     @Published var dayChange: Double = 0.0
+    @Published var dayPChange: Double = 0.0
     @Published var timeBought = Date()
     
     
@@ -118,7 +119,6 @@ class StockOwned: ObservableObject, Identifiable, Codable {
         case numberOfShares
         case avgPriceBought
         case lastPrice
-        case dayChange
         case timeBought
     }
     
@@ -128,7 +128,6 @@ class StockOwned: ObservableObject, Identifiable, Codable {
         try container.encode(stockSymbol, forKey: .stockSymbol)
         try container.encode(numberOfShares, forKey: .numberOfShares)
         try container.encode(avgPriceBought, forKey: .avgPriceBought)
-        try container.encode(dayChange, forKey: .dayChange)
         try container.encode(timeBought, forKey: .timeBought)
         try container.encode(lastPrice, forKey: .lastPrice)
     }
@@ -139,7 +138,6 @@ class StockOwned: ObservableObject, Identifiable, Codable {
         stockSymbol = try values.decode(String.self, forKey: .stockSymbol)
         numberOfShares = try values.decode(Int.self, forKey: .numberOfShares)
         avgPriceBought = try values.decode(Double.self, forKey: .avgPriceBought)
-        dayChange = try values.decode(Double.self, forKey: .dayChange)
         timeBought = try values.decode(Date.self, forKey: .timeBought)
         lastPrice = try values.decode(Double.self, forKey: .lastPrice)
     }
@@ -154,6 +152,7 @@ var testStockOwned: StockOwned {
     stockOwned.numberOfShares = 10
     stockOwned.avgPriceBought = 2002.30
     stockOwned.dayChange = 12.20
+    stockOwned.dayPChange = 0.79
     stockOwned.lastPrice = 2004.75
     return stockOwned
 }

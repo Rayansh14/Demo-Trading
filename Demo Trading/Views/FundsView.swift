@@ -20,6 +20,9 @@ struct FundsView: View {
                 Text("Total Net Worth :\(getTotalNetWorth().withCommas(withRupeeSymbol: true))")
             }
             .navigationTitle("Funds")
+            .navigationBarItems(trailing: NavigationLink(destination: about()) {
+                Image(systemName: "info.circle.fill")
+            })
         }
     }
     
@@ -31,16 +34,26 @@ struct FundsView: View {
         
         totalValue += holdingsInfo["currentValue"]!
         totalValue += positionsInfo["currentValue"]!
+        totalValue += getDeliveryMargin()
         totalValue += data.funds
         
         return totalValue
     }
     
     func getDeliveryMargin() -> Double {
-        if let amount = data.deliveryMargin["amount"] as? Double {
-            return amount
+        var sum = 0.0
+        for amt in data.deliveryMargin.values {
+            sum += amt
         }
-        return 0.0
+        return sum
+    }
+}
+
+
+struct about: View {
+    var body: some View {
+        Text("only nifty 500 companies, updates less often (about twice a minute), one lakh in fantasy amount provided")
+            .padding()
     }
 }
 

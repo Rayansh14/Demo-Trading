@@ -15,7 +15,7 @@ class DataController: ObservableObject {
     @ObservedObject var monitor = NetworkMonitor()
     
     @Published var stockQuotes: [StockQuote] = []
-    @Published var userStocksOrder = ["RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT", "SBIN", "BAJFINANCE", "BHARTIARTL", "ASIANPAINT", "HCLTECH", "MARUTI", "M&M", "ULTRACEMCO", "SUNPHARMA", "WIPRO", "INDUSINDBK", "TITAN", "BAJAJFINSV", "NESTLEIND", "TATAMOTORS", "TECHM", "HDFCLIFE", "POWERGRID", "DRREDDY", "TATASTEEL", "NTPC", "BAJAJ-AUTO", "ADANIPORTS", "HINDALCO", "GRASIM", "DIVISLAB", "HEROMOTOCO", "ONGC", "CIPLA", "BRITANNIA", "JSWSTEEL", "BPCL", "EICHERMOT", "SHREECEM", "SBILIFE", "COALINDIA", "UPL", "IOC", "TATACONSUM"]
+    @Published var userStocksOrder = ["RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT"]
     
     //    let userStocksOrder = ["RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT", "SBIN", "BAJFINANCE", "BHARTIARTL", "ASIANPAINT", "HCLTECH", "MARUTI", "M&M", "ULTRACEMCO", "SUNPHARMA", "WIPRO", "INDUSINDBK", "TITAN", "BAJAJFINSV", "NESTLEIND", "TATAMOTORS", "TECHM", "HDFCLIFE", "POWERGRID", "DRREDDY", "TATASTEEL", "NTPC", "BAJAJ-AUTO", "ADANIPORTS", "HINDALCO", "GRASIM", "DIVISLAB", "HEROMOTOCO", "ONGC", "CIPLA", "BRITANNIA", "JSWSTEEL", "BPCL", "EICHERMOT", "SHREECEM", "SBILIFE", "COALINDIA", "UPL", "IOC", "TATACONSUM"]
     
@@ -37,10 +37,7 @@ class DataController: ObservableObject {
     
     @Published var funds: Double = 1_00_000.0
     
-    @Published var deliveryMargin = [
-        "date": Date(),
-        "amount" : 0.0
-    ]
+    @Published var deliveryMargin: [Date: Double] = [:]
     
     @Published var showError = false
     @Published var errorMessage = ""
@@ -50,9 +47,9 @@ class DataController: ObservableObject {
         let calendar = Calendar.current
         let now = Date()
         let nineFifteenToday = calendar.date(bySettingHour: 9, minute: 14, second: 59, of: now)!
-        let threeThirtyToday = calendar.date(bySettingHour: 15, minute: 30, second: 01, of: now)!
+        let threeThirtyToday = calendar.date(bySettingHour: 15, minute: 30, second: 00, of: now)!
         
-        print(nineFifteenToday)
+        //        print(nineFifteenToday)
         
         if now.compare(.isWeekday) {
             if now > nineFifteenToday && now < threeThirtyToday {
@@ -67,7 +64,7 @@ class DataController: ObservableObject {
         if monitor.isConnected {
             if let url = URL(string: "https://latest-stock-price.p.rapidapi.com/price?Indices=NIFTY%20500") {
                 var request = URLRequest(url: url)
-                request.addValue("7fb21cb036msh42efbbec95f083fp193e7bjsn0fc5005cafa3", forHTTPHeaderField: "x-rapidapi-key")
+                request.addValue("03512222b0mshcad312769b45365p140f7ajsnf9fbe4c10a7e", forHTTPHeaderField: "x-rapidapi-key")
                 request.addValue("latest-stock-price.p.rapidapi.com", forHTTPHeaderField: "x-rapidapi-host")
                 request.addValue("true", forHTTPHeaderField: "useQueryString")
                 URLSession.shared.dataTask(with: request) { (data, response, error) in
@@ -111,7 +108,9 @@ class DataController: ObservableObject {
                                 stockQuotesToAdd.append(stockQuote)
                             }
                             DispatchQueue.main.async {
-                                self.stockQuotes = stockQuotesToAdd
+                                if stockQuotesToAdd.count != 0 {
+                                    self.stockQuotes = stockQuotesToAdd
+                                }
                             }
                         }
                     }
@@ -123,26 +122,34 @@ class DataController: ObservableObject {
     }
     
     
+    func getStockOwned(stockSymbol: String) -> StockOwned {
+        if let index = portfolio.firstIndex(where: {loopingStockOwned -> Bool in
+            return loopingStockOwned.stockSymbol == stockSymbol
+        }) {
+            return portfolio[index]
+        }
+        return StockOwned()
+    }
+    
+    
     func updateDeliveryMargin() {
-        if let date = deliveryMargin["date"]! as? Date {
-            if date > Date().dateAt(.startOfDay) {
-                if let amount = deliveryMargin["amount"] as? Double {
-                    funds += amount
-                    deliveryMargin["amount"]! = 0.0
-                }
-                deliveryMargin["date"] = Date()
+        for dm in deliveryMargin {
+            if dm.key < Date().dateAt(.endOfDay) {
+                funds += dm.value
+                deliveryMargin.removeValue(forKey: dm.key)
             }
         }
     }
     
     
+    
     func updateAllStockPricesInPortfolio() {
-        stockQuotes.append(StockQuote())
         for stock in portfolio {
             for quote in stockQuotes {
                 if stock.stockSymbol == quote.symbol {
                     stock.lastPrice = quote.lastPrice
                     stock.dayChange = quote.change
+                    stock.dayPChange = quote.pChange
                 }
             }
         }
@@ -215,12 +222,12 @@ class DataController: ObservableObject {
             if order.type == .buy {
                 if funds >= (order.sharePrice * Double(order.numberOfShares)) {
                     orderList.append(order)
+                    funds -= (order.sharePrice * Double(order.numberOfShares))
                     if checkIfOwned(stockSymbol: order.stockSymbol) {
                         for stock in portfolio {
                             if stock.stockSymbol == order.stockSymbol {
                                 stock.avgPriceBought = (((stock.avgPriceBought * Double(stock.numberOfShares)) + (order.sharePrice * Double(order.numberOfShares)))/Double(order.numberOfShares + stock.numberOfShares))
                                 stock.numberOfShares += order.numberOfShares
-                                funds -= (order.sharePrice * Double(order.numberOfShares))
                             }
                         }
                     } else {
@@ -230,7 +237,6 @@ class DataController: ObservableObject {
                         stockOwned.stockSymbol = order.stockSymbol
                         stockOwned.timeBought = order.time
                         portfolio.append(stockOwned)
-                        funds -= (order.sharePrice * Double(order.numberOfShares))
                     }
                 } else {
                     showErrorMessage(message: "Not enough funds! Sell some stocks or reduce the number of shares.")
@@ -254,9 +260,9 @@ class DataController: ObservableObject {
                                 
                                 if checkIfInHoldings(stockSymbol: stock.stockSymbol) {
                                     funds += (Double(order.numberOfShares) * order.sharePrice) * 0.8
-                                    if let amount = deliveryMargin["amount"] as? Double {
-                                        deliveryMargin["amount"]! = amount + ((Double(order.numberOfShares) * order.sharePrice) * 0.2)
-                                    }
+                                    let date = Date() + 5.hours + 30.minutes + 1.days
+                                    self.deliveryMargin[date] = Double(order.numberOfShares) * order.sharePrice * 0.2
+                                    
                                 } else {
                                     funds += (Double(order.numberOfShares) * order.sharePrice)
                                 }
@@ -282,10 +288,12 @@ class DataController: ObservableObject {
             if let portfolioData = try? encoder.encode(self.portfolio) {
                 if let orderListData = try? encoder.encode(self.orderList) {
                     if let fundsData = try? encoder.encode(self.funds) {
-                        UserDefaults.standard.setValue(portfolioData, forKey: "portfolio")
-                        UserDefaults.standard.setValue(orderListData, forKey: "orderList")
-                        UserDefaults.standard.setValue(fundsData, forKey: "funds")
-                        UserDefaults.standard.synchronize()
+                        if let userStocksOrderData = try? encoder.encode(self.userStocksOrder) {
+                            UserDefaults.standard.setValue(portfolioData, forKey: "portfolio")
+                            UserDefaults.standard.setValue(orderListData, forKey: "orderList")
+                            UserDefaults.standard.setValue(fundsData, forKey: "funds")
+                            UserDefaults.standard.setValue(userStocksOrderData, forKey: "userStocksOrder")
+                        }
                     }
                 }
             }
@@ -297,14 +305,19 @@ class DataController: ObservableObject {
             if let portfolioData = UserDefaults.standard.data(forKey: "portfolio") {
                 if let orderListData = UserDefaults.standard.data(forKey: "orderList") {
                     if let fundsData = UserDefaults.standard.data(forKey: "funds") {
-                        let decoder = JSONDecoder()
-                        if let jsonPortfolio = try? decoder.decode([StockOwned].self, from: portfolioData) {
-                            if let jsonOrderList = try? decoder.decode([Order].self, from: orderListData) {
-                                if let jsonFunds = try? decoder.decode(Double.self, from: fundsData) {
-                                    DispatchQueue.main.async {
-                                        self.portfolio = jsonPortfolio
-                                        self.orderList = jsonOrderList
-                                        self.funds = jsonFunds
+                        if let userStocksOrderData = UserDefaults.standard.data(forKey: "userStocksOrder") {
+                            let decoder = JSONDecoder()
+                            if let jsonPortfolio = try? decoder.decode([StockOwned].self, from: portfolioData) {
+                                if let jsonOrderList = try? decoder.decode([Order].self, from: orderListData) {
+                                    if let jsonFunds = try? decoder.decode(Double.self, from: fundsData) {
+                                        if let jsonUserStocksOrder = try? decoder.decode([String].self, from: userStocksOrderData) {
+                                            DispatchQueue.main.async {
+                                                self.portfolio = jsonPortfolio
+                                                self.orderList = jsonOrderList
+                                                self.funds = jsonFunds
+                                                self.userStocksOrder = jsonUserStocksOrder
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -317,10 +330,11 @@ class DataController: ObservableObject {
     
     
     func resetAll() {
-        self.portfolio = []
-        self.orderList = []
-        self.funds = 1_00_000.0
-        saveData()
+        //        self.portfolio = []
+        //        self.orderList = []
+        //        self.funds = 1_00_000.0
+        //        self.userStocksOrder = ["RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT"]
+        //        saveData()
     }
 }
 
@@ -354,9 +368,9 @@ extension View {
     }
     
     
-    #if canImport(UIKit)
+    //    #if canImport(UIKit)
     func dismissKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
-    #endif
+    //    #endif
 }
