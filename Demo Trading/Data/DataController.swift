@@ -289,10 +289,13 @@ class DataController: ObservableObject {
                 if let orderListData = try? encoder.encode(self.orderList) {
                     if let fundsData = try? encoder.encode(self.funds) {
                         if let userStocksOrderData = try? encoder.encode(self.userStocksOrder) {
-                            UserDefaults.standard.setValue(portfolioData, forKey: "portfolio")
-                            UserDefaults.standard.setValue(orderListData, forKey: "orderList")
-                            UserDefaults.standard.setValue(fundsData, forKey: "funds")
-                            UserDefaults.standard.setValue(userStocksOrderData, forKey: "userStocksOrder")
+                            if let deliveryMarginData = try? encoder.encode(self.deliveryMargin) {
+                                UserDefaults.standard.setValue(portfolioData, forKey: "portfolio")
+                                UserDefaults.standard.setValue(orderListData, forKey: "orderList")
+                                UserDefaults.standard.setValue(fundsData, forKey: "funds")
+                                UserDefaults.standard.setValue(userStocksOrderData, forKey: "userStocksOrder")
+                                UserDefaults.standard.setValue(deliveryMarginData, forKey: "deliveryMargin")
+                            }
                         }
                     }
                 }
@@ -306,16 +309,21 @@ class DataController: ObservableObject {
                 if let orderListData = UserDefaults.standard.data(forKey: "orderList") {
                     if let fundsData = UserDefaults.standard.data(forKey: "funds") {
                         if let userStocksOrderData = UserDefaults.standard.data(forKey: "userStocksOrder") {
-                            let decoder = JSONDecoder()
-                            if let jsonPortfolio = try? decoder.decode([StockOwned].self, from: portfolioData) {
-                                if let jsonOrderList = try? decoder.decode([Order].self, from: orderListData) {
-                                    if let jsonFunds = try? decoder.decode(Double.self, from: fundsData) {
-                                        if let jsonUserStocksOrder = try? decoder.decode([String].self, from: userStocksOrderData) {
-                                            DispatchQueue.main.async {
-                                                self.portfolio = jsonPortfolio
-                                                self.orderList = jsonOrderList
-                                                self.funds = jsonFunds
-                                                self.userStocksOrder = jsonUserStocksOrder
+                            if let deliveryMarginData = UserDefaults.standard.data(forKey: "deliveryMargin") {
+                                let decoder = JSONDecoder()
+                                if let jsonPortfolio = try? decoder.decode([StockOwned].self, from: portfolioData) {
+                                    if let jsonOrderList = try? decoder.decode([Order].self, from: orderListData) {
+                                        if let jsonFunds = try? decoder.decode(Double.self, from: fundsData) {
+                                            if let jsonUserStocksOrder = try? decoder.decode([String].self, from: userStocksOrderData) {
+                                                if let jsonDeliveryMargin = try? decoder.decode([Date: Double].self, from: deliveryMarginData) {
+                                                    DispatchQueue.main.async {
+                                                        self.portfolio = jsonPortfolio
+                                                        self.orderList = jsonOrderList
+                                                        self.funds = jsonFunds
+                                                        self.userStocksOrder = jsonUserStocksOrder
+                                                        self.deliveryMargin = jsonDeliveryMargin
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -333,6 +341,7 @@ class DataController: ObservableObject {
         //        self.portfolio = []
         //        self.orderList = []
         //        self.funds = 1_00_000.0
+        //        self.deliveryMargin = [:]
         //        self.userStocksOrder = ["RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT"]
         //        saveData()
     }
@@ -368,9 +377,7 @@ extension View {
     }
     
     
-    //    #if canImport(UIKit)
     func dismissKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
-    //    #endif
 }

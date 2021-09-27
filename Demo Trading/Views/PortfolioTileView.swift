@@ -76,9 +76,6 @@ struct PortfolioTileView: View {
             }
             .foregroundColor(Color("Black White")) // without this, text colour is blue
         }
-        .onDisappear(perform: {
-            print("\(stock.stockSymbol) disappeared")
-        })
         .onAppear(perform: {
             updateProfitLoss()
         })

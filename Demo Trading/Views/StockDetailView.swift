@@ -170,8 +170,7 @@ struct StockDetailView: View {
                                 Text((stockOwned.avgPriceBought * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true))
                             }
                             .padding(.horizontal)
-                            .padding(.top, 15)
-                            .padding(.bottom, 1)
+                            .padding(.top)
                                 
                             HStack {
                                 Text("Current Value:")
@@ -179,7 +178,7 @@ struct StockDetailView: View {
                                 Text((stockOwned.lastPrice * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true))
                             }
                             .padding(.horizontal)
-                            .padding(.bottom, 1)
+                            .padding(.top, 1)
                             
                             HStack {
                                 Text("Profit/Loss: ")
@@ -187,6 +186,7 @@ struct StockDetailView: View {
                                 Text(((stockOwned.lastPrice - stockOwned.avgPriceBought) * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true))
                             }
                             .padding(.horizontal)
+                            .padding(.top, 1)
                         }
                     }
                     
@@ -194,13 +194,6 @@ struct StockDetailView: View {
                 }
                 
             }
-//            VStack {
-//                Spacer()
-//                ErrorTileView(error: data.errorMessage)
-//                    .opacity(data.showError ? 1.0 : 0.0)
-//                    .animation(.easeInOut)
-//                    .padding(.bottom)
-//            }
         }
         .onDisappear(perform: {
             self.presentationMode.wrappedValue.dismiss()
@@ -229,13 +222,21 @@ struct TransactStockView: View {
     var orderType: OrderType
     var stockQuote: StockQuote
     var showTitle: Bool
+    @ObservedObject var data = DataController.shared
     @StateObject var order = Order()
     @State var numberOfShares = ""
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         VStack {
+            HStack {
+                Spacer()
             Text(orderType.rawValue.capitalized)
+                Spacer()
+                Button(action: {self.numberOfShares = buyMaxShares(sharePrice: stockQuote.lastPrice)}) {
+                    Text("Max")
+                }
+            }
             Text(String(stockQuote.lastPrice))
             TextField("Number of shares", text: $numberOfShares)
                 .padding(5)
@@ -249,10 +250,10 @@ struct TransactStockView: View {
                 order.time = Date()
                 if let intNumberOfShares = Int(numberOfShares) {
                     order.numberOfShares = intNumberOfShares
-                    DataController.shared.processOrder(order: order)
+                    data.processOrder(order: order)
                     presentationMode.wrappedValue.dismiss()
                 } else {
-                    DataController.shared.showErrorMessage(message: "Please enter a valid number of shares.")
+                    data.showErrorMessage(message: "Please enter a valid number of shares.")
                 }
             }) {
                 Text("Execute")
@@ -275,6 +276,10 @@ struct TransactStockView: View {
         }()) { view in
             view.navigationBarHidden(true)
         }
+    }
+    
+    func buyMaxShares(sharePrice: Double) -> String {
+        return String(Int(data.funds/sharePrice))
     }
 }
 

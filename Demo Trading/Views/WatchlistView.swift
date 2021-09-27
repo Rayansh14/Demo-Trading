@@ -135,8 +135,6 @@ struct WatchlistView: View {
                 if data.getMarketStatus() {
                     data.getStocksData()
                 }
-                //                PortfolioListView(portfolioType: .holdings).updateAllPortfolioData()
-                //                PortfolioListView(portfolioType: .positions).updateAllPortfolioData()
             })
         }
     }

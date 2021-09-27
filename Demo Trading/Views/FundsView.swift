@@ -14,11 +14,54 @@ struct FundsView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text("Starting balance: ₹ 1,00,000")
-                Text("Available funds :\(data.funds.withCommas(withRupeeSymbol: true))")
-                Text("Delivery Margin :\(getDeliveryMargin().withCommas(withRupeeSymbol: true))")
-                Text("Total Net Worth :\(getTotalNetWorth().withCommas(withRupeeSymbol: true))")
+                HStack(spacing: 0) {
+                    Rectangle()
+                        .frame(height: 1)
+                    
+                    VStack {
+                        Text("\(data.funds.withCommas(withRupeeSymbol: true))")
+                            .font(.title)
+                        Text("Available Funds")
+                    }
+                    .frame(minWidth: 200)
+                    .padding(.vertical, 12)
+                    .border(Color("Black White"), width: 1)
+                    
+                    Rectangle()
+                        .frame(height: 1)
+                }
+                
+                
+                HStack {
+                    Text("Starting balance:")
+                    Spacer()
+                    Text("₹ 1,00,000")
+                }
+                .padding(.horizontal)
+                .padding(.top, 15)
+                
+                HStack {
+                    Text("Delivery Margin:")
+                    Spacer()
+                    Text("\(getDeliveryMargin().withCommas(withRupeeSymbol: true))")
+                }
+                .padding(.horizontal)
+                .padding(.top, 1)
+                
+                HStack {
+                    Text("Total Net Worth:")
+                    Spacer()
+                    VStack(alignment: .trailing) {
+                        Text("\(getTotalNetWorth().withCommas(withRupeeSymbol: true))")
+                        Text("\(changeInNetWorth().withCommas(withRupeeSymbol: false)) %")
+                            .foregroundColor(changeInNetWorth() >= 0 ? .green : .red)
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.top, 1)
+                Spacer()
             }
+            .padding(.top)
             .navigationTitle("Funds")
             .navigationBarItems(trailing: NavigationLink(destination: about()) {
                 Image(systemName: "info.circle.fill")
@@ -26,6 +69,9 @@ struct FundsView: View {
         }
     }
     
+    func changeInNetWorth() -> Double {
+        return ((getTotalNetWorth() -  1_00_000) / 1_00_000 * 100)
+    }
     
     func getTotalNetWorth() -> Double {
         let holdingsInfo = data.getPorfolioInfo(portfolio: data.holdings)
@@ -60,5 +106,6 @@ struct about: View {
 struct FundsView_Previews: PreviewProvider {
     static var previews: some View {
         FundsView()
+            .preferredColorScheme(.dark)
     }
 }
