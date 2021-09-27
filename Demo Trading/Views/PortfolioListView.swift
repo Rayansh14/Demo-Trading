@@ -25,34 +25,48 @@ struct PortfolioListView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
-                HStack {
-                    VStack {
-                        Text("\(buyValue.withCommas(withRupeeSymbol: false))")
-                        Text("Invested Amount")
-                            .font(.system(size: 15.5))
-                            .padding(.bottom, 1)
-                        Text("\(currentValue.withCommas(withRupeeSymbol: false))")
-                        Text("Current Value")
-                            .font(.system(size: 15.5))
+            VStack(spacing: 0) {
+                VStack {
+                    HStack {
+                        VStack {
+                            Text("\(buyValue.withCommas(withRupeeSymbol: false))")
+                            Text("Invested Amount")
+                                .font(.system(size: 15.5))
+                                .padding(.bottom, 1)
+                        }
+                        Spacer()
+                        VStack {
+                            Text("\(currentValue.withCommas(withRupeeSymbol: false))")
+                            Text("Current Value")
+                                .font(.system(size: 15.5))
+                        }
+                        Spacer()
                     }
-                    .font(.title)
+                    .font(.system(size: 30))
+                    .padding(.leading, 35)
                     
                     Rectangle()
-                        .frame(width: 1, height: 160)
+                        .frame(height: 1)
+                        .padding(.horizontal, 25)
                     
-                    VStack {
+                    
+                    HStack {
                         Text("P/L:")
                             .font(.title)
+                        Spacer()
+                        Spacer()
                         Text("\(String(profitLoss.withCommas(withRupeeSymbol: false)))")
                             .font(.title)
                             .foregroundColor(profitLoss >= 0 ? .green : .red)
-                        Text("\(String(profitLossPercent.withCommas(withRupeeSymbol: false)))%")
+                        Text("(\(String(profitLossPercent.withCommas(withRupeeSymbol: false)))%)")
                             .foregroundColor(profitLoss >= 0 ? .green : .red)
+                        Spacer()
                     }
+                    .padding(.leading, 35)
                 }
-                .padding(.horizontal, 15)
-                .border(Color.black, width: 1)
+                .padding(.vertical)
+                .border(Color.black)
+                .padding()
                 
                 
                 ScrollView {
@@ -101,18 +115,21 @@ struct PortfolioListView: View {
     }
     
     func updateAllPortfolioData() {
-//                data.updateAllStockPricesInPortfolio()
-//                let portfolioInfo = data.getPorfolioInfo(portfolio: portfolioType == .holdings ? data.holdings : data.positions)
-//                buyValue = portfolioInfo["buyValue"]!
-//                currentValue = portfolioInfo["currentValue"]!
-//                profitLoss = portfolioInfo["profitLoss"]!
-//                dayProfitLoss = portfolioInfo["dayProfitLoss"]!
-//                dayProfitLossPercent = dayProfitLoss*100/buyValue
-//                if buyValue > 0.0 {
-//                    profitLossPercent = portfolioInfo["profitLossPercent"]!
-//                } else {
-//                    profitLossPercent = 0.00
-//                }
+        data.updateAllStockPricesInPortfolio()
+        let portfolioInfo = data.getPorfolioInfo(portfolio: portfolioType == .holdings ? data.holdings : data.positions)
+        buyValue = portfolioInfo["buyValue"]!
+        currentValue = portfolioInfo["currentValue"]!
+        profitLoss = portfolioInfo["profitLoss"]!
+        dayProfitLoss = portfolioInfo["dayProfitLoss"]!
+        dayProfitLossPercent = dayProfitLoss*100/buyValue
+        if buyValue == 0 {
+            dayProfitLossPercent = 0
+        }
+        if buyValue > 0.0 {
+            profitLossPercent = portfolioInfo["profitLossPercent"]!
+        } else {
+            profitLossPercent = 0.00
+        }
     }
 }
 
@@ -120,7 +137,7 @@ struct PortfolioListView: View {
 struct PortfolioListView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            PortfolioListView(portfolioType: .holdings, buyValue: 82069.06, currentValue: 83194.40, profitLoss: 874.66, profitLossPercent: 1.07, dayProfitLoss: 517.85, dayProfitLossPercent: 0.73)
+            PortfolioListView(portfolioType: .holdings, buyValue: 2069.06, currentValue: 8394.40, profitLoss: 874.66, profitLossPercent: 1.07, dayProfitLoss: 517.85, dayProfitLossPercent: 0.73)
         }
     }
 }

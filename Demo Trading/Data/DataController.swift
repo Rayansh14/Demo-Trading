@@ -62,7 +62,7 @@ class DataController: ObservableObject {
     
     func getStocksData() {
         if monitor.isConnected {
-            if let url = URL(string: "https://latest-stock-price.p.rapidapi.com/price?Indices=NIFTY%20500") {
+            if let url = URL(string: "https://latest-stock-price.p.rapidapi.com/any") {
                 var request = URLRequest(url: url)
                 request.addValue("03512222b0mshcad312769b45365p140f7ajsnf9fbe4c10a7e", forHTTPHeaderField: "x-rapidapi-key")
                 request.addValue("latest-stock-price.p.rapidapi.com", forHTTPHeaderField: "x-rapidapi-host")
@@ -140,7 +140,6 @@ class DataController: ObservableObject {
             }
         }
     }
-    
     
     
     func updateAllStockPricesInPortfolio() {
@@ -303,6 +302,7 @@ class DataController: ObservableObject {
         }
     }
     
+    
     func loadData() {
         DispatchQueue.global().async {
             if let portfolioData = UserDefaults.standard.data(forKey: "portfolio") {
@@ -364,7 +364,6 @@ extension Double {
         return numberFormatter.string(from: NSNumber(value:self))!
     }
 }
-
 
 
 extension View {

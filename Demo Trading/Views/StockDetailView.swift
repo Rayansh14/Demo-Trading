@@ -17,7 +17,6 @@ struct StockDetailView: View {
     
     var body: some View {
         ZStack {
-            if !(stockQuote.symbol.contains("NIFTY")) {
                 
                 VStack {
                     
@@ -113,6 +112,7 @@ struct StockDetailView: View {
                     }
                     
                     
+                        if !(stockQuote.symbol.contains("NIFTY")) {
                     
                     if !showTitle {
                         
@@ -189,11 +189,11 @@ struct StockDetailView: View {
                             .padding(.top, 1)
                         }
                     }
+                        }
                     
                     Spacer()
                 }
                 
-            }
         }
         .onDisappear(perform: {
             self.presentationMode.wrappedValue.dismiss()
