@@ -22,21 +22,19 @@ struct Demo_TradingApp: App {
                 
                 MainTabView()
                     .onAppear(perform: {
-                        print(Date().dateAt(.endOfDay) > laterdate)
-                        print(date > laterdate)
                         DataController.shared.getStocksData()
                         DataController.shared.loadData()
                     })
                 
                 VStack {
                     Spacer()
-                    Button(action: {data.showError = false}) {
-                        ErrorTileView(error: data.errorMessage)
+                    Button(action: {data.showMessage = false}) {
+                        ErrorTileView()
                         
                     }
                     .padding(.bottom, 60)
                     .buttonStyle(BorderlessButtonStyle())
-                    .opacity(data.showError ? 1 : 0)
+                    .opacity(data.showMessage ? 1 : 0)
                     .animation(.easeInOut(duration: 0.3))
                 }
             }

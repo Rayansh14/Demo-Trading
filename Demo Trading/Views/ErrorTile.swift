@@ -9,13 +9,13 @@ import SwiftUI
 
 struct ErrorTileView: View {
     
-    var error: String
+    @ObservedObject var data = DataController.shared
     
     var body: some View {
         HStack {
             Spacer()
-            Text(error)
-                .foregroundColor(.red)
+            Text(data.message)
+                .foregroundColor(data.isError ? .red : .green)
                 .padding(10)
                 .multilineTextAlignment(.center)
             Spacer()
@@ -29,6 +29,6 @@ struct ErrorTileView: View {
 
 struct ErrorTileView_Previews: PreviewProvider {
     static var previews: some View {
-        ErrorTileView(error: "err")
+        ErrorTileView()
     }
 }

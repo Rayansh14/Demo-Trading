@@ -7,23 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		44032890262ACB8F0039A0E6 /* ErrorTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4403288F262ACB8F0039A0E6 /* ErrorTileView.swift */; };
-		44032893262D92910039A0E6 /* PortfolioListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44032892262D92910039A0E6 /* PortfolioListView.swift */; };
-		44336BDC2626CD0A00C12CE0 /* StockDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44336BDB2626CD0A00C12CE0 /* StockDetailView.swift */; };
-		44336BDF26272EB800C12CE0 /* OrdersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44336BDE26272EB800C12CE0 /* OrdersView.swift */; };
+		44032890262ACB8F0039A0E6 /* ErrorTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4403288F262ACB8F0039A0E6 /* ErrorTile.swift */; };
+		44032893262D92910039A0E6 /* PortfolioList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44032892262D92910039A0E6 /* PortfolioList.swift */; };
+		44336BDC2626CD0A00C12CE0 /* StockDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44336BDB2626CD0A00C12CE0 /* StockDetail.swift */; };
+		44336BDF26272EB800C12CE0 /* Orders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44336BDE26272EB800C12CE0 /* Orders.swift */; };
 		4438747126416AD400A35820 /* SwiftDate in Frameworks */ = {isa = PBXBuildFile; productRef = 4438747026416AD400A35820 /* SwiftDate */; };
-		443874732643E3A000A35820 /* PortfolioTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443874722643E3A000A35820 /* PortfolioTileView.swift */; };
-		4438748326468D9100A35820 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4438748226468D9100A35820 /* TestView.swift */; };
+		443874732643E3A000A35820 /* PortfolioTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443874722643E3A000A35820 /* PortfolioTile.swift */; };
+		4438748326468D9100A35820 /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4438748226468D9100A35820 /* Test.swift */; };
 		44387488265054CF00A35820 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44387487265054CF00A35820 /* SearchBar.swift */; };
 		444879BB2632E6A8000601BF /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444879BA2632E6A8000601BF /* NetworkMonitor.swift */; };
+		449CD48C27030627000C3567 /* iActivityIndicator in Frameworks */ = {isa = PBXBuildFile; productRef = 449CD48B27030627000C3567 /* iActivityIndicator */; };
 		44A79A32262451E100652F17 /* Demo_TradingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A79A31262451E100652F17 /* Demo_TradingApp.swift */; };
 		44A79A34262451E100652F17 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A79A33262451E100652F17 /* MainTabView.swift */; };
 		44A79A36262451E200652F17 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44A79A35262451E200652F17 /* Assets.xcassets */; };
 		44A79A39262451E200652F17 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44A79A38262451E200652F17 /* Preview Assets.xcassets */; };
 		44A79A42262451F200652F17 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A79A41262451F200652F17 /* DataController.swift */; };
 		44A79A4626255EEB00652F17 /* Classes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A79A4526255EEB00652F17 /* Classes.swift */; };
-		44A79A532626C27C00652F17 /* WatchlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A79A522626C27C00652F17 /* WatchlistView.swift */; };
-		44A79A5D2626C2C900652F17 /* FundsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A79A5C2626C2C900652F17 /* FundsView.swift */; };
+		44A79A532626C27C00652F17 /* Watchlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A79A522626C27C00652F17 /* Watchlist.swift */; };
+		44A79A5D2626C2C900652F17 /* Funds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A79A5C2626C2C900652F17 /* Funds.swift */; };
+		44AAFC0027063653001289E2 /* Tips.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44AAFBFF27063653001289E2 /* Tips.swift */; };
+		44F25F7627046C0E00BB69DD /* Transact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F25F7527046C0E00BB69DD /* Transact.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -40,12 +43,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4403288F262ACB8F0039A0E6 /* ErrorTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorTileView.swift; sourceTree = "<group>"; };
-		44032892262D92910039A0E6 /* PortfolioListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioListView.swift; sourceTree = "<group>"; };
-		44336BDB2626CD0A00C12CE0 /* StockDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetailView.swift; sourceTree = "<group>"; };
-		44336BDE26272EB800C12CE0 /* OrdersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersView.swift; sourceTree = "<group>"; };
-		443874722643E3A000A35820 /* PortfolioTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioTileView.swift; sourceTree = "<group>"; };
-		4438748226468D9100A35820 /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
+		4403288F262ACB8F0039A0E6 /* ErrorTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorTile.swift; sourceTree = "<group>"; };
+		44032892262D92910039A0E6 /* PortfolioList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioList.swift; sourceTree = "<group>"; };
+		44336BDB2626CD0A00C12CE0 /* StockDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetail.swift; sourceTree = "<group>"; };
+		44336BDE26272EB800C12CE0 /* Orders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Orders.swift; sourceTree = "<group>"; };
+		443874722643E3A000A35820 /* PortfolioTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioTile.swift; sourceTree = "<group>"; };
+		4438748226468D9100A35820 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
 		44387487265054CF00A35820 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		444879BA2632E6A8000601BF /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		44A79A2E262451E100652F17 /* Demo Trading.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo Trading.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -56,8 +59,10 @@
 		44A79A3A262451E200652F17 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		44A79A41262451F200652F17 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		44A79A4526255EEB00652F17 /* Classes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Classes.swift; sourceTree = "<group>"; };
-		44A79A522626C27C00652F17 /* WatchlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistView.swift; sourceTree = "<group>"; };
-		44A79A5C2626C2C900652F17 /* FundsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FundsView.swift; sourceTree = "<group>"; };
+		44A79A522626C27C00652F17 /* Watchlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Watchlist.swift; sourceTree = "<group>"; };
+		44A79A5C2626C2C900652F17 /* Funds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Funds.swift; sourceTree = "<group>"; };
+		44AAFBFF27063653001289E2 /* Tips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tips.swift; sourceTree = "<group>"; };
+		44F25F7527046C0E00BB69DD /* Transact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transact.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +71,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4438747126416AD400A35820 /* SwiftDate in Frameworks */,
+				449CD48C27030627000C3567 /* iActivityIndicator in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -114,15 +120,17 @@
 		44A79A502626C25300652F17 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				44A79A522626C27C00652F17 /* WatchlistView.swift */,
-				44336BDB2626CD0A00C12CE0 /* StockDetailView.swift */,
-				4403288F262ACB8F0039A0E6 /* ErrorTileView.swift */,
-				44032892262D92910039A0E6 /* PortfolioListView.swift */,
-				443874722643E3A000A35820 /* PortfolioTileView.swift */,
-				44A79A5C2626C2C900652F17 /* FundsView.swift */,
-				44336BDE26272EB800C12CE0 /* OrdersView.swift */,
+				44A79A522626C27C00652F17 /* Watchlist.swift */,
+				44AAFBFF27063653001289E2 /* Tips.swift */,
+				44336BDB2626CD0A00C12CE0 /* StockDetail.swift */,
+				44F25F7527046C0E00BB69DD /* Transact.swift */,
+				4403288F262ACB8F0039A0E6 /* ErrorTile.swift */,
+				44032892262D92910039A0E6 /* PortfolioList.swift */,
+				443874722643E3A000A35820 /* PortfolioTile.swift */,
+				44A79A5C2626C2C900652F17 /* Funds.swift */,
+				44336BDE26272EB800C12CE0 /* Orders.swift */,
 				44387487265054CF00A35820 /* SearchBar.swift */,
-				4438748226468D9100A35820 /* TestView.swift */,
+				4438748226468D9100A35820 /* Test.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -156,6 +164,7 @@
 			name = "Demo Trading";
 			packageProductDependencies = (
 				4438747026416AD400A35820 /* SwiftDate */,
+				449CD48B27030627000C3567 /* iActivityIndicator */,
 			);
 			productName = "Demo Trading";
 			productReference = 44A79A2E262451E100652F17 /* Demo Trading.app */;
@@ -186,6 +195,7 @@
 			mainGroup = 44A79A25262451E100652F17;
 			packageReferences = (
 				4438746F26416AD400A35820 /* XCRemoteSwiftPackageReference "SwiftDate" */,
+				449CD48A27030627000C3567 /* XCRemoteSwiftPackageReference "iActivityIndicator" */,
 			);
 			productRefGroup = 44A79A2F262451E100652F17 /* Products */;
 			projectDirPath = "";
@@ -213,20 +223,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4438748326468D9100A35820 /* TestView.swift in Sources */,
+				4438748326468D9100A35820 /* Test.swift in Sources */,
 				444879BB2632E6A8000601BF /* NetworkMonitor.swift in Sources */,
-				44A79A532626C27C00652F17 /* WatchlistView.swift in Sources */,
+				44A79A532626C27C00652F17 /* Watchlist.swift in Sources */,
 				44A79A34262451E100652F17 /* MainTabView.swift in Sources */,
 				44A79A4626255EEB00652F17 /* Classes.swift in Sources */,
-				44336BDF26272EB800C12CE0 /* OrdersView.swift in Sources */,
-				443874732643E3A000A35820 /* PortfolioTileView.swift in Sources */,
+				44AAFC0027063653001289E2 /* Tips.swift in Sources */,
+				44336BDF26272EB800C12CE0 /* Orders.swift in Sources */,
+				44F25F7627046C0E00BB69DD /* Transact.swift in Sources */,
+				443874732643E3A000A35820 /* PortfolioTile.swift in Sources */,
 				44387488265054CF00A35820 /* SearchBar.swift in Sources */,
-				44A79A5D2626C2C900652F17 /* FundsView.swift in Sources */,
+				44A79A5D2626C2C900652F17 /* Funds.swift in Sources */,
 				44A79A42262451F200652F17 /* DataController.swift in Sources */,
-				44336BDC2626CD0A00C12CE0 /* StockDetailView.swift in Sources */,
-				44032890262ACB8F0039A0E6 /* ErrorTileView.swift in Sources */,
+				44336BDC2626CD0A00C12CE0 /* StockDetail.swift in Sources */,
+				44032890262ACB8F0039A0E6 /* ErrorTile.swift in Sources */,
 				44A79A32262451E100652F17 /* Demo_TradingApp.swift in Sources */,
-				44032893262D92910039A0E6 /* PortfolioListView.swift in Sources */,
+				44032893262D92910039A0E6 /* PortfolioList.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -284,7 +296,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -339,7 +351,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -367,7 +379,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "rayansh.gupta.Demo-Trading";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -389,7 +401,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "rayansh.gupta.Demo-Trading";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -425,6 +437,14 @@
 				minimumVersion = 6.3.1;
 			};
 		};
+		449CD48A27030627000C3567 /* XCRemoteSwiftPackageReference "iActivityIndicator" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MojtabaHs/iActivityIndicator.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.4.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -432,6 +452,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4438746F26416AD400A35820 /* XCRemoteSwiftPackageReference "SwiftDate" */;
 			productName = SwiftDate;
+		};
+		449CD48B27030627000C3567 /* iActivityIndicator */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 449CD48A27030627000C3567 /* XCRemoteSwiftPackageReference "iActivityIndicator" */;
+			productName = iActivityIndicator;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

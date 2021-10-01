@@ -15,6 +15,20 @@ struct OrdersView: View {
     
     var body: some View {
         NavigationView {
+            ZStack {
+                if data.earlierOrders.count < 1 && data.orderList.count < 2 {
+                Image("signature")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .padding(.top)
+                } else {
+                    
+                    Image("signature")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .padding(.top)
+                        .opacity(0.1)
+                }
             VStack {
                 ScrollView {
                     DisclosureGroup(isExpanded: $isTodayExpanded, content: {
@@ -44,6 +58,7 @@ struct OrdersView: View {
                                     Divider()
                                     OrderTileView(order: order)
                                 }
+                                
                                 Divider()
                             }
                         }, label: {Text("Earlier").foregroundColor(Color("Black White"))})
@@ -54,6 +69,7 @@ struct OrdersView: View {
                     }
                     Spacer()
                 }
+            }
             }
             .navigationTitle("Orders")
             
@@ -104,7 +120,6 @@ struct OrderTileView: View {
                         .font(.body)
                         .foregroundColor(Color("Gray"))
                 }
-                
             }
         }
     }
@@ -113,6 +128,5 @@ struct OrderTileView: View {
 struct OrdersView_Previews: PreviewProvider {
     static var previews: some View {
         OrdersView()
-            .preferredColorScheme(.dark)
     }
 }

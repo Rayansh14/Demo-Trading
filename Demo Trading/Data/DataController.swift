@@ -14,9 +14,11 @@ class DataController: ObservableObject {
     static var shared = DataController()
     @ObservedObject var monitor = NetworkMonitor()
     
-    @Published var stockQuotes: [StockQuote] = []
-    @Published var userStocksOrder = ["RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT"]
+    @Published var showTab = true
     
+    @Published var stockQuotes: [StockQuote] = []
+    @Published var userStocksOrder: [String] = []
+//    "RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT"
     //    let userStocksOrder = ["RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT", "SBIN", "BAJFINANCE", "BHARTIARTL", "ASIANPAINT", "HCLTECH", "MARUTI", "M&M", "ULTRACEMCO", "SUNPHARMA", "WIPRO", "INDUSINDBK", "TITAN", "BAJAJFINSV", "NESTLEIND", "TATAMOTORS", "TECHM", "HDFCLIFE", "POWERGRID", "DRREDDY", "TATASTEEL", "NTPC", "BAJAJ-AUTO", "ADANIPORTS", "HINDALCO", "GRASIM", "DIVISLAB", "HEROMOTOCO", "ONGC", "CIPLA", "BRITANNIA", "JSWSTEEL", "BPCL", "EICHERMOT", "SHREECEM", "SBILIFE", "COALINDIA", "UPL", "IOC", "TATACONSUM"]
     
     @Published var portfolio: [StockOwned] = []
@@ -39,8 +41,9 @@ class DataController: ObservableObject {
     
     @Published var deliveryMargin: [Date: Double] = [:]
     
-    @Published var showError = false
-    @Published var errorMessage = ""
+    @Published var showMessage = false
+    @Published var message = ""
+    @Published var isError = true
     
     
     func getMarketStatus() -> Bool {
@@ -49,7 +52,6 @@ class DataController: ObservableObject {
         let nineFifteenToday = calendar.date(bySettingHour: 9, minute: 14, second: 59, of: now)!
         let threeThirtyToday = calendar.date(bySettingHour: 15, minute: 30, second: 00, of: now)!
         
-        //        print(nineFifteenToday)
         
         if now.compare(.isWeekday) {
             if now > nineFifteenToday && now < threeThirtyToday {
@@ -78,7 +80,6 @@ class DataController: ObservableObject {
                                 
                                 if let symbol = jsonStockQuote["symbol"] as? String {
                                     stockQuote.symbol = symbol
-                                    print(symbol)
                                 }
                                 if let lastPrice = jsonStockQuote["lastPrice"] as? Double {
                                     stockQuote.lastPrice = lastPrice
@@ -107,6 +108,7 @@ class DataController: ObservableObject {
                                 
                                 stockQuotesToAdd.append(stockQuote)
                             }
+                            
                             DispatchQueue.main.async {
                                 if stockQuotesToAdd.count != 0 {
                                     self.stockQuotes = stockQuotesToAdd
@@ -117,7 +119,7 @@ class DataController: ObservableObject {
                 }.resume()
             }
         } else {
-            showErrorMessage(message: "Not connected to internet.")
+            showMessage(message: "Not connected to internet.")
         }
     }
     
@@ -129,16 +131,6 @@ class DataController: ObservableObject {
             return portfolio[index]
         }
         return StockOwned()
-    }
-    
-    
-    func updateDeliveryMargin() {
-        for dm in deliveryMargin {
-            if dm.key < Date().dateAt(.endOfDay) {
-                funds += dm.value
-                deliveryMargin.removeValue(forKey: dm.key)
-            }
-        }
     }
     
     
@@ -188,11 +180,12 @@ class DataController: ObservableObject {
     }
     
     
-    func showErrorMessage(message: String) {
-        errorMessage = message
-        showError = true
+    func showMessage(message: String, error: Bool = true) {
+        self.message = message
+        self.isError = error
+        showMessage = true
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(7)) {
-            self.showError = false
+            self.showMessage = false
         }
     }
     
@@ -237,8 +230,10 @@ class DataController: ObservableObject {
                         stockOwned.timeBought = order.time
                         portfolio.append(stockOwned)
                     }
+                    
+                    showMessage(message: "Done! And you still have \(self.funds.withCommas(withRupeeSymbol: true)) left.", error: false)
                 } else {
-                    showErrorMessage(message: "Not enough funds! Sell some stocks or reduce the number of shares.")
+                    showMessage(message: "Not enough funds! Sell some stocks or reduce the number of shares.")
                 }
             } else {
                 if checkIfOwned(stockSymbol: order.stockSymbol) {
@@ -266,17 +261,17 @@ class DataController: ObservableObject {
                                     funds += (Double(order.numberOfShares) * order.sharePrice)
                                 }
                             } else {
-                                showErrorMessage(message: "You don't own enough shares.")
+                                showMessage(message: "You don't own enough shares.")
                             }
                         }
                     }
                 } else {
-                    showErrorMessage(message: "You don't own any \(order.stockSymbol) shares.")
+                    showMessage(message: "You don't own any \(order.stockSymbol) shares.")
                 }
             }
             saveData()
         } else {
-            showErrorMessage(message: "The stock market is not open right now. Please try again when it is open.")
+            showMessage(message: "The stock market is not open right now. Please try again when it is open.")
         }
     }
     

@@ -106,6 +106,7 @@ struct StockDetailView: View {
                     }
                     .font(.system(size: 16))
                     .multilineTextAlignment(.center)
+                    .animation(.none)
                     
                     if !showTitle {
                         Spacer()
@@ -136,6 +137,7 @@ struct StockDetailView: View {
                                     .cornerRadius(10)
                             }
                         }
+                        .animation(.none)
                         
                     } else {
                         
@@ -164,29 +166,17 @@ struct StockDetailView: View {
                         .padding(.vertical, 10)
                         
                         VStack {
-                            HStack {
-                                Text("Buy Value:")
-                                Spacer()
-                                Text((stockOwned.avgPriceBought * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true))
-                            }
-                            .padding(.horizontal)
-                            .padding(.top)
-                                
-                            HStack {
-                                Text("Current Value:")
-                                Spacer()
-                                Text((stockOwned.lastPrice * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true))
-                            }
-                            .padding(.horizontal)
+                            CustomInfoView(label: "Buy Value:", info: ((stockOwned.avgPriceBought * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true)))
+                                .padding(.top)
+                            
+                            CustomInfoView(label: "Current Value:", info: ((stockOwned.lastPrice * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true)))
+                                .padding(.top, 1)
+                            
+                            CustomInfoView(label: "Profit/Loss:", info: ((stockOwned.lastPrice - stockOwned.avgPriceBought) * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true))
                             .padding(.top, 1)
                             
-                            HStack {
-                                Text("Profit/Loss: ")
-                                Spacer()
-                                Text(((stockOwned.lastPrice - stockOwned.avgPriceBought) * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true))
-                            }
-                            .padding(.horizontal)
-                            .padding(.top, 1)
+                            CustomInfoView(label: "Weightage in Portfolio:", info: "\((stockOwned.lastPrice * 100 * Double(stockOwned.numberOfShares) / data.getPorfolioInfo(portfolio: data.holdings)["currentValue"]!).withCommas(withRupeeSymbol: false))%")
+                                .padding(.top, 1)
                         }
                     }
                         }
@@ -215,73 +205,19 @@ struct StockDetailView: View {
 }
 
 
-
-
-struct TransactStockView: View {
-    
-    var orderType: OrderType
-    var stockQuote: StockQuote
-    var showTitle: Bool
-    @ObservedObject var data = DataController.shared
-    @StateObject var order = Order()
-    @State var numberOfShares = ""
-    @Environment(\.presentationMode) var presentationMode
-    
+struct CustomInfoView: View {
+    var label: String
+    var info: String
     var body: some View {
-        VStack {
-            HStack {
-                Spacer()
-            Text(orderType.rawValue.capitalized)
-                Spacer()
-                Button(action: {self.numberOfShares = buyMaxShares(sharePrice: stockQuote.lastPrice)}) {
-                    Text("Max")
-                }
-            }
-            Text(String(stockQuote.lastPrice))
-            TextField("Number of shares", text: $numberOfShares)
-                .padding(5)
-                .border(Color("Black White"), width: 1)
-                .padding()
-                .keyboardType(.numberPad)
-            Button(action: {
-                order.type = orderType
-                order.sharePrice = stockQuote.lastPrice
-                order.stockSymbol = stockQuote.symbol
-                order.time = Date()
-                if let intNumberOfShares = Int(numberOfShares) {
-                    order.numberOfShares = intNumberOfShares
-                    data.processOrder(order: order)
-                    presentationMode.wrappedValue.dismiss()
-                } else {
-                    data.showErrorMessage(message: "Please enter a valid number of shares.")
-                }
-            }) {
-                Text("Execute")
-                    .foregroundColor(.white)
-                    .font(.title)
-                    .padding(.vertical, 10)
-                    .padding(.horizontal)
-                    .background(Color.blue)
-                    .cornerRadius(10)
-            }
-            .disabled(numberOfShares == "" ? true : false)
+        HStack {
+            Text(label)
+            Spacer()
+            Text(info)
         }
-        .if({
-            showTitle
-        }()) { view in
-            view.navigationTitle(stockQuote.symbol)
-        }
-        .if({
-            !showTitle
-        }()) { view in
-            view.navigationBarHidden(true)
-        }
-    }
-    
-    func buyMaxShares(sharePrice: Double) -> String {
-        return String(Int(data.funds/sharePrice))
+        .padding(.horizontal)
     }
 }
+
 
 
 struct StockDetailView_Previews: PreviewProvider {

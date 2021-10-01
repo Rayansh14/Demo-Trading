@@ -59,11 +59,18 @@ struct FundsView: View {
                 }
                 .padding(.horizontal)
                 .padding(.top, 1)
+                
+                Spacer()
+                Image("money")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .padding(.horizontal)
+                Spacer()
                 Spacer()
             }
             .padding(.top)
             .navigationTitle("Funds")
-            .navigationBarItems(trailing: NavigationLink(destination: about()) {
+            .navigationBarItems(trailing: NavigationLink(destination: AboutView()) {
                 Image(systemName: "info.circle.fill")
             })
         }
@@ -87,6 +94,12 @@ struct FundsView: View {
     }
     
     func getDeliveryMargin() -> Double {
+        for dm in data.deliveryMargin {
+            if dm.key < Date().dateAt(.endOfDay) {
+                data.funds += dm.value
+                data.deliveryMargin.removeValue(forKey: dm.key)
+            }
+        }
         var sum = 0.0
         for amt in data.deliveryMargin.values {
             sum += amt
@@ -96,7 +109,7 @@ struct FundsView: View {
 }
 
 
-struct about: View {
+struct AboutView: View {
     var body: some View {
         Text("only nifty 500 companies, updates less often (about twice a minute), one lakh in fantasy amount provided")
             .padding()

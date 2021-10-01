@@ -23,6 +23,8 @@ struct PortfolioListView: View {
     @State var dayProfitLoss: Double = 0
     @State var dayProfitLossPercent: Double = 0
     
+    @Environment(\.colorScheme) var colorScheme
+    
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
@@ -47,7 +49,7 @@ struct PortfolioListView: View {
                     
                     Rectangle()
                         .frame(height: 1)
-                        .padding(.horizontal, 25)
+                        .padding(.horizontal, 20)
                     
                     
                     HStack {
@@ -65,15 +67,50 @@ struct PortfolioListView: View {
                     .padding(.leading, 35)
                 }
                 .padding(.vertical)
-                .border(Color.black)
+                .border(Color("Black White"))
                 .padding()
                 
-                
+                if (portfolioType == .holdings ? data.holdings : data.positions).count == 0 {
+                    ZStack {
+                        
+//                        if colorScheme == ColorScheme.dark {
+//                            Image("share-certificate-png")
+//                        } else {
+                        
+                        Image("share-certificate-png")
+                            .resizable()
+                            .renderingMode(.template)
+                            .foregroundColor(Color("Blue"))
+                            .opacity(0.9)
+                            .padding(.vertical, 10)
+                            .padding(.horizontal, 20)
+                            .aspectRatio(contentMode: .fit)
+//                        }
+                        
+                        
+                    VStack {
+                        Spacer()
+                        /*
+                        Text("Nothing to see here 👀")
+                            .font(.system(size: 18.5))
+                        if portfolioType == .positions {
+                            Text("Stocks that you buy will appear here on the day that they are bought. Go to your watchlist, select a stock and buy it to get started!")
+                                .multilineTextAlignment(.center)
+                                .padding()
+                        } else {
+                            Text("These are your holdings. Stocks that you have been holding for more than a day will appear here.")
+                                .multilineTextAlignment(.center)
+                                .padding()
+                        }*/
+                        Spacer()
+                    }
+                            .padding(.bottom, 120)
+                    }
+                } else {
                 ScrollView {
                     VStack {
-                        if (portfolioType == .holdings ? data.holdings : data.positions).count == 0 {
-                            Text("Nothing to see here 👀")
-                        } else {
+                        
+                        
                             ForEach(portfolioType == .holdings ? data.holdings : data.positions) {stock in
                                 Divider()
                                 PortfolioTileView(stock: stock)
@@ -124,11 +161,8 @@ struct PortfolioListView: View {
         dayProfitLossPercent = dayProfitLoss*100/buyValue
         if buyValue == 0 {
             dayProfitLossPercent = 0
-        }
-        if buyValue > 0.0 {
-            profitLossPercent = portfolioInfo["profitLossPercent"]!
         } else {
-            profitLossPercent = 0.00
+            profitLossPercent = portfolioInfo["profitLossPercent"]!
         }
     }
 }
@@ -138,6 +172,8 @@ struct PortfolioListView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             PortfolioListView(portfolioType: .holdings, buyValue: 2069.06, currentValue: 8394.40, profitLoss: 874.66, profitLossPercent: 1.07, dayProfitLoss: 517.85, dayProfitLossPercent: 0.73)
+            PortfolioListView(portfolioType: .positions)
+                .preferredColorScheme(.dark)
         }
     }
 }
