@@ -16,12 +16,12 @@ struct PortfolioListView: View {
     @ObservedObject var data = DataController.shared
     let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
     var portfolioType: PortfolioType
-    @State var buyValue = 0.0
-    @State var currentValue: Double = 0
-    @State var profitLoss: Double = 0
-    @State var profitLossPercent: Double = 0
-    @State var dayProfitLoss: Double = 0
-    @State var dayProfitLossPercent: Double = 0
+    @State private var buyValue = 0.0
+    @State private var currentValue: Double = 0
+    @State private var profitLoss: Double = 0
+    @State private var profitLossPercent: Double = 0
+    @State private var dayProfitLoss: Double = 0
+    @State private var dayProfitLossPercent: Double = 0
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -30,22 +30,27 @@ struct PortfolioListView: View {
             VStack(spacing: 0) {
                 VStack {
                     HStack {
+                        Spacer()
+                        
                         VStack {
                             Text("\(buyValue.withCommas(withRupeeSymbol: false))")
                             Text("Invested Amount")
-                                .font(.system(size: 15.5))
-                                .padding(.bottom, 1)
+                                .font(.system(size: 15))
                         }
+                        .offset(x: -5)
+                        
                         Spacer()
+                        
                         VStack {
                             Text("\(currentValue.withCommas(withRupeeSymbol: false))")
                             Text("Current Value")
-                                .font(.system(size: 15.5))
+                                .font(.system(size: 15))
                         }
+                        
                         Spacer()
                     }
+                    .padding(.bottom, 2)
                     .font(.system(size: 30))
-                    .padding(.leading, 35)
                     
                     Rectangle()
                         .frame(height: 1)
@@ -62,12 +67,12 @@ struct PortfolioListView: View {
                             .foregroundColor(profitLoss >= 0 ? .green : .red)
                         Text("(\(String(profitLossPercent.withCommas(withRupeeSymbol: false)))%)")
                             .foregroundColor(profitLoss >= 0 ? .green : .red)
-                        Spacer()
+//                        Spacer()
                     }
-                    .padding(.leading, 35)
+                    .padding(.horizontal, 30)
                 }
                 .padding(.vertical)
-                .border(Color("Black White"))
+                .overlay(RoundedRectangle(cornerRadius: 10).stroke())
                 .padding()
                 
                 if (portfolioType == .holdings ? data.holdings : data.positions).count == 0 {
@@ -112,16 +117,21 @@ struct PortfolioListView: View {
                         
                         
                             ForEach(portfolioType == .holdings ? data.holdings : data.positions) {stock in
-                                Divider()
+                                Rectangle()
+                                    .frame(height: 1)
+                                    .foregroundColor(Color("Divider Gray"))
                                 PortfolioTileView(stock: stock)
                             }
-                            Divider()
+                        Rectangle()
+                            .frame(height: 1)
+                            .foregroundColor(Color("Divider Gray"))
                         }
                     }
                 }
                 
                 
                 if portfolioType == .holdings {
+                    VStack {
                     HStack {
                         Text("Day P/L:")
                             .padding(.leading, 10)
@@ -133,6 +143,8 @@ struct PortfolioListView: View {
                             .foregroundColor(dayProfitLoss >= 0 ? .green : .red)
                     }
                     .background(Color("Light Gray"))
+                    .padding(.bottom, 1)
+                    }
                 }
                 
             }
@@ -171,7 +183,8 @@ struct PortfolioListView: View {
 struct PortfolioListView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            PortfolioListView(portfolioType: .holdings, buyValue: 2069.06, currentValue: 8394.40, profitLoss: 874.66, profitLossPercent: 1.07, dayProfitLoss: 517.85, dayProfitLossPercent: 0.73)
+//            PortfolioListView(portfolioType: .holdings, buyValue: 2069.06, currentValue: 8394.40, profitLoss: 874.66, profitLossPercent: 1.07, dayProfitLoss: 517.85, dayProfitLossPercent: 0.73)
+            PortfolioListView(portfolioType: .holdings)
             PortfolioListView(portfolioType: .positions)
                 .preferredColorScheme(.dark)
         }

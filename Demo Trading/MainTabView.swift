@@ -12,12 +12,6 @@ struct MainTabView: View {
     @ObservedObject var data = DataController.shared
     
     
-    init() {
-//        UITabBar.appearance().backgroundColor = UIColor.white
-//        UITabBar.appearance().barTintColor = UIColor.white
-//        UITabBar.appearance().unselectedItemTintColor = UIColor(Color.primary)
-        UITabBar.appearance().unselectedItemTintColor = UIColor(Color.secondary)
-        }
     
     var body: some View {
         

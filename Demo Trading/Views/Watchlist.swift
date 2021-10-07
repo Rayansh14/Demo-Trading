@@ -11,11 +11,11 @@ import iActivityIndicator
 struct WatchlistView: View {
     
     @ObservedObject var data = DataController.shared
-    @State var showSheet = false
-    @State var selectedStock = StockQuote()
-    @State var sheetOffset = CGSize(width: 0, height: 750)
-    @State var isAdding = false
-    @State var searchText = ""
+    @State private var showSheet = false
+    @State private var selectedStock = StockQuote()
+    @State private var sheetOffset = CGSize(width: 0, height: 750)
+    @State private var isAdding = false
+    @State private var searchText = ""
     let timer = Timer.publish(every: 30, tolerance: 5, on: .main, in: .common).autoconnect()
     @Environment(\.colorScheme) var colorScheme
     
@@ -23,7 +23,7 @@ struct WatchlistView: View {
         NavigationView {
             ZStack {
                 VStack {
-                    SearchBar(placeholderText: "Add stocks...", searchText: $searchText, isEditing: $isAdding)
+                    SearchBar(placeholderText: "Add stocks...", searchText: $searchText, isEditing: $isAdding, showSheet: $showSheet, sheetOffset: $sheetOffset)
                     
                     if !(isAdding) {
                         if data.userStocksOrder.count < 1 {
@@ -37,16 +37,16 @@ struct WatchlistView: View {
                                         .opacity(colorScheme == ColorScheme.light ? 0.15 : 0.25)
                                         .padding(40)
                                 }
-                            VStack {
-                                Spacer()
-                                Text("Howdy!")
-                                    .font(.title3)
-                                Text("Welcome to Demo Trading! To begin, add a stock to your watchlist using the search bar above 👆. Tap on it and select buy to buy that stock. You have been given ₹ 1,00,000 in fantasy money to buy stocks of your choosing! \nBest of luck and happy trading!")
-//                                to begin on your journey of ups (hopefully more) and downs (hopefully less) in the stock market!
-                                    .multilineTextAlignment(.center)
-                                    .padding(.horizontal)
-                                Spacer()
-                            }
+                                VStack {
+                                    Spacer()
+                                    Text("Howdy!")
+                                        .font(.title3)
+                                    Text("Welcome to Demo Trading! To begin, add a stock to your watchlist using the search bar above 👆. Tap on it and select buy to buy that stock. You have been given ₹ 1,00,000 in fantasy money to buy stocks of your choosing! \nBest of luck and happy trading!")
+                                    //                                to begin on your journey of ups (hopefully more) and downs (hopefully less) in the stock market!
+                                        .multilineTextAlignment(.center)
+                                        .padding(.horizontal)
+                                    Spacer()
+                                }
                             }
                         } else if data.stockQuotes.count == 0 {
                             VStack {
@@ -68,36 +68,32 @@ struct WatchlistView: View {
                         } else {
                             ZStack {
                                 if data.userStocksOrder.count < 2 {
-                                VStack {
-                                    Image("watchlist")
-                                        .resizable()
-                                        .renderingMode(.template)
-                                        .aspectRatio(contentMode: .fit)
-                                        .foregroundColor(Color("Blue"))
-                                        .opacity(0.9)
-                                        .padding(40)
-                                }
-                                }
-                            List {
-                                // todo - improve efficiency by not looping over everything, instead find more efficient way
-                                ForEach(data.userStocksOrder, id: \.self) { stock in
-                                    ForEach(data.stockQuotes) { stockQuote in
-                                        if stockQuote.symbol == stock {
-                                            Button(action: {
-                                                sheetOffset = CGSize.zero
-                                                showSheet = true
-                                                selectedStock = stockQuote
-                                            }) {
-                                                WatchlistTileView(stockQuote: stockQuote)
-                                            }
-                                        }
+                                    VStack {
+                                        Image("watchlist")
+                                            .resizable()
+                                            .renderingMode(.template)
+                                            .aspectRatio(contentMode: .fit)
+                                            .foregroundColor(Color("Blue"))
+                                            .opacity(0.9)
+                                            .padding(40)
                                     }
                                 }
-                                .onDelete { indexSet in
-                                    delete(at: indexSet)
+                                List {
+                                    ForEach(data.userStocksOrder, id: \.self) { stock in
+                                        let stockQuote = data.getStockQuote(stockSymbol: stock)
+                                        Button(action: {
+                                            sheetOffset = CGSize.zero
+                                            showSheet = true
+                                            selectedStock = stockQuote
+                                        }) {
+                                            WatchlistTileView(stockQuote: stockQuote)
+                                        }
+                                    }
+                                    .onDelete { indexSet in
+                                        delete(at: indexSet)
+                                    }
                                 }
-                            }
-                            .listStyle(PlainListStyle())
+                                .listStyle(PlainListStyle())
                             }
                         }
                         
@@ -110,8 +106,8 @@ struct WatchlistView: View {
                                     if data.userStocksOrder.contains(stock.symbol) {
                                         d2(symbol: stock.symbol)
                                     } else {
-                                        if data.userStocksOrder.count < 25 {
-                                    data.userStocksOrder.append(stock.symbol)
+                                        if data.userStocksOrder.count < 50 {
+                                            data.userStocksOrder.append(stock.symbol)
                                         }
                                     }
                                     
@@ -119,8 +115,10 @@ struct WatchlistView: View {
                                 }) {
                                     if data.userStocksOrder.contains(stock.symbol) {
                                         Image(systemName: "hand.thumbsup.fill")
+                                            .imageScale(.large)
                                     } else {
-                                    Image(systemName: "plus.square")
+                                        Image(systemName: "plus.square")
+                                            .imageScale(.large)
                                     }
                                 }
                                 .buttonStyle(BorderlessButtonStyle())
@@ -131,13 +129,13 @@ struct WatchlistView: View {
                 }
                 
                 VStack(spacing: 0) {
-                    Spacer()
+                    Spacer() // the spacer pushes the half sheet to the bottom of the phone
                     VStack(spacing: 0) {
                         ZStack {
                             Rectangle()
                                 .foregroundColor(Color("Light Gray"))
                                 .frame(height: 55)
-                                .cornerRadius(8)
+                                .cornerRadius(10)
                             HStack {
                                 Text(selectedStock.symbol)
                                     .font(.title)
@@ -164,10 +162,10 @@ struct WatchlistView: View {
                                 }
                         )
                         NavigationView {
-                            StockDetailView(stockQuote: selectedStock, showTitle: false)
+                            StockDetailView(stockSymbol: selectedStock.symbol, isFullScreen: false)
                         }
                     }
-                    .frame(height: 325)
+                    .frame(height: 350)
                 }
                 .opacity(showSheet ? 1 : 0)
                 .offset(y: sheetOffset.height)
@@ -175,7 +173,8 @@ struct WatchlistView: View {
             }
             .navigationTitle("Watchlist")
             .navigationBarItems(leading: NavigationLink(destination: TipsView()) {
-                Image(systemName: "eyeglasses")
+                Image(systemName: "lightbulb.fill")
+                    .foregroundColor(.yellow)
             }, trailing: Button(action: {
                 data.getStocksData()
             }) {
@@ -191,14 +190,7 @@ struct WatchlistView: View {
     
     
     func delete(at offsets: IndexSet) {
-        for x in offsets {
-            let stockToBeDeleted = data.stockQuotes[x]
-            if let index = data.userStocksOrder.firstIndex(where: { loopingStock -> Bool in
-                return stockToBeDeleted.symbol == loopingStock
-            }) {
-                data.userStocksOrder.remove(at: index)
-            }
-        }
+        data.userStocksOrder.remove(atOffsets: offsets)
         data.saveData()
     }
     
@@ -227,13 +219,13 @@ struct WatchlistTileView: View {
                 Text(stockQuote.symbol)
                     .foregroundColor(Color("Black White"))
                     .padding(.leading, 10)
-                    .padding(.vertical, 10)
-                    .font(.system(size: 20))
+                    .padding(.vertical, 12)
+                    .font(.system(size: 19))
                 VStack {
                     HStack {
                         Spacer()
                         Text(String(format: "%.2f", stockQuote.lastPrice))
-                            .font(.system(size: 18))
+                            .font(.system(size: 17))
                     }
                     HStack {
                         Spacer()

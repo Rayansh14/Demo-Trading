@@ -22,12 +22,11 @@ struct OrdersView: View {
                     .aspectRatio(contentMode: .fit)
                     .padding(.top)
                 } else {
-                    
                     Image("signature")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .padding(.top)
-                        .opacity(0.1)
+                        .opacity(0.2)
                 }
             VStack {
                 ScrollView {
@@ -39,10 +38,14 @@ struct OrdersView: View {
                                     .foregroundColor(Color("Black White"))
                             } else {
                                 ForEach(data.todayOrders) { order in
-                                    Divider()
+                                    Rectangle()
+                                        .frame(height: 1)
+                                        .foregroundColor(Color("Divider Gray"))
                                     OrderTileView(order: order)
                                 }
-                                Divider()
+                                Rectangle()
+                                    .frame(height: 1)
+                                    .foregroundColor(Color("Divider Gray"))
                             }
                         }
                     }, label: {Text("Today").foregroundColor(Color("Black White"))})
@@ -55,11 +58,15 @@ struct OrdersView: View {
                         DisclosureGroup(isExpanded: $isEarlierExpanded, content: {
                             VStack {
                                 ForEach(data.earlierOrders) { order in
-                                    Divider()
+                                    Rectangle()
+                                        .frame(height: 1)
+                                        .foregroundColor(Color("Divider Gray"))
                                     OrderTileView(order: order)
                                 }
                                 
-                                Divider()
+                                    Rectangle()
+                                        .frame(height: 1)
+                                        .foregroundColor(Color("Divider Gray"))
                             }
                         }, label: {Text("Earlier").foregroundColor(Color("Black White"))})
                         .font(.title2)
@@ -94,7 +101,7 @@ struct OrderTileView: View {
                 HStack {
                     Text(order.stockSymbol)
                         .foregroundColor(Color("Black White"))
-                        .font(.system(size: 23))
+                        .font(.system(size: 22))
                     Spacer()
                 }
             }
@@ -112,7 +119,7 @@ struct OrderTileView: View {
                     Spacer()
                     Text("\(String(format: "%.2f", order.sharePrice))")
                         .foregroundColor(Color("Black White"))
-                        .font(.system(size: 22))
+                        .font(.system(size: 21))
                 }
                 HStack {
                     Spacer()
@@ -122,11 +129,13 @@ struct OrderTileView: View {
                 }
             }
         }
+        .padding(.top, 1)
     }
 }
 
 struct OrdersView_Previews: PreviewProvider {
     static var previews: some View {
         OrdersView()
+            .preferredColorScheme(.dark)
     }
 }

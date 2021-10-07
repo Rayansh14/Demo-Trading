@@ -24,8 +24,8 @@ struct FundsView: View {
                         Text("Available Funds")
                     }
                     .frame(minWidth: 200)
-                    .padding(.vertical, 12)
-                    .border(Color("Black White"), width: 1)
+                    .padding(12)
+                    .background(RoundedRectangle(cornerRadius: 10).stroke())
                     
                     Rectangle()
                         .frame(height: 1)
@@ -70,9 +70,9 @@ struct FundsView: View {
             }
             .padding(.top)
             .navigationTitle("Funds")
-            .navigationBarItems(trailing: NavigationLink(destination: AboutView()) {
-                Image(systemName: "info.circle.fill")
-            })
+//            .navigationBarItems(trailing: NavigationLink(destination: AboutView()) {
+//                Image(systemName: "info.circle.fill")
+//            })
         }
     }
     
@@ -109,16 +109,16 @@ struct FundsView: View {
 }
 
 
-struct AboutView: View {
-    var body: some View {
-        Text("only nifty 500 companies, updates less often (about twice a minute), one lakh in fantasy amount provided")
-            .padding()
-    }
-}
+//struct AboutView: View {
+//    var body: some View {
+//        Text("only nifty 500 companies, updates less often (about twice a minute), one lakh in fantasy amount provided")
+//            .padding()
+//    }
+//}
 
 struct FundsView_Previews: PreviewProvider {
     static var previews: some View {
         FundsView()
-            .preferredColorScheme(.dark)
+//            .preferredColorScheme(.dark)
     }
 }

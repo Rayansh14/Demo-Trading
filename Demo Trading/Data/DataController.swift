@@ -18,8 +18,7 @@ class DataController: ObservableObject {
     
     @Published var stockQuotes: [StockQuote] = []
     @Published var userStocksOrder: [String] = []
-//    "RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT"
-    //    let userStocksOrder = ["RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT", "SBIN", "BAJFINANCE", "BHARTIARTL", "ASIANPAINT", "HCLTECH", "MARUTI", "M&M", "ULTRACEMCO", "SUNPHARMA", "WIPRO", "INDUSINDBK", "TITAN", "BAJAJFINSV", "NESTLEIND", "TATAMOTORS", "TECHM", "HDFCLIFE", "POWERGRID", "DRREDDY", "TATASTEEL", "NTPC", "BAJAJ-AUTO", "ADANIPORTS", "HINDALCO", "GRASIM", "DIVISLAB", "HEROMOTOCO", "ONGC", "CIPLA", "BRITANNIA", "JSWSTEEL", "BPCL", "EICHERMOT", "SHREECEM", "SBILIFE", "COALINDIA", "UPL", "IOC", "TATACONSUM"]
+    //    "RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT"
     
     @Published var portfolio: [StockOwned] = []
     var positions: [StockOwned] {
@@ -47,16 +46,14 @@ class DataController: ObservableObject {
     
     
     func getMarketStatus() -> Bool {
+        //        return true
         let calendar = Calendar.current
         let now = Date()
         let nineFifteenToday = calendar.date(bySettingHour: 9, minute: 14, second: 59, of: now)!
         let threeThirtyToday = calendar.date(bySettingHour: 15, minute: 30, second: 00, of: now)!
         
-        
-        if now.compare(.isWeekday) {
-            if now > nineFifteenToday && now < threeThirtyToday {
-                return true
-            }
+        if now.compare(.isWeekday) && now > nineFifteenToday && now < threeThirtyToday {
+            return true
         }
         return false
     }
@@ -66,16 +63,17 @@ class DataController: ObservableObject {
         if monitor.isConnected {
             if let url = URL(string: "https://latest-stock-price.p.rapidapi.com/any") {
                 var request = URLRequest(url: url)
-                request.addValue("03512222b0mshcad312769b45365p140f7ajsnf9fbe4c10a7e", forHTTPHeaderField: "x-rapidapi-key")
+                request.addValue("7fb21cb036msh42efbbec95f083fp193e7bjsn0fc5005cafa3", forHTTPHeaderField: "x-rapidapi-key")
                 request.addValue("latest-stock-price.p.rapidapi.com", forHTTPHeaderField: "x-rapidapi-host")
-                request.addValue("true", forHTTPHeaderField: "useQueryString")
+                //                request.addValue("true", forHTTPHeaderField: "useQueryString")
                 URLSession.shared.dataTask(with: request) { (data, response, error) in
                     if let webData = data {
                         if let json = try? JSONSerialization.jsonObject(with: webData, options: []) as? [[String:Any]] {
                             
-                            var stockQuotesToAdd: [StockQuote] = []
+                            var count = 0
                             
                             for jsonStockQuote in json {
+                                count += 1
                                 let stockQuote = StockQuote()
                                 
                                 if let symbol = jsonStockQuote["symbol"] as? String {
@@ -106,12 +104,31 @@ class DataController: ObservableObject {
                                     stockQuote.totalTradedVolume = totalTradedVolume
                                 }
                                 
-                                stockQuotesToAdd.append(stockQuote)
+                                DispatchQueue.main.async {
+                                    if let index = self.stockQuotes.firstIndex(where: {$0.symbol == stockQuote.symbol}) {
+                                        self.stockQuotes.remove(at: index)
+                                    }
+                                    
+                                    self.stockQuotes.append(stockQuote)
+                                }
                             }
                             
-                            DispatchQueue.main.async {
-                                if stockQuotesToAdd.count != 0 {
-                                    self.stockQuotes = stockQuotesToAdd
+                            
+                            print(count)
+                            if count == 0 {
+                                print("getting data again......")
+                                if self.stockQuotes.count == 0 {
+                                    print("instantly")
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                    self.getStocksData()
+                                    print("got new data!\n")
+                                    }
+                                } else {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+                                        self.getStocksData()
+                                        print("got new data!\n")
+                                        
+                                    }
                                 }
                             }
                         }
@@ -126,7 +143,7 @@ class DataController: ObservableObject {
     
     func getStockOwned(stockSymbol: String) -> StockOwned {
         if let index = portfolio.firstIndex(where: {loopingStockOwned -> Bool in
-            return loopingStockOwned.stockSymbol == stockSymbol
+            return loopingStockOwned.stockSymbol.lowercased() == stockSymbol.lowercased()
         }) {
             return portfolio[index]
         }
@@ -136,13 +153,10 @@ class DataController: ObservableObject {
     
     func updateAllStockPricesInPortfolio() {
         for stock in portfolio {
-            for quote in stockQuotes {
-                if stock.stockSymbol == quote.symbol {
-                    stock.lastPrice = quote.lastPrice
-                    stock.dayChange = quote.change
-                    stock.dayPChange = quote.pChange
-                }
-            }
+            let quote = getStockQuote(stockSymbol: stock.stockSymbol)
+            stock.lastPrice = quote.lastPrice
+            stock.dayChange = quote.change
+            stock.dayPChange = quote.pChange
         }
         saveData()
     }
@@ -169,13 +183,14 @@ class DataController: ObservableObject {
     
     
     func getStockQuote(stockSymbol: String) -> StockQuote {
-        for quote in stockQuotes {
-            if quote.symbol == stockSymbol {
-                return quote
-            }
+        if let quote = stockQuotes.first(where: { loopingQuote -> Bool in
+            loopingQuote.symbol.lowercased() == stockSymbol.lowercased()
+        }) {
+            return quote
         }
+        
         let newQuote = StockQuote()
-        newQuote.symbol = "ERROR 1"
+        newQuote.symbol = "ERROR 404"
         return newQuote
     }
     
@@ -237,36 +252,38 @@ class DataController: ObservableObject {
                 }
             } else {
                 if checkIfOwned(stockSymbol: order.stockSymbol) {
-                    for stock in portfolio {
-                        if stock.stockSymbol == order.stockSymbol {
-                            if stock.numberOfShares >= order.numberOfShares {
-                                orderList.append(order)
-                                
-                                if stock.numberOfShares == order.numberOfShares {
-                                    if let index = portfolio.firstIndex(where: {loopingStockOwned -> Bool in
-                                        return loopingStockOwned.id == stock.id
-                                    }) {
-                                        portfolio.remove(at: index)
-                                    }
-                                } else {
-                                    stock.numberOfShares -= order.numberOfShares
-                                }
-                                
-                                if checkIfInHoldings(stockSymbol: stock.stockSymbol) {
-                                    funds += (Double(order.numberOfShares) * order.sharePrice) * 0.8
-                                    let date = Date() + 5.hours + 30.minutes + 1.days
-                                    self.deliveryMargin[date] = Double(order.numberOfShares) * order.sharePrice * 0.2
-                                    
-                                } else {
-                                    funds += (Double(order.numberOfShares) * order.sharePrice)
+                    if let stock = portfolio.first(where: {loopingStock -> Bool in
+                        loopingStock.stockSymbol == order.stockSymbol
+                    }) {
+                        if stock.numberOfShares >= order.numberOfShares {
+                            orderList.append(order)
+                            
+                            if stock.numberOfShares == order.numberOfShares {
+                                if let index = portfolio.firstIndex(where: {loopingStockOwned -> Bool in
+                                    return loopingStockOwned.id == stock.id
+                                }) {
+                                    portfolio.remove(at: index)
                                 }
                             } else {
-                                showMessage(message: "You don't own enough shares.")
+                                stock.numberOfShares -= order.numberOfShares
                             }
+                            
+                            if checkIfInHoldings(stockSymbol: stock.stockSymbol) {
+                                funds += (Double(order.numberOfShares) * order.sharePrice) * 0.8
+                                let date = Date() + 5.hours + 30.minutes + 1.days
+                                self.deliveryMargin[date] = Double(order.numberOfShares) * order.sharePrice * 0.2
+                                
+                            } else {
+                                funds += (Double(order.numberOfShares) * order.sharePrice)
+                            }
+                            
+                            showMessage(message: "S😎LD! You got \((Double(order.numberOfShares) * order.sharePrice).withCommas(withRupeeSymbol: true)) from that sale! You now have \(funds.withCommas(withRupeeSymbol: true)).", error: false)
+                        } else {
+                            showMessage(message: "Seriously??? You're trying to sell more shares than you own?! 😡")
                         }
                     }
                 } else {
-                    showMessage(message: "You don't own any \(order.stockSymbol) shares.")
+                    showMessage(message: "You can't sell what you don't own! 😡")
                 }
             }
             saveData()
