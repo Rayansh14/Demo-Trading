@@ -20,7 +20,7 @@ struct ErrorTileView: View {
                 .multilineTextAlignment(.center)
             Spacer()
         }
-        .background(Color.white)
+        .background(Color("White Black"))
         .cornerRadius(10)
         .padding()
         .shadow(radius: 5)

@@ -17,14 +17,13 @@ struct StockDetailView: View {
         self.stockSymbol = stockSymbol
         self.isFullScreen = isFullScreen
         self.stockQuote = data.getStockQuote(stockSymbol: stockSymbol)
+        self.stockOwned = data.getStockOwned(stockSymbol: stockSymbol)
     }
     
     @ObservedObject var data = DataController.shared
-    @State private var stockOwned = StockOwned()
+    var stockOwned = StockOwned()
     @Environment(\.presentationMode) var presentationMode
     
-    
-//    let stockQuote = StockQuote()
     
     var body: some View {
         ZStack {
@@ -55,71 +54,34 @@ struct StockDetailView: View {
                     
                     HStack {
                         Spacer()
-                        VStack {
-                            Text("Open")
-                                .font(.system(size: 15))
-                                .foregroundColor(Color("Gray"))
-                                .offset(x: 0, y: -3)
-                            Text(stockQuote.open.withCommas(withRupeeSymbol: false))
-                                .offset(x: 0, y: 3)
-                                .font(.system(size: 15.5))
-                        }
+                        InfoView(text: "Open", info: stockQuote.open)
                         Spacer()
                         
-                        Rectangle()
-                            .frame(width: 1, height: 70)
-                            .foregroundColor(Color("Divider Gray"))
+                        CustomDivider()
                     }
                     
                     HStack {
                         Spacer()
-                        VStack {
-                            Text("Low")
-                                .font(.system(size: 15))
-                                .foregroundColor(Color("Gray"))
-                                .offset(x: 0, y: -3)
-                            Text(stockQuote.dayLow.withCommas(withRupeeSymbol: false))
-                                .offset(x: 0, y: 3)
-                                .font(.system(size: 15.5))
-                        }
+                        InfoView(text: "Low", info: stockQuote.dayLow)
                         Spacer()
                         
-                        Rectangle()
-                            .frame(width: 1, height: 70)
-                            .foregroundColor(Color("Divider Gray"))
+                        CustomDivider()
                     }
                     
                     HStack {
                         Spacer()
-                        VStack {
-                            Text("High")
-                                .font(.system(size: 15))
-                                .foregroundColor(Color("Gray"))
-                                .offset(x: 0, y: -3)
-                            Text(stockQuote.dayHigh.withCommas(withRupeeSymbol: false))
-                                .offset(x: 0, y: 3)
-                                .font(.system(size: 15.5))
-                        }
+                        InfoView(text: "High", info: stockQuote.dayHigh)
                         Spacer()
                         
-                        Rectangle()
-                            .frame(width: 1, height: 70)
-                            .foregroundColor(Color("Divider Gray"))
+                        CustomDivider()
                     }
                     
                     HStack {
                         Spacer()
-                        VStack {
-                            Text("Prev. Close")
-                                .font(.system(size: 15))
-                                .foregroundColor(Color("Gray"))
-                                .offset(x: 0, y: -3)
-                            Text(stockQuote.previousClose.withCommas(withRupeeSymbol: false))
-                                .offset(x: 0, y: 3)
-                                .font(.system(size: 15.5))
-                        }
+                        InfoView(text: "Prev. Close", info: stockQuote.previousClose)
                         Spacer()
                     }
+                    
                 }
                 .font(.system(size: 16))
                 .multilineTextAlignment(.center)
@@ -130,31 +92,17 @@ struct StockDetailView: View {
                 
                 
                 if !(stockQuote.symbol.contains("NIFTY")) {
-                        
-                        HStack {
-                            NavigationLink(destination: TransactStockView(orderType: .buy, stockSymbol: stockSymbol, isFullScreen: isFullScreen)) {
-                                Text("Buy")
-                                    .frame(width: 150)
-                                    .foregroundColor(.white)
-                                    .font(.system(size: 24))
-                                    .padding(.vertical, 12)
-                                    .background(Color.green)
-                                    .cornerRadius(10)
-                                    .padding(.horizontal, 1)
-                            }
-                            NavigationLink(destination: TransactStockView(orderType: .sell, stockSymbol: stockSymbol, isFullScreen: isFullScreen)) {
-                                Text("Sell")
-                                    .frame(width: 150)
-                                    .foregroundColor(.white)
-                                    .font(.system(size: 24))
-                                    .padding(.vertical, 12)
-                                    .background(Color.red)
-                                    .cornerRadius(10)
-                                    .padding(.horizontal, 1)
-                            }
+                    
+                    HStack {
+                        NavigationLink(destination: TransactStockView(orderType: .buy, stockSymbol: stockSymbol, isFullScreen: isFullScreen)) {
+                            TransactButton(text: "Buy", color: .green)
                         }
-                        .animation(.none)
-                        .padding(.vertical, 10)
+                        NavigationLink(destination: TransactStockView(orderType: .sell, stockSymbol: stockSymbol, isFullScreen: isFullScreen)) {
+                            TransactButton(text: "Sell", color: .red)
+                        }
+                    }
+                    .animation(.none)
+                    .padding(.vertical, 10)
                     
                     if isFullScreen {
                         
@@ -166,15 +114,14 @@ struct StockDetailView: View {
                                 .padding(.top, 1)
                             
                             CustomInfoView(label: "Profit/Loss:", info: ((stockOwned.lastPrice - stockOwned.avgPriceBought) * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true))
-                            .padding(.top, 1)
+                                .padding(.top, 1)
                             
                             CustomInfoView(label: "Weightage in Portfolio:", info: "\((stockOwned.lastPrice * 100 * Double(stockOwned.numberOfShares) / data.getPorfolioInfo(portfolio: data.portfolio)["currentValue"]!).withCommas(withRupeeSymbol: false))%")
                                 .padding(.top, 1)
                         }
                     }
-                        
                     
-                    Spacer()
+                    //                    Spacer()
                 }
                 
                 Spacer()
@@ -184,9 +131,6 @@ struct StockDetailView: View {
         }
         .onDisappear(perform: {
             self.presentationMode.wrappedValue.dismiss()
-        })
-        .onAppear(perform: {
-            stockOwned = data.getStockOwned(stockSymbol: stockSymbol)
         })
         .if({
             isFullScreen
@@ -198,6 +142,24 @@ struct StockDetailView: View {
         }()) { view in
             view.navigationBarHidden(true)
         }
+    }
+}
+
+
+struct TransactButton: View {
+    
+    var text: String
+    var color: Color
+    
+    var body: some View {
+        Text(text)
+            .frame(width: 150)
+            .foregroundColor(.white)
+            .font(.system(size: 24))
+            .padding(.vertical, 12)
+            .background(color)
+            .cornerRadius(10)
+            .padding(.horizontal, 1)
     }
 }
 
@@ -222,7 +184,33 @@ struct StockDetailView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             StockDetailView(stockSymbol: "RELIANCE", isFullScreen: true)
-//                .preferredColorScheme(.dark)
+            //                .preferredColorScheme(.dark)
         }
+    }
+}
+
+struct InfoView: View {
+    
+    var text: String
+    var info: Double
+    
+    var body: some View {
+        VStack {
+            Text(text)
+                .font(.system(size: 15))
+                .foregroundColor(Color("Gray"))
+                .offset(x: 0, y: -3)
+            Text(info.withCommas(withRupeeSymbol: false))
+                .offset(x: 0, y: 3)
+                .font(.system(size: 15.5))
+        }
+    }
+}
+
+struct CustomDivider: View {
+    var body: some View {
+        Rectangle()
+            .frame(width: 1, height: 70)
+            .foregroundColor(Color("Divider Gray"))
     }
 }

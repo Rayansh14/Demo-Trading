@@ -41,8 +41,8 @@ struct WatchlistView: View {
                                     Spacer()
                                     Text("Howdy!")
                                         .font(.title3)
-                                    Text("Welcome to Demo Trading! To begin, add a stock to your watchlist using the search bar above 👆. Tap on it and select buy to buy that stock. You have been given ₹ 1,00,000 in fantasy money to buy stocks of your choosing! \nBest of luck and happy trading!")
-                                    //                                to begin on your journey of ups (hopefully more) and downs (hopefully less) in the stock market!
+                                    Text("Welcome to Demo Trading! To get started, tap on the light bulb in the top left corner. ↖")
+                                    //                                    Text("Welcome to Demo Trading! To begin, add a stock to your watchlist using the search bar above 👆. Tap on it and select buy to buy that stock. You have been given ₹ 1,00,000 in fantasy money to buy stocks of your choosing! \nBest of luck and happy trading!")
                                         .multilineTextAlignment(.center)
                                         .padding(.horizontal)
                                     Spacer()
@@ -51,16 +51,12 @@ struct WatchlistView: View {
                         } else if data.stockQuotes.count == 0 {
                             VStack {
                                 Spacer()
-                                HStack {
-                                    Spacer()
-                                    ZStack {
-                                        Text("Loading...")
-                                            .font(.title)
-                                        iActivityIndicator(style: .arcs(count: 5, width: 5, spacing: 3))
-                                            .padding(50)
-                                            .foregroundColor(Color("Blue"))
-                                    }
-                                    Spacer()
+                                ZStack(alignment: .center) {
+                                    Text("Loading...")
+                                        .font(.title)
+                                    iActivityIndicator(style: .arcs(count: 5, width: 5, spacing: 3))
+                                        .padding(50)
+                                        .foregroundColor(Color("Blue"))
                                 }
                                 Spacer()
                             }
@@ -172,6 +168,7 @@ struct WatchlistView: View {
                 .animation(.easeInOut(duration: 0.6))
             }
             .navigationTitle("Watchlist")
+            .navigationBarTitleDisplayMode(.large)
             .navigationBarItems(leading: NavigationLink(destination: TipsView()) {
                 Image(systemName: "lightbulb.fill")
                     .foregroundColor(.yellow)
@@ -207,7 +204,6 @@ struct WatchlistView: View {
 
 
 
-
 struct WatchlistTileView: View {
     
     var stockQuote: StockQuote
@@ -224,12 +220,12 @@ struct WatchlistTileView: View {
                 VStack {
                     HStack {
                         Spacer()
-                        Text(String(format: "%.2f", stockQuote.lastPrice))
+                        Text(stockQuote.lastPrice.withCommas(withRupeeSymbol: false))
                             .font(.system(size: 17))
                     }
                     HStack {
                         Spacer()
-                        Text("\(String(format: "%.2f", stockQuote.pChange))%")
+                        Text("\(stockQuote.pChange.withCommas(withRupeeSymbol: false))%")
                             .font(.system(size: 14))
                     }
                 }

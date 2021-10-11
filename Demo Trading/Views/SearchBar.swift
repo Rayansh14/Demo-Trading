@@ -59,10 +59,8 @@ struct SearchBar: View {
                         dismissKeyboard()
                         
                     }) {
-                        HStack {
                             Text("Done")
                                 .padding(5)
-                        }
                     }
                     .padding(.trailing, 10)
                     .transition(.move(edge: .trailing))
@@ -71,7 +69,7 @@ struct SearchBar: View {
                 
             }
             .animation(.easeInOut(duration: 0.5))
-            .if({ 
+            .if({
                 !UIDevice.current.hasNotch
             }()) { view in
                 view.padding(.top, 20)
@@ -82,8 +80,8 @@ struct SearchBar: View {
 
 extension UIDevice {
     var hasNotch: Bool {
-            let keyWindow = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
-            return keyWindow?.safeAreaInsets.bottom ?? 0 > 0
-        }
-
+        let keyWindow = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
+        return keyWindow?.safeAreaInsets.bottom ?? 0 > 0
+    }
+    
 }

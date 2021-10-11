@@ -120,15 +120,15 @@
 		44A79A502626C25300652F17 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4403288F262ACB8F0039A0E6 /* ErrorTile.swift */,
 				44AAFBFF27063653001289E2 /* Tips.swift */,
 				44A79A522626C27C00652F17 /* Watchlist.swift */,
 				44336BDB2626CD0A00C12CE0 /* StockDetail.swift */,
 				44F25F7527046C0E00BB69DD /* Transact.swift */,
-				4403288F262ACB8F0039A0E6 /* ErrorTile.swift */,
+				44336BDE26272EB800C12CE0 /* Orders.swift */,
 				44032892262D92910039A0E6 /* PortfolioList.swift */,
 				443874722643E3A000A35820 /* PortfolioTile.swift */,
 				44A79A5C2626C2C900652F17 /* Funds.swift */,
-				44336BDE26272EB800C12CE0 /* Orders.swift */,
 				44387487265054CF00A35820 /* SearchBar.swift */,
 				4438748226468D9100A35820 /* Test.swift */,
 			);

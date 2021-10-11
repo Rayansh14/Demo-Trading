@@ -28,8 +28,6 @@ struct TransactStockView: View {
     @FocusState private var textFieldFocused: Bool
     @Environment(\.presentationMode) var presentationMode
     
-    //    self.numberOfShares = buyMaxShares(sharePrice: stockQuote.lastPrice)
-    
     var body: some View {
         VStack(alignment: .leading) {
             
@@ -65,6 +63,7 @@ struct TransactStockView: View {
             
             
             if isFullScreen {
+                // hstack is there so that when image shrinks, it still stays in the middle of the screen.
                 HStack {
                     Spacer()
                     Image("handshake")
@@ -118,7 +117,6 @@ struct TransactStockView: View {
                 .disabled(stockQuote.lastPrice == 0 ? true : false)
                 Spacer()
             }
-            //            Spacer()
         }
         .onAppear(perform: {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {

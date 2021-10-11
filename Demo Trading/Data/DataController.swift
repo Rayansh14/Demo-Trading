@@ -46,7 +46,6 @@ class DataController: ObservableObject {
     
     
     func getMarketStatus() -> Bool {
-        //        return true
         let calendar = Calendar.current
         let now = Date()
         let nineFifteenToday = calendar.date(bySettingHour: 9, minute: 14, second: 59, of: now)!

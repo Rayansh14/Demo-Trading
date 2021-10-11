@@ -19,62 +19,44 @@ struct PortfolioTileView: View {
         NavigationLink(destination: StockDetailView(stockSymbol: stock.stockSymbol, isFullScreen: true)) {
             HStack {
                 
-                VStack(spacing: 3) {
-                    HStack {
-                        Text("Avg: \(String(format: "%.2f", stock.avgPriceBought))")
-                            .font(.system(size: 15))
-                        Spacer()
-                    }
-                    .foregroundColor(Color("Gray"))
-                    HStack {
-                        Text(stock.stockSymbol)
-                            .font(.system(size: 20))
-                            .frame(height: 32)
-                        Spacer()
-                    }
-                    HStack {
-                        Text("Qty: \(stock.numberOfShares)")
-                            .font(.system(size: 15))
-                        Spacer()
-                    }
-                    .foregroundColor(Color("Gray"))
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("Avg: \(String(format: "%.2f", stock.avgPriceBought))")
+                        .font(.system(size: 15))
+                        .foregroundColor(Color("Gray"))
+                    
+                    Text(stock.stockSymbol)
+                        .font(.system(size: 20))
+                        .frame(height: 32)
+                    
+                    Text("Qty: \(stock.numberOfShares)")
+                        .font(.system(size: 15))
+                        .foregroundColor(Color("Gray"))
                 }
-                .padding(.horizontal)
                 
                 Spacer()
                 
-                VStack(spacing: 3) {
-                    HStack {
-                        Spacer()
-                        Text("\(String(format: "%.2f", profitLossPercent))%")
-                            .foregroundColor(profitLoss >= 0 ? .green : .red)
-                            .font(.system(size: 15))
-                    }
-                    HStack {
-                        Spacer()
-                        Text("\(profitLoss >= 0 ? "+" : "")\(String(format: "%.2f", profitLoss))")
-                            .font(.system(size: 20))
-                            .frame(height: 32)
-                            .foregroundColor(profitLoss >= 0 ? .green : .red)
-                    }
+                VStack(alignment: .trailing, spacing: 3) {
+                    Text("\(String(format: "%.2f", profitLossPercent))%")
+                        .foregroundColor(profitLoss >= 0 ? .green : .red)
+                        .font(.system(size: 15))
                     
-                    HStack {
-                        Spacer()
-                        
-                        HStack(spacing: 0) {
+                    Text("\(profitLoss >= 0 ? "+" : "")\(String(format: "%.2f", profitLoss))")
+                        .font(.system(size: 20))
+                        .frame(height: 32)
+                        .foregroundColor(profitLoss >= 0 ? .green : .red)
+                    
+                    HStack(spacing: 0) {
                         Text("LTP: \(String(format: "%.2f", stock.lastPrice))")
                             .font(.system(size: 15))
                             .foregroundColor(Color("Gray"))
                         Text(" (\(stock.dayChange >= 0 ? "+" : "")\(String(format: "%.2f", stock.dayPChange))%)")
                             .font(.system(size: 16))
                             .foregroundColor(stock.dayChange >= 0 ? .green : .red)
-                        }
                     }
                 }
                 
-                .padding(.trailing)
-                
             }
+            .padding(.horizontal)
             .foregroundColor(Color("Black White")) // without this, text colour is blue
         }
         .onAppear(perform: {

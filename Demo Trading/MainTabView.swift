@@ -11,8 +11,6 @@ struct MainTabView: View {
     
     @ObservedObject var data = DataController.shared
     
-    
-    
     var body: some View {
         
         

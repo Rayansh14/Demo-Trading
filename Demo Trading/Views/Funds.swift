@@ -51,11 +51,10 @@ struct FundsView: View {
                 HStack {
                     Text("Total Net Worth:")
                     Spacer()
-                    VStack(alignment: .trailing) {
-                        Text("\(getTotalNetWorth().withCommas(withRupeeSymbol: true))")
-                        Text("\(changeInNetWorth().withCommas(withRupeeSymbol: false)) %")
-                            .foregroundColor(changeInNetWorth() >= 0 ? .green : .red)
-                    }
+                    Text("\(getTotalNetWorth().withCommas(withRupeeSymbol: true))\n\(changeInNetWorth().withCommas(withRupeeSymbol: false)) %")
+                        .foregroundColor(changeInNetWorth() >= 0 ? .green : .red)
+                        .multilineTextAlignment(.trailing)
+                    
                 }
                 .padding(.horizontal)
                 .padding(.top, 1)
@@ -70,9 +69,6 @@ struct FundsView: View {
             }
             .padding(.top)
             .navigationTitle("Funds")
-//            .navigationBarItems(trailing: NavigationLink(destination: AboutView()) {
-//                Image(systemName: "info.circle.fill")
-//            })
         }
     }
     
@@ -109,16 +105,9 @@ struct FundsView: View {
 }
 
 
-//struct AboutView: View {
-//    var body: some View {
-//        Text("only nifty 500 companies, updates less often (about twice a minute), one lakh in fantasy amount provided")
-//            .padding()
-//    }
-//}
 
 struct FundsView_Previews: PreviewProvider {
     static var previews: some View {
         FundsView()
-//            .preferredColorScheme(.dark)
     }
 }
