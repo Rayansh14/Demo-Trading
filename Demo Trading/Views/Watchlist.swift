@@ -16,7 +16,7 @@ struct WatchlistView: View {
     @State private var sheetOffset = CGSize(width: 0, height: 750)
     @State private var isAdding = false
     @State private var searchText = ""
-    let timer = Timer.publish(every: 30, tolerance: 5, on: .main, in: .common).autoconnect()
+    let timer = Timer.publish(every: 25, tolerance: 5, on: .main, in: .common).autoconnect()
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {

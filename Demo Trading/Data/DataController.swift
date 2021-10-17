@@ -46,11 +46,13 @@ class DataController: ObservableObject {
     
     
     func getMarketStatus() -> Bool {
+//                return true
+        
         let calendar = Calendar.current
         let now = Date()
         let nineFifteenToday = calendar.date(bySettingHour: 9, minute: 14, second: 59, of: now)!
         let threeThirtyToday = calendar.date(bySettingHour: 15, minute: 30, second: 00, of: now)!
-        
+
         if now.compare(.isWeekday) && now > nineFifteenToday && now < threeThirtyToday {
             return true
         }
@@ -119,11 +121,11 @@ class DataController: ObservableObject {
                                 if self.stockQuotes.count == 0 {
                                     print("instantly")
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                    self.getStocksData()
-                                    print("got new data!\n")
+                                        self.getStocksData()
+                                        print("got new data!\n")
                                     }
                                 } else {
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                                         self.getStocksData()
                                         print("got new data!\n")
                                         
@@ -151,6 +153,24 @@ class DataController: ObservableObject {
     
     
     func updateAllStockPricesInPortfolio() {
+        for stock in holdings {
+            let filtered = holdings.filter({ $0.stockSymbol == stock.stockSymbol })
+            if filtered.count > 1 {
+                let stocko = filtered[0]
+                
+                for stock in filtered[1...] {
+                    stocko.avgPriceBought = ((stock.avgPriceBought * Double(stock.numberOfShares)) + (stocko.avgPriceBought * Double(stocko.numberOfShares)))/Double(stocko.numberOfShares + stock.numberOfShares)
+                        stocko.numberOfShares += stock.numberOfShares
+                }
+                
+                
+                self.portfolio = portfolio.filter({ stockOwned in
+                    !filtered.contains(where: {$0.timeBought == stockOwned.timeBought})
+                })
+                self.portfolio.append(stocko)
+            }
+        }
+        
         for stock in portfolio {
             let quote = getStockQuote(stockSymbol: stock.stockSymbol)
             stock.lastPrice = quote.lastPrice
@@ -181,6 +201,16 @@ class DataController: ObservableObject {
     }
     
     
+    func checkIfInPositions(stockSymbol: String) -> Bool {
+        for stock in self.positions {
+            if stock.stockSymbol == stockSymbol {
+                return true
+            }
+        }
+        return false
+    }
+    
+    
     func getStockQuote(stockSymbol: String) -> StockQuote {
         if let quote = stockQuotes.first(where: { loopingQuote -> Bool in
             loopingQuote.symbol.lowercased() == stockSymbol.lowercased()
@@ -189,7 +219,7 @@ class DataController: ObservableObject {
         }
         
         let newQuote = StockQuote()
-        newQuote.symbol = "ERROR 404"
+        newQuote.symbol = stockSymbol
         return newQuote
     }
     
@@ -229,12 +259,13 @@ class DataController: ObservableObject {
                 if funds >= (order.sharePrice * Double(order.numberOfShares)) {
                     orderList.append(order)
                     funds -= (order.sharePrice * Double(order.numberOfShares))
-                    if checkIfOwned(stockSymbol: order.stockSymbol) {
-                        for stock in portfolio {
-                            if stock.stockSymbol == order.stockSymbol {
-                                stock.avgPriceBought = (((stock.avgPriceBought * Double(stock.numberOfShares)) + (order.sharePrice * Double(order.numberOfShares)))/Double(order.numberOfShares + stock.numberOfShares))
-                                stock.numberOfShares += order.numberOfShares
-                            }
+                    
+                    if checkIfInPositions(stockSymbol: order.stockSymbol) {
+                        if let stock = positions.first(where:{ $0.stockSymbol == order.stockSymbol }) {
+                            
+                            stock.avgPriceBought = ((stock.avgPriceBought * Double(stock.numberOfShares)) + (order.sharePrice * Double(order.numberOfShares)))/Double(stock.numberOfShares + order.numberOfShares)
+                            stock.numberOfShares += order.numberOfShares
+                            
                         }
                     } else {
                         let stockOwned = StockOwned()

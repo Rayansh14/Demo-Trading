@@ -145,7 +145,7 @@ struct PortfolioListView: View {
         currentValue = portfolioInfo["currentValue"]!
         profitLoss = portfolioInfo["profitLoss"]!
         dayProfitLoss = portfolioInfo["dayProfitLoss"]!
-        dayProfitLossPercent = dayProfitLoss*100/buyValue
+        dayProfitLossPercent = dayProfitLoss*100/currentValue
         if buyValue == 0 {
             dayProfitLossPercent = 0
         } else {
