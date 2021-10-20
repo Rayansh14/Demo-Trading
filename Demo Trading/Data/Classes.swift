@@ -150,9 +150,65 @@ var testStockOwned: StockOwned {
     let stockOwned = StockOwned()
     stockOwned.stockSymbol = "RELIANCE"
     stockOwned.numberOfShares = 10
-    stockOwned.avgPriceBought = 2002.30
+    stockOwned.avgPriceBought = 1982.30
     stockOwned.dayChange = 12.20
     stockOwned.dayPChange = 0.79
     stockOwned.lastPrice = 2004.75
     return stockOwned
 }
+
+var test1: StockOwned {
+    let stockOwned = StockOwned()
+    stockOwned.stockSymbol = "HDFCBANK"
+    stockOwned.numberOfShares = 18
+    stockOwned.avgPriceBought = 1681.55
+    stockOwned.dayChange = 17.30
+    stockOwned.dayPChange = 1.04
+    stockOwned.lastPrice = 1687.60
+    return stockOwned
+}
+
+var test2: StockOwned {
+    let stockOwned = StockOwned()
+    stockOwned.stockSymbol = "TCS"
+    stockOwned.numberOfShares = 6
+    stockOwned.avgPriceBought = 3657.65
+    stockOwned.dayChange = -12.7
+    stockOwned.dayPChange = -0.35
+    stockOwned.lastPrice = 3634.45
+    return stockOwned
+}
+
+var test3: StockOwned {
+    let stockOwned = StockOwned()
+    stockOwned.stockSymbol = "IDEA"
+    stockOwned.numberOfShares = 1750
+    stockOwned.avgPriceBought = 11.77
+    stockOwned.dayChange = 0.6
+    stockOwned.dayPChange = 6
+    stockOwned.lastPrice = 10.6
+    return stockOwned
+}
+
+var test4: StockOwned {
+    let stockOwned = StockOwned()
+    stockOwned.stockSymbol = "BANKBARODA"
+    stockOwned.numberOfShares = 250
+    stockOwned.avgPriceBought = 81.01
+    stockOwned.dayChange = 2.75
+    stockOwned.dayPChange = 3.08
+    stockOwned.lastPrice = 92.15
+    return stockOwned
+}
+
+var test5: StockOwned {
+    let stockOwned = StockOwned()
+    stockOwned.stockSymbol = "LT"
+    stockOwned.numberOfShares = 15
+    stockOwned.avgPriceBought = 1532.72
+    stockOwned.dayChange = -39.35
+    stockOwned.dayPChange = -2.13
+    stockOwned.lastPrice = 1807.5
+    return stockOwned
+}
+

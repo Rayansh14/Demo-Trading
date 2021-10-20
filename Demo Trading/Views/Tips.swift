@@ -14,16 +14,17 @@ struct TipsView: View {
     var body: some View {
         ZStack {
             TabView {
+                TipsPageView(title: "Welcome!", text: "Welcome to Demo Trading! This app is meant to help you get started with investing in the stock market 💸. You have been given ₹1 lakh in fantasy money to buy and sell stocks of your choice! 🙃. Read on to get an idea for how this app, and the stock market in general works.", imageName: "", alignment: TextAlignment.center)
                 
-                TipsPageView(title: "Watchlist 👀", text: "This is your watchlist tab. You can add stocks to your watchlist by tapping on the search bar and searching for them. Once you've added stocks, they will appear on your watchlist. You can tap on a stock to get details about that stock and also trade (buy or sell) it.", imageName: "t")
+                TipsPageView(title: "Watchlist 👀", text: "This is your watchlist tab. You can add stocks to your watchlist by tapping on the search bar and searching for them. Once you've added stocks, they will appear on your watchlist. You can tap on a stock to get details about that stock and also trade (buy or sell) it.", imageName: "watchlist-1")
                 
                 TipsPageView(title: "Orders", text: "This is your orders tab. You can see all your transactions over here. You can also see details about your transaction, like type (buy or sell), number of shares, share price, time, etc.", imageName: "t")
                 
-                TipsPageView(title: "Positions", text: "This is your positions tab. Stocks that you buy will appear here on the day that they are bought. Go to your watchlist, select a stock and buy it to get started!", imageName: "t")
+                TipsPageView(title: "Holdings", text: "This is your holdings tab. Stocks that you have been holding for more than a day will appear here. You can see details about the stocks that you've been holding over here. If this is not empty, then you have been using this app for more than a day. 🤩🙃", imageName: "t")
                 
-                TipsPageView(title: "Holdings", text: "This is your holdings tab. Stocks that you have been holding for more than a day will appear here. If this is not empty, then you have been using this app for more than a day. 🤩🙃", imageName: "t")
+                TipsPageView(title: "Positions", text: "This is your positions tab. Stocks that you buy will appear here on the day that they are bought. Go to your watchlist, tap on a stock and buy it to get started!", imageName: "positions")
                 
-                TipsPageView(title: "Funds", text: "amount that can be used to buy new stocks", imageName: "t")
+                TipsPageView(title: "Funds", text: "This page shows the funds that you have available to buy new stocks. It also shows other details like the delivery margin and total net worth.", imageName: "funds")
                 
                 TipsPageView(title: "Delivery Margin", text: "as per guideline, 20 percent is blocked, can be accessed next day. implemented this feature to make the app more realistic.", imageName: "t")
                 
@@ -44,35 +45,50 @@ struct TipsPageView: View {
     var title: String
     var text: String
     var imageName: String
+    var alignment: TextAlignment = .leading
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HStack {
-                Spacer()
-                
-                Image(imageName)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .cornerRadius(40)
-                
-                Spacer()
+            
+            if imageName != "" {
+                HStack {
+                    Spacer()
+                    
+                    Image(imageName)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                    
+                    Spacer()
+                }
             }
             
             Spacer()
             
             HStack {
-                Text(title)
+                
+                if alignment == .center {
+                    Spacer()
+                }
+                
+                Text("\(title)")
                     .font(.title)
                 
                 if title.lowercased().contains("watchlist") {
                     Image(systemName: "list.bullet")
                         .imageScale(.large)
                         .offset(x: -5, y: -1)
+                
+                    Spacer()
                     
                 }
                 Spacer()
             }
             Text(text)
+                .multilineTextAlignment(alignment)
+            
+            if imageName == "" {
+                Spacer()
+            }
             
         }
         .padding(15)
@@ -87,6 +103,7 @@ struct TipsView_Previews: PreviewProvider {
         Group {
             NavigationView {
                 TipsView()
+                    .preferredColorScheme(.dark)
             }
         }
     }

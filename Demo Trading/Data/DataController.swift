@@ -17,16 +17,19 @@ class DataController: ObservableObject {
     @Published var showTab = true
     
     @Published var stockQuotes: [StockQuote] = []
-    @Published var userStocksOrder: [String] = []
+    @Published var userStocksOrder: [String] = ["NIFTY 50", "RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT"]
     //    "RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT"
     
     @Published var portfolio: [StockOwned] = []
     var positions: [StockOwned] {
         return portfolio.filter { $0.timeBought > Date().dateAt(.startOfDay) }
     }
-    var holdings: [StockOwned] {
-        return portfolio.filter { $0.timeBought < Date().dateAt(.startOfDay) }
-    }
+//    var positions = [testStockOwned, test1, test2]
+    
+    var holdings = [test4, test3, test5]
+//    var holdings: [StockOwned] {
+//        return portfolio.filter { $0.timeBought < Date().dateAt(.startOfDay) }
+//    }
     
     @Published var orderList: [Order] = []
     var todayOrders: [Order] {
@@ -46,17 +49,17 @@ class DataController: ObservableObject {
     
     
     func getMarketStatus() -> Bool {
-//                return true
+                return true
         
-        let calendar = Calendar.current
-        let now = Date()
-        let nineFifteenToday = calendar.date(bySettingHour: 9, minute: 14, second: 59, of: now)!
-        let threeThirtyToday = calendar.date(bySettingHour: 15, minute: 30, second: 00, of: now)!
-
-        if now.compare(.isWeekday) && now > nineFifteenToday && now < threeThirtyToday {
-            return true
-        }
-        return false
+//        let calendar = Calendar.current
+//        let now = Date()
+//        let nineFifteenToday = calendar.date(bySettingHour: 9, minute: 14, second: 59, of: now)!
+//        let threeThirtyToday = calendar.date(bySettingHour: 15, minute: 30, second: 00, of: now)!
+//
+//        if now.compare(.isWeekday) && now > nineFifteenToday && now < threeThirtyToday {
+//            return true
+//        }
+//        return false
     }
     
     
