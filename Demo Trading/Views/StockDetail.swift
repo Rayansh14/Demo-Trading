@@ -48,7 +48,6 @@ struct StockDetailView: View {
                 .padding(.top, 15)
                 .font(.title2)
                 
-                // todo: make seperate view for this info (open, low, high, previous close)
                 
                 HStack {
                     

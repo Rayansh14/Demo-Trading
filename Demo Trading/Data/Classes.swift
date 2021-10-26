@@ -5,7 +5,8 @@
 //  Created by Rayansh Gupta on 13/04/21.
 //
 
-import Foundation
+import SwiftUI
+import SwiftDate
 
 
 class StockQuote: ObservableObject, Identifiable {
@@ -92,12 +93,43 @@ class Order: ObservableObject, Identifiable, Codable {
 }
 
 
-var testOrder: Order {
+var testOrder2: Order {
     let order = Order()
     order.stockSymbol = "RELIANCE"
     order.numberOfShares = 10
     order.sharePrice = 2002.30
     order.type = .buy
+    order.time = Date() - 2.hours
+    return order
+}
+
+var testOrder: Order {
+    let order = Order()
+    order.stockSymbol = "INFY"
+    order.numberOfShares = 17
+    order.sharePrice = 1582.30
+    order.type = .buy
+    order.time = Date() - 1.hours - 23.minutes
+    return order
+}
+
+var testOrder3: Order {
+    let order = Order()
+    order.stockSymbol = "IEX"
+    order.numberOfShares = 27
+    order.sharePrice = 682.30
+    order.type = .sell
+    order.time = Date() - 2.hours - 47.minutes
+    return order
+}
+
+var testOrder4: Order {
+    let order = Order()
+    order.stockSymbol = "IEX"
+    order.numberOfShares = 35
+    order.sharePrice = 621.35
+    order.type = .buy
+    order.time = Date() - 2.days - 1.hours - 23.minutes
     return order
 }
 

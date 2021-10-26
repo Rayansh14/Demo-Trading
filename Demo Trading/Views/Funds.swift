@@ -5,10 +5,6 @@
 //  Created by Rayansh Gupta on 14/04/21.
 //
 
-let deliveryMarginExplanation = "According to SEBI guidelines, 80% of the money received from selling holdings will be instanly available for new trades, and the rest 20% will be available the next day. This feature was implemented into the app to make it seem more realistic. 🙃"
-
-let totalNetWorthExplanation = "This is the sum of your funds and the value of stocks you own. It shows the total amount that you have gained or lost compared to your starting funds, which was ₹1,00,000."
-
 import SwiftUI
 
 struct FundsView: View {
@@ -47,7 +43,7 @@ struct FundsView: View {
                 
                 HStack {
                     Button(action: {
-                        data.showMessage(message: deliveryMarginExplanation, error: false)
+                        data.showMessage(message: deliveryMarginExplanation, error: false, duration: 10)
                     }) {
                         HStack {
                             Text("Delivery Margin: ")
@@ -64,7 +60,7 @@ struct FundsView: View {
                 
                 HStack {
                     Button(action: {
-                        data.showMessage(message: totalNetWorthExplanation, error: false)
+                        data.showMessage(message: totalNetWorthExplanation, error: false, duration: 9)
                     }) {
                         HStack {
                             Text("Total Net Worth:")

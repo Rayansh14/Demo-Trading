@@ -14,12 +14,14 @@ struct SearchBar: View {
     @Binding var isEditing: Bool
     @Binding var showSheet: Bool
     @Binding var sheetOffset: CGSize
+    @FocusState var isFocused
     
     var body: some View {
         ZStack {
             HStack {
                 
                 TextField(placeholderText, text: $searchText)
+                    .focused($isFocused)
                     .autocapitalization(.allCharacters)
                     .disableAutocorrection(true)
                     .padding(7)
@@ -56,7 +58,7 @@ struct SearchBar: View {
                     Button(action: {
                         self.isEditing = false
                         self.searchText = ""
-                        dismissKeyboard()
+                        isFocused = false
                         
                     }) {
                             Text("Done")

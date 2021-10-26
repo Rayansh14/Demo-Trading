@@ -20,7 +20,7 @@ struct PortfolioTileView: View {
             HStack {
                 
                 VStack(alignment: .leading, spacing: 3) {
-                    Text("Avg: \(String(format: "%.2f", stock.avgPriceBought))")
+                    Text("Avg: \(stock.avgPriceBought.withCommas(withRupeeSymbol: false))")
                         .font(.system(size: 15))
                         .foregroundColor(Color("Gray"))
                     
@@ -40,13 +40,13 @@ struct PortfolioTileView: View {
                         .foregroundColor(profitLoss >= 0 ? .green : .red)
                         .font(.system(size: 15))
                     
-                    Text("\(profitLoss >= 0 ? "+" : "")\(String(format: "%.2f", profitLoss))")
+                    Text("\(profitLoss >= 0 ? "+" : "")\(profitLoss.withCommas(withRupeeSymbol: false))")
                         .font(.system(size: 20))
                         .frame(height: 32)
                         .foregroundColor(profitLoss >= 0 ? .green : .red)
                     
                     HStack(spacing: 0) {
-                        Text("LTP: \(String(format: "%.2f", stock.lastPrice))")
+                        Text("LTP: \(stock.lastPrice.withCommas(withRupeeSymbol: false))")
                             .font(.system(size: 15))
                             .foregroundColor(Color("Gray"))
                         Text(" (\(stock.dayChange >= 0 ? "+" : "")\(String(format: "%.2f", stock.dayPChange))%)")

@@ -25,7 +25,7 @@ struct TransactStockView: View {
     @ObservedObject var data = DataController.shared
     @StateObject var order = Order()
     @State private var numberOfShares = ""
-    @FocusState private var textFieldFocused: Bool
+    @FocusState var textFieldFocused: Bool
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {

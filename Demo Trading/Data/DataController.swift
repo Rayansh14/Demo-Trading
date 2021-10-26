@@ -9,6 +9,12 @@ import SwiftUI
 import SwiftDate
 import UIKit
 
+
+let deliveryMarginExplanation = "According to SEBI (the market regulator) guidelines, 80% of the money received from selling holdings will be instanly available for new trades, and the rest 20% will be available the next day. This feature was implemented into the app to make it more realistic. 🙃"
+
+let totalNetWorthExplanation = "This is the sum of your funds and the value of stocks you own. It shows the total amount that you have gained or lost compared to your starting funds, which was ₹1,00,000."
+
+
 class DataController: ObservableObject {
     
     static var shared = DataController()
@@ -17,7 +23,8 @@ class DataController: ObservableObject {
     @Published var showTab = true
     
     @Published var stockQuotes: [StockQuote] = []
-    @Published var userStocksOrder: [String] = ["NIFTY 50", "RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT"]
+    @Published var userStocksOrder: [String] = []
+//    @Published var userStocksOrder: [String] = ["NIFTY 50", "RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT"]
     //    "RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT"
     
     @Published var portfolio: [StockOwned] = []
@@ -26,15 +33,17 @@ class DataController: ObservableObject {
     }
 //    var positions = [testStockOwned, test1, test2]
     
-    var holdings = [test4, test3, test5]
-//    var holdings: [StockOwned] {
-//        return portfolio.filter { $0.timeBought < Date().dateAt(.startOfDay) }
-//    }
+//    var holdings = [test4, test3, test5]
+    var holdings: [StockOwned] {
+        return portfolio.filter { $0.timeBought < Date().dateAt(.startOfDay) }
+    }
     
     @Published var orderList: [Order] = []
+//    var todayOrders = [testOrder, testOrder2, testOrder3]
     var todayOrders: [Order] {
         return orderList.filter { $0.time > Date().dateAt(.startOfDay) }.sorted { $0.time > $1.time }
     }
+//    var earlierOrders = [testOrder4]
     var earlierOrders: [Order] {
         return orderList.filter { $0.time < Date().dateAt(.startOfDay) }.sorted { $0.time > $1.time }
     }
@@ -227,11 +236,11 @@ class DataController: ObservableObject {
     }
     
     
-    func showMessage(message: String, error: Bool = true) {
-        self.message = message
+    func showMessage(message: String, error: Bool = true, duration: Int = 6) {
+        self.message = "\(message)\(userStocksOrder.count == 0 ? "\n Tap to dismiss" : "")"
         self.isError = error
         showMessage = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(7)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(duration)) {
             self.showMessage = false
         }
     }
@@ -418,10 +427,5 @@ extension View {
         } else {
             self
         }
-    }
-    
-    
-    func dismissKeyboard() {
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }

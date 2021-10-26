@@ -94,7 +94,7 @@ struct WatchlistView: View {
                         }
                         
                     } else {
-                        List(data.stockQuotes.filter { searchText.isEmpty ? true : $0.symbol.contains(searchText) }) { stock in
+                        List(data.stockQuotes.filter { searchText.isEmpty ? true : $0.symbol.contains(searchText.filter {!$0.isWhitespace}) }) { stock in
                             HStack {
                                 Text(stock.symbol)
                                 Spacer()
@@ -151,7 +151,7 @@ struct WatchlistView: View {
                                     if sheetOffset.height > 20 {
                                         sheetOffset.height = 750
                                         showSheet = false
-                                        dismissKeyboard()
+                                        
                                     } else {
                                         sheetOffset.height = 0
                                     }

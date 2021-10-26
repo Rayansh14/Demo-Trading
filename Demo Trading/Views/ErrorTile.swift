@@ -15,7 +15,7 @@ struct ErrorTileView: View {
         HStack {
             Spacer()
             Text(data.message)
-                .foregroundColor(data.isError ? .red : .green)
+                .foregroundColor(data.isError ? .red : .blue)
                 .padding(10)
                 .multilineTextAlignment(.center)
             Spacer()
@@ -23,7 +23,7 @@ struct ErrorTileView: View {
         .background(Color("White Black"))
         .cornerRadius(10)
         .padding()
-        .shadow(radius: 5)
+        .shadow(color: .gray, radius: 5)
     }
 }
 
