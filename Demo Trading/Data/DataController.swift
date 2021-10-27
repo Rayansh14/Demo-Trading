@@ -288,7 +288,7 @@ class DataController: ObservableObject {
                         portfolio.append(stockOwned)
                     }
                     
-                    showMessage(message: "Done! And you still have \(self.funds.withCommas(withRupeeSymbol: true)) left.", error: false)
+                    showMessage(message: "You bought \(order.numberOfShares) shares of \(order.stockSymbol) @ \(order.sharePrice.withCommas(withRupeeSymbol: true))! And you still have \(self.funds.withCommas(withRupeeSymbol: true)) left.", error: false)
                 } else {
                     showMessage(message: "Not enough funds! Sell some stocks or reduce the number of shares.")
                 }

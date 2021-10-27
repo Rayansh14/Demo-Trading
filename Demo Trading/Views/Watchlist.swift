@@ -159,13 +159,15 @@ struct WatchlistView: View {
                         )
                         NavigationView {
                             StockDetailView(stockSymbol: selectedStock.symbol, isFullScreen: false)
+                                .animation(.none, value: sheetOffset)
                         }
                     }
                     .frame(height: 350)
                 }
                 .opacity(showSheet ? 1 : 0)
                 .offset(y: sheetOffset.height)
-                .animation(.easeInOut(duration: 0.6))
+                .animation(.easeInOut(duration: 0.6), value: sheetOffset)
+                .animation(.easeInOut(duration: 0.6), value: showSheet)
             }
             .navigationTitle("Watchlist")
             .navigationBarTitleDisplayMode(.large)

@@ -100,7 +100,6 @@ struct StockDetailView: View {
                             TransactButton(text: "Sell", color: .red)
                         }
                     }
-                    .animation(.none)
                     .padding(.vertical, 10)
                     
                     if isFullScreen {
@@ -119,13 +118,10 @@ struct StockDetailView: View {
                                 .padding(.top, 1)
                         }
                     }
-                    
-                    //                    Spacer()
                 }
                 
                 Spacer()
             }
-            .animation(.none)
             
         }
         .onDisappear(perform: {

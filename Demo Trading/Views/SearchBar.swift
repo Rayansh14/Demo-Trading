@@ -17,7 +17,6 @@ struct SearchBar: View {
     @FocusState var isFocused
     
     var body: some View {
-        ZStack {
             HStack {
                 
                 TextField(placeholderText, text: $searchText)
@@ -66,18 +65,17 @@ struct SearchBar: View {
                     }
                     .padding(.trailing, 10)
                     .transition(.move(edge: .trailing))
-                    .animation(.default)
+                    .animation(.default, value: isEditing)
                 }
                 
             }
-            .animation(.easeInOut(duration: 0.5))
+            .animation(.easeInOut(duration: 0.5), value: isEditing)
             .if({
                 !UIDevice.current.hasNotch
             }()) { view in
                 view.padding(.top, 20)
             }
         }
-    }
 }
 
 extension UIDevice {

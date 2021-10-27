@@ -118,6 +118,10 @@ struct TransactStockView: View {
                 Spacer()
             }
         }
+        .onDisappear(perform: {
+            textFieldFocused = false
+            presentationMode.wrappedValue.dismiss()
+        })
         .onAppear(perform: {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 textFieldFocused = true

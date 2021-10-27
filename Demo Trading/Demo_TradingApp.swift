@@ -35,7 +35,7 @@ struct Demo_TradingApp: App {
                     .padding(.bottom, 60)
                     .buttonStyle(BorderlessButtonStyle())
                     .opacity(data.showMessage ? 1 : 0)
-                    .animation(.easeInOut(duration: 0.3))
+                    .animation(.easeInOut(duration: 0.3), value: data.showMessage)
                 }
             }
             
