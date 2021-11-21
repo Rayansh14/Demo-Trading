@@ -35,7 +35,7 @@ struct StockDetailView: View {
                 HStack {
                     VStack {
                         Text("NSE: \(stockQuote.lastPrice.withCommas(withRupeeSymbol: true))")
-                        Text("\(String(format: "%.2f", stockQuote.pChange))%")
+                        Text("\(Image(systemName: stockQuote.change >= 0 ? "arrow.up" : "arrow.down")) \(abs(stockQuote.pChange).withCommas(withRupeeSymbol: false))%")
                             .foregroundColor(stockQuote.pChange >= 0.0 ? .green : .red)
                             .font(.title3)
                     }
@@ -153,7 +153,7 @@ struct TransactButton: View {
             .font(.system(size: 24))
             .padding(.vertical, 12)
             .background(color)
-            .cornerRadius(10)
+            .cornerRadius(100)
             .padding(.horizontal, 1)
     }
 }

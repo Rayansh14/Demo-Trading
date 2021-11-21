@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftDate
-import UIKit
 
 
 let deliveryMarginExplanation = "According to SEBI (the market regulator) guidelines, 80% of the money received from selling holdings will be instanly available for new trades, and the rest 20% will be available the next day. This feature was implemented into the app to make it more realistic. 🙃"
@@ -24,26 +23,26 @@ class DataController: ObservableObject {
     
     @Published var stockQuotes: [StockQuote] = []
     @Published var userStocksOrder: [String] = []
-//    @Published var userStocksOrder: [String] = ["NIFTY 50", "RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT"]
+    //    @Published var userStocksOrder: [String] = ["NIFTY 50", "RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT"]
     //    "RELIANCE", "HDFCBANK", "INFY", "HDFC", "ICICIBANK", "TCS", "KOTAKBANK", "HINDUNILVR", "AXISBANK", "ITC", "LT"
     
     @Published var portfolio: [StockOwned] = []
     var positions: [StockOwned] {
         return portfolio.filter { $0.timeBought > Date().dateAt(.startOfDay) }
     }
-//    var positions = [testStockOwned, test1, test2]
+    //    var positions = [testStockOwned, test1, test2]
     
-//    var holdings = [test4, test3, test5]
+    //    var holdings = [test4, test3, test5]
     var holdings: [StockOwned] {
         return portfolio.filter { $0.timeBought < Date().dateAt(.startOfDay) }
     }
     
     @Published var orderList: [Order] = []
-//    var todayOrders = [testOrder, testOrder2, testOrder3]
+    //    var todayOrders = [testOrder, testOrder2, testOrder3]
     var todayOrders: [Order] {
         return orderList.filter { $0.time > Date().dateAt(.startOfDay) }.sorted { $0.time > $1.time }
     }
-//    var earlierOrders = [testOrder4]
+    //    var earlierOrders = [testOrder4]
     var earlierOrders: [Order] {
         return orderList.filter { $0.time < Date().dateAt(.startOfDay) }.sorted { $0.time > $1.time }
     }
@@ -58,17 +57,17 @@ class DataController: ObservableObject {
     
     
     func getMarketStatus() -> Bool {
-                return true
+        //        return true
         
-//        let calendar = Calendar.current
-//        let now = Date()
-//        let nineFifteenToday = calendar.date(bySettingHour: 9, minute: 14, second: 59, of: now)!
-//        let threeThirtyToday = calendar.date(bySettingHour: 15, minute: 30, second: 00, of: now)!
-//
-//        if now.compare(.isWeekday) && now > nineFifteenToday && now < threeThirtyToday {
-//            return true
-//        }
-//        return false
+        let calendar = Calendar.current
+        let now = Date()
+        let nineFifteenToday = calendar.date(bySettingHour: 9, minute: 14, second: 59, of: now)!
+        let threeThirtyToday = calendar.date(bySettingHour: 15, minute: 30, second: 00, of: now)!
+        
+        if now.compare(.isWeekday) && now > nineFifteenToday && now < threeThirtyToday {
+            return true
+        }
+        return false
     }
     
     
@@ -165,19 +164,19 @@ class DataController: ObservableObject {
     
     
     func updateAllStockPricesInPortfolio() {
-        for stock in holdings {
-            let filtered = holdings.filter({ $0.stockSymbol == stock.stockSymbol })
-            if filtered.count > 1 {
-                let stocko = filtered[0]
+        for stock in holdings { // this is to remove duplicates from the holdings array
+            let filtered = holdings.filter({ $0.stockSymbol == stock.stockSymbol }) // create new array 'filtered' which contains all instances with a particular stock name.
+            if filtered.count > 1 { // if there are any duplicates,
+                let stocko = filtered[0] // new constant 'stocko', which has the first duplicate
                 
-                for stock in filtered[1...] {
-                    stocko.avgPriceBought = ((stock.avgPriceBought * Double(stock.numberOfShares)) + (stocko.avgPriceBought * Double(stocko.numberOfShares)))/Double(stocko.numberOfShares + stock.numberOfShares)
-                        stocko.numberOfShares += stock.numberOfShares
+                for stock in filtered[1...] { // loop over all other duplicates
+                    stocko.avgPriceBought = ((stock.avgPriceBought * Double(stock.numberOfShares)) + (stocko.avgPriceBought * Double(stocko.numberOfShares)))/Double(stocko.numberOfShares + stock.numberOfShares) // adjusts avg price
+                    stocko.numberOfShares += stock.numberOfShares
                 }
                 
                 
-                self.portfolio = portfolio.filter({ stockOwned in
-                    !filtered.contains(where: {$0.timeBought == stockOwned.timeBought})
+                self.portfolio = portfolio.filter({ stockOwned in // removes all StockOwned instances that are in filtered
+                    !filtered.contains(where: {$0.timeBought == stockOwned.timeBought}) // if the timeBought of loopingStockOwned is the same as any StockOwned instance in filtered array, then do not include that loopingStockOwned in the updated portfolio array
                 })
                 self.portfolio.append(stocko)
             }
@@ -273,7 +272,7 @@ class DataController: ObservableObject {
                     funds -= (order.sharePrice * Double(order.numberOfShares))
                     
                     if checkIfInPositions(stockSymbol: order.stockSymbol) {
-                        if let stock = positions.first(where:{ $0.stockSymbol == order.stockSymbol }) {
+                        if let stock = positions.first(where: { $0.stockSymbol == order.stockSymbol }) {
                             
                             stock.avgPriceBought = ((stock.avgPriceBought * Double(stock.numberOfShares)) + (order.sharePrice * Double(order.numberOfShares)))/Double(stock.numberOfShares + order.numberOfShares)
                             stock.numberOfShares += order.numberOfShares

@@ -16,7 +16,7 @@ struct WatchlistView: View {
     @State private var sheetOffset = CGSize(width: 0, height: 750)
     @State private var isAdding = false
     @State private var searchText = ""
-    let timer = Timer.publish(every: 25, tolerance: 5, on: .main, in: .common).autoconnect()
+    private let timer = Timer.publish(every: 25, tolerance: 5, on: .main, in: .common).autoconnect()
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
@@ -94,7 +94,7 @@ struct WatchlistView: View {
                         }
                         
                     } else {
-                        List(data.stockQuotes.filter { searchText.isEmpty ? true : $0.symbol.contains(searchText.filter {!$0.isWhitespace}) }) { stock in
+                        List(data.stockQuotes.filter { searchText.isEmpty ? true : $0.symbol.contains(searchText.filter {!$0.isWhitespace}) }) { stock in // if searchText is empty, then return true. otherwise, return true if loopingStockQuote symbol contains the searchText (excluding whitespaces i.e spaces)
                             HStack {
                                 Text(stock.symbol)
                                 Spacer()
@@ -162,7 +162,7 @@ struct WatchlistView: View {
                                 .animation(.none, value: sheetOffset)
                         }
                     }
-                    .frame(height: 350)
+                    .frame(height: 330)
                 }
                 .opacity(showSheet ? 1 : 0)
                 .offset(y: sheetOffset.height)

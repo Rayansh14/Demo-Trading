@@ -199,6 +199,7 @@
 			packageReferences = (
 				4438746F26416AD400A35820 /* XCRemoteSwiftPackageReference "SwiftDate" */,
 				449CD48A27030627000C3567 /* XCRemoteSwiftPackageReference "iActivityIndicator" */,
+				448E1C16274823C20018F403 /* XCRemoteSwiftPackageReference "FLAnimatedImage" */,
 			);
 			productRefGroup = 44A79A2F262451E100652F17 /* Products */;
 			projectDirPath = "";
@@ -439,6 +440,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 6.3.1;
+			};
+		};
+		448E1C16274823C20018F403 /* XCRemoteSwiftPackageReference "FLAnimatedImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Flipboard/FLAnimatedImage.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
 			};
 		};
 		449CD48A27030627000C3567 /* XCRemoteSwiftPackageReference "iActivityIndicator" */ = {

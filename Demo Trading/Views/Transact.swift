@@ -42,8 +42,12 @@ struct TransactStockView: View {
                     .if(isFullScreen, transform: { view in
                         view.padding(.bottom, 10)
                     })
+                        
+                        HStack {
                         Text(orderType.rawValue.capitalized)
-                        .font(.system(size: 25, weight: .regular, design: .serif))
+                            .font(.system(size: 25, weight: .regular, design: .serif))
+                        
+                        Spacer()
                         
                         Button(action: {
                             if orderType == .buy {
@@ -51,12 +55,17 @@ struct TransactStockView: View {
                             } else {
                                 numberOfShares = String(data.getStockOwned(stockSymbol: stockQuote.symbol).numberOfShares)
                             }}) {
-                        Text("\(orderType.rawValue.capitalized) Max Shares")
-                            .font(.system(size: 20, weight: .regular, design: .serif))
-                            .foregroundColor(orderType == .buy ? Color("Blue") : .red)
+                                Text("\(orderType.rawValue.capitalized) Max Shares")
+                                    .font(.system(size: 20, weight: .regular, design: .serif))
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal)
+                                    .padding(.vertical, 10)
+                                    .background(orderType == .buy ? Color("Blue") : Color.red)
+                                    .cornerRadius(100)
+                            }
                     }
             }
-            .padding(.leading, 20)
+            .padding(.horizontal, 20)
             
             
             Spacer()
@@ -81,7 +90,11 @@ struct TransactStockView: View {
                 .padding(7)
                 .keyboardType(.numberPad)
                 .font(.title)
-                .overlay(RoundedRectangle(cornerRadius: 10).stroke(orderType == .buy ? Color("Blue") : Color.red, lineWidth: 1))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 100)
+                        .stroke(orderType == .buy ? Color("Blue") : Color.red, lineWidth: 1)
+                        .offset(x: -5)
+                )
                 .padding()
             
             HStack {
@@ -108,9 +121,9 @@ struct TransactStockView: View {
                         .foregroundColor(.white)
                         .font(.system(size: 26, weight: .medium, design: .serif))
                         .padding(.vertical, 15)
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 22)
                         .background(orderType == .buy ? Color("Blue") : Color.red)
-                        .cornerRadius(10)
+                        .cornerRadius(100)
                 }
                 .padding(.bottom)
                 .disabled(numberOfShares == "" ? true : false)
@@ -157,7 +170,8 @@ struct TransactView_Preview: PreviewProvider {
     static var previews: some View {
         Group {
             NavigationView {
-                TransactStockView(orderType: .buy, stockSymbol: "RELIANCE", isFullScreen: true)
+                TransactStockView(orderType: .buy, stockSymbol: "RELIANCE", isFullScreen: false)
+//                    .preferredColorScheme(.dark)
             }
         }
     }
