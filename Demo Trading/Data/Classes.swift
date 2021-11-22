@@ -17,6 +17,7 @@ class StockQuote: ObservableObject, Identifiable {
     @Published var pChange = 0.0
     @Published var dayHigh = 0.0
     @Published var dayLow = 0.0
+    @Published var updateTime = Date()
     @Published var previousClose = 0.0
     @Published var open = 0.0
     @Published var totalTradedVolume = 0

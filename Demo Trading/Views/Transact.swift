@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftDate
 
 
 struct TransactStockView: View {
@@ -101,15 +102,19 @@ struct TransactStockView: View {
                 Spacer()
                 
                 Button(action: {
-                    order.type = orderType
-                    order.sharePrice = stockQuote.lastPrice
-                    order.stockSymbol = stockQuote.symbol
-                    order.time = Date()
                     if let intNumberOfShares = Int(numberOfShares) {
                         if intNumberOfShares > 0 {
-                            order.numberOfShares = intNumberOfShares
-                            data.processOrder(order: order)
-                            presentationMode.wrappedValue.dismiss()
+                            if (stockQuote.updateTime + 2.minutes) > Date.now {
+                                order.type = orderType
+                                order.sharePrice = stockQuote.lastPrice
+                                order.stockSymbol = stockQuote.symbol
+                                order.time = Date()
+                                order.numberOfShares = intNumberOfShares
+                                data.processOrder(order: order)
+                                presentationMode.wrappedValue.dismiss()
+                            } else {
+                                data.showMessage(message: "The stock price hasn't been refreshed in a while. Try manually refreshing it from your watchlist tab")
+                            }
                         } else {
                             data.showMessage(message: "LOL")
                         }
@@ -171,7 +176,7 @@ struct TransactView_Preview: PreviewProvider {
         Group {
             NavigationView {
                 TransactStockView(orderType: .buy, stockSymbol: "RELIANCE", isFullScreen: false)
-//                    .preferredColorScheme(.dark)
+                //                    .preferredColorScheme(.dark)
             }
         }
     }

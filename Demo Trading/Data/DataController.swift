@@ -40,7 +40,7 @@ class DataController: ObservableObject {
     @Published var orderList: [Order] = []
     //    var todayOrders = [testOrder, testOrder2, testOrder3]
     var todayOrders: [Order] {
-        return orderList.filter { $0.time > Date().dateAt(.startOfDay) }.sorted { $0.time > $1.time }
+        return orderList.filter { $0.time > Date().dateAt(.startOfDay) }.sorted { $0.time > $1.time } // > means later than 
     }
     //    var earlierOrders = [testOrder4]
     var earlierOrders: [Order] {
@@ -88,36 +88,47 @@ class DataController: ObservableObject {
                                 count += 1
                                 let stockQuote = StockQuote()
                                 
-                                if let symbol = jsonStockQuote["symbol"] as? String {
-                                    stockQuote.symbol = symbol
-                                }
-                                if let lastPrice = jsonStockQuote["lastPrice"] as? Double {
-                                    stockQuote.lastPrice = lastPrice
-                                }
-                                if let change = jsonStockQuote["change"] as? Double {
-                                    stockQuote.change = change
-                                }
-                                if let pChange = jsonStockQuote["pChange"] as? Double {
-                                    stockQuote.pChange = pChange
-                                }
-                                if let dayHigh = jsonStockQuote["dayHigh"] as? Double {
-                                    stockQuote.dayHigh = dayHigh
-                                }
-                                if let dayLow = jsonStockQuote["dayLow"] as? Double {
-                                    stockQuote.dayLow = dayLow
-                                }
-                                if let previousClose = jsonStockQuote["previousClose"] as? Double {
-                                    stockQuote.previousClose = previousClose
-                                }
-                                if let open = jsonStockQuote["open"] as? Double {
-                                    stockQuote.open = open
-                                }
-                                if let totalTradedVolume = jsonStockQuote["totalTradedVolume"] as? Int {
-                                    stockQuote.totalTradedVolume = totalTradedVolume
-                                }
+                                stockQuote.symbol = jsonStockQuote["symbol"] as! String
+                                stockQuote.lastPrice = jsonStockQuote["lastPrice"] as! Double
+                                stockQuote.change = jsonStockQuote["change"] as! Double
+                                stockQuote.pChange = jsonStockQuote["pChange"] as! Double
+                                stockQuote.dayHigh = jsonStockQuote["dayHigh"] as! Double
+                                stockQuote.dayLow = jsonStockQuote["dayLow"] as! Double
+                                stockQuote.previousClose = jsonStockQuote["previousClose"] as! Double
+                                stockQuote.open = jsonStockQuote["previousClose"] as! Double
+                                stockQuote.totalTradedVolume = jsonStockQuote["totalTradedVolume"] as! Int
+                                stockQuote.updateTime = jsonStockQuote["lastUpdateTime"] as! Date
+                                
+//                                if let symbol = jsonStockQuote["symbol"] as? String {
+//                                    stockQuote.symbol = symbol
+//                                }
+//                                if let lastPrice = jsonStockQuote["lastPrice"] as? Double {
+//                                    stockQuote.lastPrice = lastPrice
+//                                }
+//                                if let change = jsonStockQuote["change"] as? Double {
+//                                    stockQuote.change = change
+//                                }
+//                                if let pChange = jsonStockQuote["pChange"] as? Double {
+//                                    stockQuote.pChange = pChange
+//                                }
+//                                if let dayHigh = jsonStockQuote["dayHigh"] as? Double {
+//                                    stockQuote.dayHigh = dayHigh
+//                                }
+//                                if let dayLow = jsonStockQuote["dayLow"] as? Double {
+//                                    stockQuote.dayLow = dayLow
+//                                }
+//                                if let previousClose = jsonStockQuote["previousClose"] as? Double {
+//                                    stockQuote.previousClose = previousClose
+//                                }
+//                                if let open = jsonStockQuote["open"] as? Double {
+//                                    stockQuote.open = open
+//                                }
+//                                if let totalTradedVolume = jsonStockQuote["totalTradedVolume"] as? Int {
+//                                    stockQuote.totalTradedVolume = totalTradedVolume
+//                                }
                                 
                                 DispatchQueue.main.async {
-                                    if let index = self.stockQuotes.firstIndex(where: {$0.symbol == stockQuote.symbol}) {
+                                    if let index = self.stockQuotes.firstIndex(where: {$0.symbol == stockQuote.symbol}) { // this is so that when api returns incomplete stock quotes, it keeps the earlier quotes of the stocks whose quote it has not received
                                         self.stockQuotes.remove(at: index)
                                     }
                                     

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import iActivityIndicator
+import SwiftDate
 
 struct WatchlistView: View {
     
@@ -182,6 +183,11 @@ struct WatchlistView: View {
             .onReceive(timer, perform: { _ in
                 if data.getMarketStatus() {
                     data.getStocksData()
+                }
+                if let sq = data.stockQuotes.first {
+                    if (sq.updateTime + 10.minutes) < Date.now {
+                        data.getStocksData()
+                    }
                 }
             })
         }
