@@ -70,10 +70,27 @@ struct FundsView: View {
                         }
                     }
                     Spacer()
-                    Text("\(getTotalNetWorth().withCommas(withRupeeSymbol: true))\n\(changeInNetWorth().withCommas(withRupeeSymbol: false)) %")
+                    // definitely some performace improvements by not calling functions 4 times
+                    Text("\(getTotalNetWorth().withCommas(withRupeeSymbol: true))\n\(changeInNetWorth() > 0 ? "+" : "" )\(changeInNetWorth().withCommas(withRupeeSymbol: false)) %")
                         .foregroundColor(changeInNetWorth() >= 0 ? .green : .red)
                         .multilineTextAlignment(.trailing)
                     
+                }
+                .padding(.horizontal)
+                .padding(.top, 1)
+                
+                HStack {
+                    Button(action: {data.showMessage(message: overperformaceExplanation, error: false, duration: 8)}) {
+                        HStack {
+                            Text("Performance relative to nifty: ")
+                                .foregroundColor(Color("Black White"))
+                            Image(systemName: "info.circle.fill")
+                            
+                        }
+                    }
+                    Spacer()
+                    Text("\(getOverperformance() > 0 ? "+" : "")\(getOverperformance().withCommas(withRupeeSymbol: false))%")
+                        .foregroundColor(getOverperformance() >= 0 ? .green : .red)
                 }
                 .padding(.horizontal)
                 .padding(.top, 1)
@@ -107,6 +124,12 @@ struct FundsView: View {
         totalValue += data.funds
         
         return totalValue
+    }
+    
+    func getOverperformance() -> Double {
+        let nifty = data.getStockQuote(stockSymbol: "NIFTY 50").lastPrice
+        let niftyReturn = nifty/data.niftyWhenStarted*100
+        return changeInNetWorth() - niftyReturn
     }
     
     func getDeliveryMargin() -> Double {

@@ -34,8 +34,14 @@ struct TransactStockView: View {
             
             VStack(alignment: .leading, spacing: 5) {
                 if isFullScreen {
+                    HStack {
                     Text(stockSymbol)
                         .font(.system(size: 28, weight: .regular, design: .serif))
+                        if let stockOwned = data.getStockOwned(stockSymbol: stockSymbol) {
+                            Spacer()
+                            Text("\(Image(systemName: "briefcase.fill")) \(stockOwned.numberOfShares)")
+                        }
+                    }
                 }
                 
                 Text("NSE: \(stockQuote.lastPrice.withCommas(withRupeeSymbol: true))")
@@ -50,21 +56,52 @@ struct TransactStockView: View {
                         
                         Spacer()
                         
-                        Button(action: {
-                            if orderType == .buy {
-                                numberOfShares = buyMaxShares(sharePrice: stockQuote.lastPrice)
-                            } else {
-                                numberOfShares = String(data.getStockOwned(stockSymbol: stockQuote.symbol).numberOfShares)
-                            }}) {
-                                Text("\(orderType.rawValue.capitalized) Max Shares")
-                                    .font(.system(size: 20, weight: .regular, design: .serif))
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal)
-                                    .padding(.vertical, 10)
-                                    .background(orderType == .buy ? Color("Blue") : Color.red)
-                                    .cornerRadius(100)
-                            }
+//                        Button(action: {
+//                            if orderType == .buy {
+//                                numberOfShares = buyMaxShares(sharePrice: stockQuote.lastPrice)
+//                            } else {
+//                                numberOfShares = String(data.getStockOwned(stockSymbol: stockQuote.symbol).numberOfShares)
+//                            }}) {
+//                                Text("\(orderType.rawValue.capitalized) Max Shares")
+//                                    .font(.system(size: 20, weight: .regular, design: .serif))
+//                                    .foregroundColor(.white)
+//                                    .padding(.horizontal)
+//                                    .padding(.vertical, 10)
+//                                    .background(orderType == .buy ? Color("Blue") : Color.red)
+//                                    .cornerRadius(100)
+//                            }
                     }
+                HStack {
+                    Button(action: {
+                        numberOfShares = percentShares(percent: 0.25)
+                    }) {
+                        PercentageText(text: "25%")
+                    }
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        numberOfShares = percentShares(percent: 0.50)
+                    }) {
+                        PercentageText(text: "50%")
+                    }
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        numberOfShares = percentShares(percent: 0.75)
+                    }) {
+                        PercentageText(text: "75%")
+                    }
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        numberOfShares = percentShares(percent: 1)
+                    }) {
+                        PercentageText(text: "100%")
+                    }
+                }
             }
             .padding(.horizontal, 20)
             
@@ -124,9 +161,9 @@ struct TransactStockView: View {
                 }) {
                     Text("Execute")
                         .foregroundColor(.white)
-                        .font(.system(size: 26, weight: .medium, design: .serif))
-                        .padding(.vertical, 15)
-                        .padding(.horizontal, 22)
+                        .font(.system(size: 25, weight: .medium, design: .serif))
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 20)
                         .background(orderType == .buy ? Color("Blue") : Color.red)
                         .cornerRadius(100)
                 }
@@ -165,8 +202,25 @@ struct TransactStockView: View {
         }
     }
     
-    func buyMaxShares(sharePrice: Double) -> String {
-        return String(Int(data.funds/sharePrice))
+    func percentShares(percent: Double) -> String {
+        if orderType == .buy {
+            return String(Int(data.funds/stockQuote.lastPrice*percent))
+        } else {
+            if let stockOwned = data.getStockOwned(stockSymbol: stockSymbol) {
+                return String(Int(Double(stockOwned.numberOfShares)*percent))
+            }
+            return "0"
+        }
+        
+    }
+}
+
+struct PercentageText: View {
+    var text: String
+    var body: some View {
+        Text(text)
+            .foregroundColor(Color("Gray"))
+            .font(.system(size: 20, weight: .regular, design: .serif))
     }
 }
 
@@ -175,7 +229,7 @@ struct TransactView_Preview: PreviewProvider {
     static var previews: some View {
         Group {
             NavigationView {
-                TransactStockView(orderType: .buy, stockSymbol: "RELIANCE", isFullScreen: false)
+                TransactStockView(orderType: .buy, stockSymbol: "RELIANCE", isFullScreen: true)
                 //                    .preferredColorScheme(.dark)
             }
         }

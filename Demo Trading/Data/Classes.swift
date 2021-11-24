@@ -21,6 +21,12 @@ class StockQuote: ObservableObject, Identifiable {
     @Published var previousClose = 0.0
     @Published var open = 0.0
     @Published var totalTradedVolume = 0
+    
+    func updateTimeAsString() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "M MMM, HH:mm:ss"
+        return formatter.string(from: self.updateTime)
+    }
 }
 
 var testStockQuote: StockQuote {

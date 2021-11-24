@@ -17,7 +17,9 @@ struct StockDetailView: View {
         self.stockSymbol = stockSymbol
         self.isFullScreen = isFullScreen
         self.stockQuote = data.getStockQuote(stockSymbol: stockSymbol)
-        self.stockOwned = data.getStockOwned(stockSymbol: stockSymbol)
+        if let owned = data.getStockOwned(stockSymbol: stockSymbol) {
+            self.stockOwned = owned
+        }
     }
     
     @ObservedObject var data = DataController.shared
@@ -41,7 +43,7 @@ struct StockDetailView: View {
                     }
                     Spacer()
                     if data.checkIfOwned(stockSymbol: stockQuote.symbol) {
-                        Text("\(Image(systemName: "briefcase.fill")) \(data.getStockOwned(stockSymbol: stockQuote.symbol).numberOfShares)")
+                        Text("\(Image(systemName: "briefcase.fill")) \(stockOwned.numberOfShares)")
                     }
                 }
                 .padding(.horizontal, 35)
@@ -115,6 +117,8 @@ struct StockDetailView: View {
                                 .padding(.top, 1)
                             
                             CustomInfoView(label: "Weightage in Portfolio:", info: "\((stockOwned.lastPrice * 100 * Double(stockOwned.numberOfShares) / data.getPorfolioInfo(portfolio: data.portfolio)["currentValue"]!).withCommas(withRupeeSymbol: false))%")
+                                .padding(.top, 1)
+                            CustomInfoView(label: "Last update time:", info: stockQuote.updateTimeAsString())
                                 .padding(.top, 1)
                         }
                     }

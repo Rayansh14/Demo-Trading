@@ -13,11 +13,14 @@ let deliveryMarginExplanation = "According to SEBI (the market regulator) guidel
 
 let totalNetWorthExplanation = "This is the sum of your funds and the value of stocks you own. It shows the total amount that you have gained or lost compared to your starting funds, which was ₹1,00,000."
 
+let overperformaceExplanation = "This is how much better/worse you are doing than the nifty 50 index. The time period is since you placed your first order."
+
 
 class DataController: ObservableObject {
     
     static var shared = DataController()
     @ObservedObject var monitor = NetworkMonitor()
+    @Published var niftyWhenStarted = 0.0
     
     @Published var showTab = true
     
@@ -40,7 +43,7 @@ class DataController: ObservableObject {
     @Published var orderList: [Order] = []
     //    var todayOrders = [testOrder, testOrder2, testOrder3]
     var todayOrders: [Order] {
-        return orderList.filter { $0.time > Date().dateAt(.startOfDay) }.sorted { $0.time > $1.time } // > means later than 
+        return orderList.filter { $0.time > Date().dateAt(.startOfDay) }.sorted { $0.time > $1.time } // > means later than
     }
     //    var earlierOrders = [testOrder4]
     var earlierOrders: [Order] {
@@ -97,35 +100,44 @@ class DataController: ObservableObject {
                                 stockQuote.previousClose = jsonStockQuote["previousClose"] as! Double
                                 stockQuote.open = jsonStockQuote["previousClose"] as! Double
                                 stockQuote.totalTradedVolume = jsonStockQuote["totalTradedVolume"] as! Int
-                                stockQuote.updateTime = jsonStockQuote["lastUpdateTime"] as! Date
                                 
-//                                if let symbol = jsonStockQuote["symbol"] as? String {
-//                                    stockQuote.symbol = symbol
-//                                }
-//                                if let lastPrice = jsonStockQuote["lastPrice"] as? Double {
-//                                    stockQuote.lastPrice = lastPrice
-//                                }
-//                                if let change = jsonStockQuote["change"] as? Double {
-//                                    stockQuote.change = change
-//                                }
-//                                if let pChange = jsonStockQuote["pChange"] as? Double {
-//                                    stockQuote.pChange = pChange
-//                                }
-//                                if let dayHigh = jsonStockQuote["dayHigh"] as? Double {
-//                                    stockQuote.dayHigh = dayHigh
-//                                }
-//                                if let dayLow = jsonStockQuote["dayLow"] as? Double {
-//                                    stockQuote.dayLow = dayLow
-//                                }
-//                                if let previousClose = jsonStockQuote["previousClose"] as? Double {
-//                                    stockQuote.previousClose = previousClose
-//                                }
-//                                if let open = jsonStockQuote["open"] as? Double {
-//                                    stockQuote.open = open
-//                                }
-//                                if let totalTradedVolume = jsonStockQuote["totalTradedVolume"] as? Int {
-//                                    stockQuote.totalTradedVolume = totalTradedVolume
-//                                }
+                                let stringDate = jsonStockQuote["lastUpdateTime"] as! String
+                                let stringTime = stringDate.split(separator: " ")[1]
+                                let stringIndividual = stringTime.split(separator: ":")
+                                
+                                let calendar = Calendar.current
+                                let now = Date()
+                                stockQuote.updateTime = calendar.date(bySettingHour: Int(stringIndividual[0])!, minute: Int(stringIndividual[1])!, second: Int(stringIndividual[2])!, of: now)!
+                                
+                                //                                stockQuote.updateTime = jsonStockQuote["lastUpdateTime"] as! Date
+                                
+                                //                                if let symbol = jsonStockQuote["symbol"] as? String {
+                                //                                    stockQuote.symbol = symbol
+                                //                                }
+                                //                                if let lastPrice = jsonStockQuote["lastPrice"] as? Double {
+                                //                                    stockQuote.lastPrice = lastPrice
+                                //                                }
+                                //                                if let change = jsonStockQuote["change"] as? Double {
+                                //                                    stockQuote.change = change
+                                //                                }
+                                //                                if let pChange = jsonStockQuote["pChange"] as? Double {
+                                //                                    stockQuote.pChange = pChange
+                                //                                }
+                                //                                if let dayHigh = jsonStockQuote["dayHigh"] as? Double {
+                                //                                    stockQuote.dayHigh = dayHigh
+                                //                                }
+                                //                                if let dayLow = jsonStockQuote["dayLow"] as? Double {
+                                //                                    stockQuote.dayLow = dayLow
+                                //                                }
+                                //                                if let previousClose = jsonStockQuote["previousClose"] as? Double {
+                                //                                    stockQuote.previousClose = previousClose
+                                //                                }
+                                //                                if let open = jsonStockQuote["open"] as? Double {
+                                //                                    stockQuote.open = open
+                                //                                }
+                                //                                if let totalTradedVolume = jsonStockQuote["totalTradedVolume"] as? Int {
+                                //                                    stockQuote.totalTradedVolume = totalTradedVolume
+                                //                                }
                                 
                                 DispatchQueue.main.async {
                                     if let index = self.stockQuotes.firstIndex(where: {$0.symbol == stockQuote.symbol}) { // this is so that when api returns incomplete stock quotes, it keeps the earlier quotes of the stocks whose quote it has not received
@@ -164,13 +176,14 @@ class DataController: ObservableObject {
     }
     
     
-    func getStockOwned(stockSymbol: String) -> StockOwned {
+    func getStockOwned(stockSymbol: String) -> StockOwned? {
         if let index = portfolio.firstIndex(where: {loopingStockOwned -> Bool in
             return loopingStockOwned.stockSymbol.lowercased() == stockSymbol.lowercased()
         }) {
             return portfolio[index]
         }
-        return StockOwned()
+        return nil
+        //        return StockOwned()
     }
     
     
@@ -301,6 +314,10 @@ class DataController: ObservableObject {
                     showMessage(message: "You bought \(order.numberOfShares) shares of \(order.stockSymbol) @ \(order.sharePrice.withCommas(withRupeeSymbol: true))! And you still have \(self.funds.withCommas(withRupeeSymbol: true)) left.", error: false)
                 } else {
                     showMessage(message: "Not enough funds! Sell some stocks or reduce the number of shares.")
+                }
+                
+                if niftyWhenStarted == 0 {
+                    niftyWhenStarted = getStockQuote(stockSymbol: "NIFTY 50").lastPrice
                 }
             } else {
                 if checkIfOwned(stockSymbol: order.stockSymbol) {
