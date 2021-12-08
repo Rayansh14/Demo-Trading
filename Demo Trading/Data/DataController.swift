@@ -110,25 +110,30 @@ class DataController: ObservableObject {
                                 
                                 // 07-Dec-2021 16:00:00
                                 
-                                let stringDate = jsonStockQuote["lastUpdateTime"] as! String
-                                let stringTime = stringDate.split(separator: " ")[1]
-                                let stringTimeIndividual = stringTime.split(separator: ":")
                                 
-                                let stringDay = stringDate.split(separator: " ")[0]
-                                let stringDayIndividual = stringDay.split(separator: "-")
+                                let formatter = DateFormatter()
+                                formatter.dateFormat = "dd-MMM-y HH:mm:ss"
+                                stockQuote.updateTime = formatter.date(from: jsonStockQuote["lastUpdateTime"] as! String)!
                                 
-                                
-                                
-                                let calendar = Calendar.current
-                                
-                                var components = calendar.dateComponents([.month, .day, .hour, .minute, .second], from: Date())
-                                components.month = getMonthNumber(for: stringDayIndividual[1])
-                                components.day = Int(stringDayIndividual[0])
-                                components.hour = Int(stringTimeIndividual[0])!
-                                components.minute = Int(stringTimeIndividual[1])!
-                                components.second = Int(stringTimeIndividual[2])!
-                                
-                                stockQuote.updateTime = calendar.date(from: components)!
+//                                let stringDate = jsonStockQuote["lastUpdateTime"] as! String
+//                                let stringTime = stringDate.split(separator: " ")[1]
+//                                let stringTimeIndividual = stringTime.split(separator: ":")
+//
+//                                let stringDay = stringDate.split(separator: " ")[0]
+//                                let stringDayIndividual = stringDay.split(separator: "-")
+//
+//
+//
+//                                let calendar = Calendar.current
+//
+//                                var components = calendar.dateComponents([.month, .day, .hour, .minute, .second], from: Date())
+//                                components.month = getMonthNumber(for: stringDayIndividual[1])
+//                                components.day = Int(stringDayIndividual[0])
+//                                components.hour = Int(stringTimeIndividual[0])!
+//                                components.minute = Int(stringTimeIndividual[1])!
+//                                components.second = Int(stringTimeIndividual[2])!
+//
+//                                stockQuote.updateTime = calendar.date(from: components)!
                                 
                                 //                                stockQuote.updateTime = jsonStockQuote["lastUpdateTime"] as! Date
                                 
