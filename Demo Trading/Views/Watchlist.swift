@@ -17,6 +17,7 @@ struct WatchlistView: View {
     @State private var sheetOffset = CGSize(width: 0, height: 750)
     @State private var isAdding = false
     @State private var searchText = ""
+    @State private var editMode: EditMode = .inactive
     private let timer = Timer.publish(every: 25, tolerance: 5, on: .main, in: .common).autoconnect()
     @Environment(\.colorScheme) var colorScheme
     
@@ -84,13 +85,27 @@ struct WatchlistView: View {
                                             selectedStock = stockQuote
                                         }) {
                                             WatchlistTileView(stockQuote: stockQuote)
+                                                .onTapGesture {
+                                                    sheetOffset = CGSize.zero
+                                                    showSheet = true
+                                                    selectedStock = stockQuote
+                                                }
+                                                .onLongPressGesture {
+                                                    editMode = .active
+                                                }
                                         }
                                     }
+                                    .onMove(perform: { indexSet, index in
+                                        data.userStocksOrder.move(fromOffsets: indexSet, toOffset: index)
+                                        data.saveData()
+                                    })
                                     .onDelete { indexSet in
                                         delete(at: indexSet)
                                     }
                                 }
+                                .environment(\.editMode, $editMode)
                                 .listStyle(PlainListStyle())
+                                .animation(.default, value: editMode)
                             }
                         }
                         
@@ -152,6 +167,7 @@ struct WatchlistView: View {
                                     if sheetOffset.height > 20 {
                                         sheetOffset.height = 750
                                         showSheet = false
+                                        UIApplication.shared.endEditing()
                                         
                                     } else {
                                         sheetOffset.height = 0
@@ -176,9 +192,17 @@ struct WatchlistView: View {
                 Image(systemName: "lightbulb.fill")
                     .foregroundColor(.yellow)
             }, trailing: Button(action: {
-                data.getStocksData()
+                if editMode == .active {
+                    editMode = .inactive
+                } else {
+                    data.getStocksData()
+                }
             }) {
-                Image(systemName: "gobackward")
+                if editMode == .active {
+                    Text("Done")
+                } else {
+                    Image(systemName: "gobackward")
+                }
             })
             .onReceive(timer, perform: { _ in
                 if data.getMarketStatus() {

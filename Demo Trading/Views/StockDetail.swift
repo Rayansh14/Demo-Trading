@@ -106,23 +106,23 @@ struct StockDetailView: View {
                     
                     if isFullScreen {
                         
-                        VStack {
-                            CustomInfoView(label: "Buy Value:", info: ((stockOwned.avgPriceBought * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true)))
-                                .padding(.top)
-                            
-                            CustomInfoView(label: "Current Value:", info: ((stockOwned.lastPrice * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true)))
-                                .padding(.top, 1)
-                            
-                            CustomInfoView(label: "Profit/Loss:", info: ((stockOwned.lastPrice - stockOwned.avgPriceBought) * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true))
-                                .padding(.top, 1)
-                            
-                            CustomInfoView(label: "Weightage in Portfolio:", info: "\((stockOwned.lastPrice * 100 * Double(stockOwned.numberOfShares) / data.getPorfolioInfo(portfolio: data.portfolio)["currentValue"]!).withCommas(withRupeeSymbol: false))%")
-                                .padding(.top, 1)
-                            CustomInfoView(label: "Last update time:", info: stockQuote.updateTimeAsString())
-                                .padding(.top, 1)
-                        }
+                        CustomInfoView(label: "Buy Value:", info: ((stockOwned.avgPriceBought * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true)))
+                            .padding(.top)
+                        
+                        CustomInfoView(label: "Current Value:", info: ((stockOwned.lastPrice * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true)))
+                            .padding(.top, 1)
+                        
+                        CustomInfoView(label: "Profit/Loss:", info: ((stockOwned.lastPrice - stockOwned.avgPriceBought) * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true))
+                            .padding(.top, 1)
+                        
+                        CustomInfoView(label: "Weightage in Portfolio:", info: "\((stockOwned.lastPrice * 100 * Double(stockOwned.numberOfShares) / data.getPorfolioInfo(portfolio: data.portfolio)["currentValue"]!).withCommas(withRupeeSymbol: false))%")
+                            .padding(.top, 1)
+                        
                     }
                 }
+                CustomInfoView(label: "Last update time:", info: stockQuote.updateTimeAsString())
+                    .padding(.top, 1)
+                    .padding(.bottom, 15)
                 
                 Spacer()
             }

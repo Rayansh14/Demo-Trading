@@ -16,7 +16,7 @@ struct TipsView: View {
             TabView {
                 TipsPageView(title: "Welcome!", text: "Welcome to Demo Trading! This app is meant to help you get started with investing in the stock market 💸. You have been given ₹1 lakh in fantasy money to buy and sell stocks of your choice! 🙃. Read on to get an idea for how this app, and the stock market in general works.", imageName: "loading", alignment: TextAlignment.center)
                 
-                TipsPageView(title: "Watchlist 👀", text: "This is your watchlist tab. You can add stocks to your watchlist by tapping on the search bar and searching for them. Once you've added stocks, they will appear on your watchlist. You can tap on a stock to get details about that stock and also trade (buy or sell) it.", imageName: "watchlist-1")
+                TipsPageView(title: "Watchlist 👀", text: "This is your watchlist tab. You can add stocks to your watchlist by tapping on the search bar and searching for them. You can tap on a stock to get details about that stock and also trade (buy or sell) it.", imageName: "watchlist-1")
                 
                 TipsPageView(title: "Orders", text: "This is your orders tab. You can see all your transactions over here. You can also see details about your transaction, like type (buy or sell), number of shares, share price, time, etc.", imageName: "orders")
                 

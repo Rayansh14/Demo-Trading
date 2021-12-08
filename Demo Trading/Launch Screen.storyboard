@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -22,13 +22,11 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="icon" translatesAutoresizingMaskIntoConstraints="NO" id="5ev-Gw-kN1">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="icon" translatesAutoresizingMaskIntoConstraints="NO" id="5ev-Gw-kN1">
                                 <rect key="frame" x="52" y="249" width="310" height="326"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Demo Trading" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rJv-No-7Ku">
-                                <rect key="frame" x="103" y="583" width="209" height="42"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Demo Trading" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rJv-No-7Ku">
+                                <rect key="frame" x="103" y="568" width="209" height="42"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="35"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -38,9 +36,17 @@
                         <color key="backgroundColor" name="Blue"/>
                         <color key="tintColor" name="Blue"/>
                         <constraints>
+                            <constraint firstItem="Bcu-3y-fUS" firstAttribute="trailing" secondItem="5ev-Gw-kN1" secondAttribute="trailing" constant="52" id="4e6-Qn-qh3"/>
                             <constraint firstItem="Bcu-3y-fUS" firstAttribute="centerX" secondItem="obG-Y5-kRd" secondAttribute="centerX" id="5cz-MP-9tL"/>
+                            <constraint firstItem="Bcu-3y-fUS" firstAttribute="bottom" secondItem="rJv-No-7Ku" secondAttribute="bottom" constant="252" id="GjJ-9T-TTT"/>
+                            <constraint firstItem="rJv-No-7Ku" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" constant="103" id="H4X-eX-7xC"/>
                             <constraint firstItem="obG-Y5-kRd" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" constant="20" symbolic="YES" id="SfN-ll-jLj"/>
+                            <constraint firstItem="Bcu-3y-fUS" firstAttribute="trailing" secondItem="rJv-No-7Ku" secondAttribute="trailing" constant="102" id="Tsu-cw-faw"/>
                             <constraint firstAttribute="bottom" secondItem="obG-Y5-kRd" secondAttribute="bottom" constant="20" id="Y44-ml-fuU"/>
+                            <constraint firstItem="5ev-Gw-kN1" firstAttribute="top" secondItem="Bcu-3y-fUS" secondAttribute="top" constant="205" id="b5H-f2-NGW"/>
+                            <constraint firstItem="5ev-Gw-kN1" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" constant="52" id="dnF-C9-Yqk"/>
+                            <constraint firstItem="rJv-No-7Ku" firstAttribute="top" secondItem="Bcu-3y-fUS" secondAttribute="top" constant="524" id="g3o-Kw-fGf"/>
+                            <constraint firstItem="Bcu-3y-fUS" firstAttribute="bottom" secondItem="5ev-Gw-kN1" secondAttribute="bottom" constant="287" id="tMy-SS-6t8"/>
                         </constraints>
                     </view>
                 </viewController>

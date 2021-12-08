@@ -10,6 +10,7 @@ import SwiftUI
 struct FundsView: View {
     
     @ObservedObject var data = DataController.shared
+    @State var refresh = true
     
     var body: some View {
         NavigationView {
@@ -80,7 +81,7 @@ struct FundsView: View {
                 .padding(.top, 1)
                 
                 HStack {
-                    Button(action: {data.showMessage(message: overperformaceExplanation, error: false, duration: 8)}) {
+                    Button(action: {data.showMessage(message: getOPExplanation(), error: false, duration: 8)}) {
                         HStack {
                             Text("Performance relative to nifty: ")
                                 .foregroundColor(Color("Black White"))
@@ -105,11 +106,14 @@ struct FundsView: View {
             }
             .padding(.top)
             .navigationTitle("Funds")
+            .navigationBarItems(trailing: Button(action: {refresh.toggle()}) {
+                Image(systemName: "gobackward")
+            })
         }
     }
     
     func changeInNetWorth() -> Double {
-        return ((getTotalNetWorth() -  1_00_000) / 1_00_000 * 100)
+        return (getTotalNetWorth() -  1_00_000) / 1_00_000 * 100
     }
     
     func getTotalNetWorth() -> Double {
@@ -127,8 +131,12 @@ struct FundsView: View {
     }
     
     func getOverperformance() -> Double {
+        if data.niftyWhenStarted == 0 {
+            return 0
+        }
+        
         let nifty = data.getStockQuote(stockSymbol: "NIFTY 50").lastPrice
-        let niftyReturn = nifty/data.niftyWhenStarted*100
+        let niftyReturn = (nifty-data.niftyWhenStarted) / data.niftyWhenStarted * 100
         return changeInNetWorth() - niftyReturn
     }
     

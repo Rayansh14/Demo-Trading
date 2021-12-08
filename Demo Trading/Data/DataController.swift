@@ -15,6 +15,13 @@ let totalNetWorthExplanation = "This is the sum of your funds and the value of s
 
 let overperformaceExplanation = "This is how much better/worse you are doing than the nifty 50 index. The time period is since you placed your first order."
 
+func getOPExplanation() -> String {
+    if DataController.shared.niftyWhenStarted > 0 {
+        return overperformaceExplanation + "\nWhen you started, Nifty 50 was at \(DataController.shared.niftyWhenStarted)"
+    }
+    return overperformaceExplanation
+}
+
 
 class DataController: ObservableObject {
     
@@ -101,13 +108,27 @@ class DataController: ObservableObject {
                                 stockQuote.open = jsonStockQuote["previousClose"] as! Double
                                 stockQuote.totalTradedVolume = jsonStockQuote["totalTradedVolume"] as! Int
                                 
+                                // 07-Dec-2021 16:00:00
+                                
                                 let stringDate = jsonStockQuote["lastUpdateTime"] as! String
                                 let stringTime = stringDate.split(separator: " ")[1]
-                                let stringIndividual = stringTime.split(separator: ":")
+                                let stringTimeIndividual = stringTime.split(separator: ":")
+                                
+                                let stringDay = stringDate.split(separator: " ")[0]
+                                let stringDayIndividual = stringDay.split(separator: "-")
+                                
+                                
                                 
                                 let calendar = Calendar.current
-                                let now = Date()
-                                stockQuote.updateTime = calendar.date(bySettingHour: Int(stringIndividual[0])!, minute: Int(stringIndividual[1])!, second: Int(stringIndividual[2])!, of: now)!
+                                
+                                var components = calendar.dateComponents([.month, .day, .hour, .minute, .second], from: Date())
+                                components.month = getMonthNumber(for: stringDayIndividual[1])
+                                components.day = Int(stringDayIndividual[0])
+                                components.hour = Int(stringTimeIndividual[0])!
+                                components.minute = Int(stringTimeIndividual[1])!
+                                components.second = Int(stringTimeIndividual[2])!
+                                
+                                stockQuote.updateTime = calendar.date(from: components)!
                                 
                                 //                                stockQuote.updateTime = jsonStockQuote["lastUpdateTime"] as! Date
                                 
@@ -288,74 +309,78 @@ class DataController: ObservableObject {
     }
     
     
-    func processOrder(order: Order) {
+    func processOrder(order: Order, quoteUpdateTime: Date) {
         if getMarketStatus() {
-            if order.type == .buy {
-                if funds >= (order.sharePrice * Double(order.numberOfShares)) {
-                    orderList.append(order)
-                    funds -= (order.sharePrice * Double(order.numberOfShares))
+            if (quoteUpdateTime + 4.minutes) < Date.now {
+                if order.type == .buy {
+                    if funds >= (order.sharePrice * Double(order.numberOfShares)) {
+                        orderList.append(order)
+                        funds -= (order.sharePrice * Double(order.numberOfShares))
+                        
+                        if checkIfInPositions(stockSymbol: order.stockSymbol) {
+                            if let stock = positions.first(where: { $0.stockSymbol == order.stockSymbol }) {
+                                
+                                stock.avgPriceBought = ((stock.avgPriceBought * Double(stock.numberOfShares)) + (order.sharePrice * Double(order.numberOfShares)))/Double(stock.numberOfShares + order.numberOfShares)
+                                stock.numberOfShares += order.numberOfShares
+                                
+                            }
+                        } else {
+                            let stockOwned = StockOwned()
+                            stockOwned.numberOfShares = order.numberOfShares
+                            stockOwned.avgPriceBought = order.sharePrice
+                            stockOwned.stockSymbol = order.stockSymbol
+                            stockOwned.timeBought = order.time
+                            portfolio.append(stockOwned)
+                        }
+                        
+                        showMessage(message: "You bought \(order.numberOfShares) shares of \(order.stockSymbol) @ \(order.sharePrice.withCommas(withRupeeSymbol: true))! And you still have \(self.funds.withCommas(withRupeeSymbol: true)) left.", error: false)
+                    } else {
+                        showMessage(message: "Not enough funds! Sell some stocks or reduce the number of shares.")
+                    }
                     
-                    if checkIfInPositions(stockSymbol: order.stockSymbol) {
-                        if let stock = positions.first(where: { $0.stockSymbol == order.stockSymbol }) {
-                            
-                            stock.avgPriceBought = ((stock.avgPriceBought * Double(stock.numberOfShares)) + (order.sharePrice * Double(order.numberOfShares)))/Double(stock.numberOfShares + order.numberOfShares)
-                            stock.numberOfShares += order.numberOfShares
-                            
+                    if niftyWhenStarted == 0 {
+                        niftyWhenStarted = getStockQuote(stockSymbol: "NIFTY 50").lastPrice
+                    }
+                } else {
+                    if checkIfOwned(stockSymbol: order.stockSymbol) {
+                        if let stock = portfolio.first(where: {loopingStock -> Bool in
+                            loopingStock.stockSymbol == order.stockSymbol
+                        }) {
+                            if stock.numberOfShares >= order.numberOfShares {
+                                orderList.append(order)
+                                
+                                if stock.numberOfShares == order.numberOfShares {
+                                    if let index = portfolio.firstIndex(where: {loopingStockOwned -> Bool in
+                                        return loopingStockOwned.id == stock.id
+                                    }) {
+                                        portfolio.remove(at: index)
+                                    }
+                                } else {
+                                    stock.numberOfShares -= order.numberOfShares
+                                }
+                                
+                                if checkIfInHoldings(stockSymbol: stock.stockSymbol) {
+                                    funds += (Double(order.numberOfShares) * order.sharePrice) * 0.8
+                                    let date = Date() + 5.hours + 30.minutes + 1.days
+                                    self.deliveryMargin[date] = Double(order.numberOfShares) * order.sharePrice * 0.2
+                                    
+                                } else {
+                                    funds += (Double(order.numberOfShares) * order.sharePrice)
+                                }
+                                
+                                showMessage(message: "S😎LD! You got \((Double(order.numberOfShares) * order.sharePrice).withCommas(withRupeeSymbol: true)) from that sale! You now have \(funds.withCommas(withRupeeSymbol: true)).", error: false)
+                            } else {
+                                showMessage(message: "Seriously??? You're trying to sell more shares than you own?! 😡")
+                            }
                         }
                     } else {
-                        let stockOwned = StockOwned()
-                        stockOwned.numberOfShares = order.numberOfShares
-                        stockOwned.avgPriceBought = order.sharePrice
-                        stockOwned.stockSymbol = order.stockSymbol
-                        stockOwned.timeBought = order.time
-                        portfolio.append(stockOwned)
+                        showMessage(message: "You can't sell what you don't own! 😡")
                     }
-                    
-                    showMessage(message: "You bought \(order.numberOfShares) shares of \(order.stockSymbol) @ \(order.sharePrice.withCommas(withRupeeSymbol: true))! And you still have \(self.funds.withCommas(withRupeeSymbol: true)) left.", error: false)
-                } else {
-                    showMessage(message: "Not enough funds! Sell some stocks or reduce the number of shares.")
                 }
-                
-                if niftyWhenStarted == 0 {
-                    niftyWhenStarted = getStockQuote(stockSymbol: "NIFTY 50").lastPrice
-                }
+                saveData()
             } else {
-                if checkIfOwned(stockSymbol: order.stockSymbol) {
-                    if let stock = portfolio.first(where: {loopingStock -> Bool in
-                        loopingStock.stockSymbol == order.stockSymbol
-                    }) {
-                        if stock.numberOfShares >= order.numberOfShares {
-                            orderList.append(order)
-                            
-                            if stock.numberOfShares == order.numberOfShares {
-                                if let index = portfolio.firstIndex(where: {loopingStockOwned -> Bool in
-                                    return loopingStockOwned.id == stock.id
-                                }) {
-                                    portfolio.remove(at: index)
-                                }
-                            } else {
-                                stock.numberOfShares -= order.numberOfShares
-                            }
-                            
-                            if checkIfInHoldings(stockSymbol: stock.stockSymbol) {
-                                funds += (Double(order.numberOfShares) * order.sharePrice) * 0.8
-                                let date = Date() + 5.hours + 30.minutes + 1.days
-                                self.deliveryMargin[date] = Double(order.numberOfShares) * order.sharePrice * 0.2
-                                
-                            } else {
-                                funds += (Double(order.numberOfShares) * order.sharePrice)
-                            }
-                            
-                            showMessage(message: "S😎LD! You got \((Double(order.numberOfShares) * order.sharePrice).withCommas(withRupeeSymbol: true)) from that sale! You now have \(funds.withCommas(withRupeeSymbol: true)).", error: false)
-                        } else {
-                            showMessage(message: "Seriously??? You're trying to sell more shares than you own?! 😡")
-                        }
-                    }
-                } else {
-                    showMessage(message: "You can't sell what you don't own! 😡")
-                }
+                showMessage(message: "The stock price hasn't been refreshed in a while. Try manually refreshing it from your watchlist tab")
             }
-            saveData()
         } else {
             showMessage(message: "The stock market is not open right now. Please try again when it is open.")
         }
@@ -365,16 +390,19 @@ class DataController: ObservableObject {
     func saveData() {
         DispatchQueue.global().async {
             let encoder = JSONEncoder()
-            if let portfolioData = try? encoder.encode(self.portfolio) {
-                if let orderListData = try? encoder.encode(self.orderList) {
-                    if let fundsData = try? encoder.encode(self.funds) {
-                        if let userStocksOrderData = try? encoder.encode(self.userStocksOrder) {
-                            if let deliveryMarginData = try? encoder.encode(self.deliveryMargin) {
-                                UserDefaults.standard.setValue(portfolioData, forKey: "portfolio")
-                                UserDefaults.standard.setValue(orderListData, forKey: "orderList")
-                                UserDefaults.standard.setValue(fundsData, forKey: "funds")
-                                UserDefaults.standard.setValue(userStocksOrderData, forKey: "userStocksOrder")
-                                UserDefaults.standard.setValue(deliveryMarginData, forKey: "deliveryMargin")
+            if let niftyData = try? encoder.encode(self.niftyWhenStarted) {
+                if let portfolioData = try? encoder.encode(self.portfolio) {
+                    if let orderListData = try? encoder.encode(self.orderList) {
+                        if let fundsData = try? encoder.encode(self.funds) {
+                            if let userStocksOrderData = try? encoder.encode(self.userStocksOrder) {
+                                if let deliveryMarginData = try? encoder.encode(self.deliveryMargin) {
+                                    UserDefaults.standard.setValue(niftyData, forKey: "niftyWhenStarted")
+                                    UserDefaults.standard.setValue(portfolioData, forKey: "portfolio")
+                                    UserDefaults.standard.setValue(orderListData, forKey: "orderList")
+                                    UserDefaults.standard.setValue(fundsData, forKey: "funds")
+                                    UserDefaults.standard.setValue(userStocksOrderData, forKey: "userStocksOrder")
+                                    UserDefaults.standard.setValue(deliveryMarginData, forKey: "deliveryMargin")
+                                }
                             }
                         }
                     }
@@ -391,18 +419,23 @@ class DataController: ObservableObject {
                     if let fundsData = UserDefaults.standard.data(forKey: "funds") {
                         if let userStocksOrderData = UserDefaults.standard.data(forKey: "userStocksOrder") {
                             if let deliveryMarginData = UserDefaults.standard.data(forKey: "deliveryMargin") {
-                                let decoder = JSONDecoder()
-                                if let jsonPortfolio = try? decoder.decode([StockOwned].self, from: portfolioData) {
-                                    if let jsonOrderList = try? decoder.decode([Order].self, from: orderListData) {
-                                        if let jsonFunds = try? decoder.decode(Double.self, from: fundsData) {
-                                            if let jsonUserStocksOrder = try? decoder.decode([String].self, from: userStocksOrderData) {
-                                                if let jsonDeliveryMargin = try? decoder.decode([Date: Double].self, from: deliveryMarginData) {
-                                                    DispatchQueue.main.async {
-                                                        self.portfolio = jsonPortfolio
-                                                        self.orderList = jsonOrderList
-                                                        self.funds = jsonFunds
-                                                        self.userStocksOrder = jsonUserStocksOrder
-                                                        self.deliveryMargin = jsonDeliveryMargin
+                                if let niftyData = UserDefaults.standard.data(forKey: "niftyWhenStarted") {
+                                    let decoder = JSONDecoder()
+                                    if let jsonPortfolio = try? decoder.decode([StockOwned].self, from: portfolioData) {
+                                        if let jsonOrderList = try? decoder.decode([Order].self, from: orderListData) {
+                                            if let jsonFunds = try? decoder.decode(Double.self, from: fundsData) {
+                                                if let jsonUserStocksOrder = try? decoder.decode([String].self, from: userStocksOrderData) {
+                                                    if let jsonDeliveryMargin = try? decoder.decode([Date: Double].self, from: deliveryMarginData) {
+                                                        if let jsonNifty = try? decoder.decode(Double.self, from: niftyData) {
+                                                            DispatchQueue.main.async {
+                                                                self.niftyWhenStarted = jsonNifty
+                                                                self.portfolio = jsonPortfolio
+                                                                self.orderList = jsonOrderList
+                                                                self.funds = jsonFunds
+                                                                self.userStocksOrder = jsonUserStocksOrder
+                                                                self.deliveryMargin = jsonDeliveryMargin
+                                                            }
+                                                        }
                                                     }
                                                 }
                                             }
@@ -455,4 +488,15 @@ extension View {
             self
         }
     }
+}
+
+extension UIApplication {
+    func endEditing() {
+        sendAction(#selector(resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+
+func getMonthNumber(for monthString: String.SubSequence) -> Int {
+    let months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+    return months.firstIndex(of: String(monthString).lowercased())! + 1
 }

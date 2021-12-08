@@ -24,7 +24,7 @@ class StockQuote: ObservableObject, Identifiable {
     
     func updateTimeAsString() -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "M MMM, HH:mm:ss"
+        formatter.dateFormat = "d MMM, HH:mm:ss"
         return formatter.string(from: self.updateTime)
     }
 }

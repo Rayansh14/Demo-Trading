@@ -141,17 +141,14 @@ struct TransactStockView: View {
                 Button(action: {
                     if let intNumberOfShares = Int(numberOfShares) {
                         if intNumberOfShares > 0 {
-                            if (stockQuote.updateTime + 2.minutes) > Date.now {
                                 order.type = orderType
                                 order.sharePrice = stockQuote.lastPrice
                                 order.stockSymbol = stockQuote.symbol
                                 order.time = Date()
                                 order.numberOfShares = intNumberOfShares
-                                data.processOrder(order: order)
+                            data.processOrder(order: order, quoteUpdateTime: stockQuote.updateTime)
                                 presentationMode.wrappedValue.dismiss()
-                            } else {
-                                data.showMessage(message: "The stock price hasn't been refreshed in a while. Try manually refreshing it from your watchlist tab")
-                            }
+                            
                         } else {
                             data.showMessage(message: "LOL")
                         }
