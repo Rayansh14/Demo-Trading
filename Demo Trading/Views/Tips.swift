@@ -65,8 +65,7 @@ struct TipsPageView: View {
             Spacer()
             
             HStack {
-                
-                if alignment == .center {
+                if alignment != .leading {
                     Spacer()
                 }
                 
@@ -77,12 +76,13 @@ struct TipsPageView: View {
                     Image(systemName: "list.bullet")
                         .imageScale(.large)
                         .offset(x: -5, y: -1)
-                
-                    Spacer()
-                    
                 }
-                Spacer()
+                
+                if alignment != .trailing {
+                    Spacer()
+                }
             }
+            
             Text(text)
                 .multilineTextAlignment(alignment)
             

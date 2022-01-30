@@ -10,7 +10,7 @@ import SwiftUI
 struct FundsView: View {
     
     @ObservedObject var data = DataController.shared
-    @State var refresh = true
+    @State private var refresh = true
     
     var body: some View {
         NavigationView {
@@ -72,7 +72,7 @@ struct FundsView: View {
                     }
                     Spacer()
                     // definitely some performace improvements by not calling functions 4 times
-                    Text("\(getTotalNetWorth().withCommas(withRupeeSymbol: true))\n\(changeInNetWorth() > 0 ? "+" : "" )\(changeInNetWorth().withCommas(withRupeeSymbol: false)) %")
+                    Text("\(getTotalNetWorth().withCommas(withRupeeSymbol: true))\n\(changeInNetWorth() > 0 ? "+" : "" )\(changeInNetWorth().withCommas()) %")
                         .foregroundColor(changeInNetWorth() >= 0 ? .green : .red)
                         .multilineTextAlignment(.trailing)
                     
@@ -90,7 +90,7 @@ struct FundsView: View {
                         }
                     }
                     Spacer()
-                    Text("\(getOverperformance() > 0 ? "+" : "")\(getOverperformance().withCommas(withRupeeSymbol: false))%")
+                    Text("\(getOverperformance() > 0 ? "+" : "")\(getOverperformance().withCommas())%")
                         .foregroundColor(getOverperformance() >= 0 ? .green : .red)
                 }
                 .padding(.horizontal)

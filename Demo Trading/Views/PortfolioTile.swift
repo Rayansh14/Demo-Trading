@@ -19,40 +19,37 @@ struct PortfolioTileView: View {
         NavigationLink(destination: StockDetailView(stockSymbol: stock.stockSymbol, isFullScreen: true)) {
             HStack {
                 
-                VStack(alignment: .leading, spacing: 3) {
-                    Text("Avg: \(stock.avgPriceBought.withCommas(withRupeeSymbol: false))")
-                        .font(.system(size: 15))
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Avg: \(stock.avgPriceBought.withCommas())")
+                        .font(.system(size: 13.5))
                         .foregroundColor(Color("Gray"))
                     
                     Text(stock.stockSymbol)
-                        .font(.system(size: 20))
-                        .frame(height: 32)
+                        .font(.system(size: 17.5))
                     
                     Text("Qty: \(stock.numberOfShares)")
-                        .font(.system(size: 15))
+                        .font(.system(size: 13.5))
                         .foregroundColor(Color("Gray"))
                 }
                 
                 Spacer()
                 
-                VStack(alignment: .trailing, spacing: 3) {
+                VStack(alignment: .trailing, spacing: 6) {
                     Text("\(String(format: "%.2f", profitLossPercent))%")
                         .foregroundColor(profitLoss >= 0 ? .green : .red)
-                        .font(.system(size: 15))
+                        .font(.system(size: 13.5))
                     
-                    Text("\(profitLoss >= 0 ? "+" : "")\(profitLoss.withCommas(withRupeeSymbol: false))")
-                        .font(.system(size: 20))
-                        .frame(height: 32)
+                    Text("\(profitLoss >= 0 ? "+" : "")\(profitLoss.withCommas())")
+                        .font(.system(size: 17.5))
                         .foregroundColor(profitLoss >= 0 ? .green : .red)
                     
                     HStack(spacing: 0) {
-                        Text("LTP: \(stock.lastPrice.withCommas(withRupeeSymbol: false))")
-                            .font(.system(size: 15))
+                        Text("LTP: \(stock.lastPrice.withCommas())")
                             .foregroundColor(Color("Gray"))
                         Text(" (\(stock.dayChange >= 0 ? "+" : "")\(String(format: "%.2f", stock.dayPChange))%)")
-                            .font(.system(size: 16))
                             .foregroundColor(stock.dayChange >= 0 ? .green : .red)
                     }
+                    .font(.system(size: 13.5))
                 }
                 
             }
@@ -77,5 +74,6 @@ struct PortfolioTileView: View {
 struct PortfolioTileView_Previews: PreviewProvider {
     static var previews: some View {
         PortfolioTileView(stock: testStockOwned)
+            .preferredColorScheme(.dark)
     }
 }

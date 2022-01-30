@@ -7,22 +7,45 @@
 
 import SwiftUI
 
+enum OrdersType: String {
+    case executed, pending
+}
+
 struct OrdersView: View {
     
     @ObservedObject var data = DataController.shared
+    
+    var body: some View {
+        NavigationView {
+            TabView {
+                OrderListView(ordersType: .executed)
+                OrderListView(ordersType: .pending)
+            }
+            .tabViewStyle(PageTabViewStyle())
+            .indexViewStyle(.page(backgroundDisplayMode: .always))
+            
+        }
+    }
+}
+
+
+struct OrderListView: View {
+    
+    @ObservedObject var data = DataController.shared
+    var ordersType: OrdersType
     @State private var isTodayExpanded = true
     @State private var isEarlierExpanded = false
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                Image("signature")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .padding(.top)
-                    .opacity((data.orderList.count < 2 && data.earlierOrders.count < 1) ? 1 : 0.2)
-                VStack {
-                    ScrollView {
+        ZStack {
+            Image("signature")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .padding(.top)
+                .opacity((data.orderList.count < 2 && data.earlierOrders.count < 1) ? 1 : 0.2)
+            VStack {
+                ScrollView {
+                    if ordersType == .executed {
                         DisclosureGroup(isExpanded: $isTodayExpanded, content: {
                             VStack {
                                 if data.todayOrders.count == 0 {
@@ -43,9 +66,7 @@ struct OrdersView: View {
                             }
                         }, label: {Text("Today").foregroundColor(Color("Black White"))})
                             .font(.title2)
-                            .foregroundColor(.black)
                             .padding()
-                            .cornerRadius(15)
                         
                         if data.earlierOrders.count != 0 {
                             DisclosureGroup(isExpanded: $isEarlierExpanded, content: {
@@ -63,17 +84,35 @@ struct OrdersView: View {
                                 }
                             }, label: {Text("Earlier").foregroundColor(Color("Black White"))})
                                 .font(.title2)
-                                .foregroundColor(.black)
                                 .padding()
-                                .cornerRadius(15)
                         }
-                        Spacer()
+                    } else {
+                        VStack {
+                        if data.pendingLimitOrders.count == 0 {
+                            Text("You have placed no orders today. Buy or sell a stock by going to your watchlist and selecting the stock that you want to trade.")
+                                .font(.body)
+                                .foregroundColor(Color("Black White"))
+                                .padding(.horizontal)
+                        } else {
+                            ForEach(data.pendingLimitOrders) { order in
+                                Rectangle()
+                                    .frame(height: 1)
+                                    .foregroundColor(Color("Divider Gray"))
+                                OrderTileView(order: order)
+                            }
+                            .padding(.horizontal)
+                            Rectangle()
+                                .frame(height: 1)
+                                .foregroundColor(Color("Divider Gray"))
+                        }
                     }
+                        .padding(.top)
+                    }
+                    Spacer()
                 }
             }
-            .navigationTitle("Orders")
-            
         }
+        .navigationTitle("\(ordersType.rawValue.capitalized) Orders")
     }
 }
 
@@ -84,26 +123,29 @@ struct OrderTileView: View {
     
     var body: some View {
         HStack {
-            VStack(alignment: .leading) {
-                Text(order.type.rawValue.capitalized)
-                    .font(.body)
-                    .foregroundColor(order.type.rawValue == "buy" ? .green : .red)
+            VStack(alignment: .leading, spacing: 3) {
+                Text(order.transactionType.rawValue.capitalized)
+                    .font(.system(size: 15))
+                    .foregroundColor(order.transactionType.rawValue == "buy" ? .green : .red)
                 Text(order.stockSymbol)
                     .foregroundColor(Color("Black White"))
-                    .font(.system(size: 22))
+                    .font(.system(size: 21))
+                Text(order.orderType.rawValue.capitalized)
+                    .font(.system(size: 15))
+                    .foregroundColor(Color("Gray"))
             }
             
             Spacer()
             
-            VStack(alignment: .trailing) {
+            VStack(alignment: .trailing, spacing: 3) {
                 Text("Qty: \(order.numberOfShares)")
-                    .font(.body)
+                    .font(.system(size: 15))
                     .foregroundColor(Color("Gray"))
-                Text("\(order.sharePrice.withCommas(withRupeeSymbol: false))")
+                Text("\(order.sharePrice.withCommas())")
                     .foregroundColor(Color("Black White"))
-                    .font(.system(size: 21))
+                    .font(.system(size: 20))
                 Text("\(order.dateAsString())")
-                    .font(.body)
+                    .font(.system(size: 15))
                     .foregroundColor(Color("Gray"))
             }
         }
@@ -111,9 +153,13 @@ struct OrderTileView: View {
     }
 }
 
+
 struct OrdersView_Previews: PreviewProvider {
     static var previews: some View {
-        OrdersView()
-            .preferredColorScheme(.dark)
+        Group {
+            OrdersView()
+            //                .preferredColorScheme(.dark)
+            OrderTileView(order: testOrder)
+        }
     }
 }

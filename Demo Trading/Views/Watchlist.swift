@@ -14,7 +14,7 @@ struct WatchlistView: View {
     @ObservedObject var data = DataController.shared
     @State private var showSheet = false
     @State private var selectedStock = StockQuote()
-    @State private var sheetOffset = CGSize(width: 0, height: 750)
+    @State private var sheetOffset: CGFloat = 750
     @State private var isAdding = false
     @State private var searchText = ""
     @State private var editMode: EditMode = .inactive
@@ -27,18 +27,16 @@ struct WatchlistView: View {
                 VStack {
                     SearchBar(placeholderText: "Add stocks...", searchText: $searchText, isEditing: $isAdding, showSheet: $showSheet, sheetOffset: $sheetOffset)
                     
-                    if !(isAdding) {
-                        if data.userStocksOrder.count < 1 {
+                    if !isAdding {
+                        if data.userStocksOrder.count == 0 {
                             ZStack {
-                                VStack {
-                                    Image("watchlist")
-                                        .resizable()
-                                        .renderingMode(.template)
-                                        .aspectRatio(contentMode: .fit)
-                                        .foregroundColor(Color("Blue"))
-                                        .opacity(colorScheme == ColorScheme.light ? 0.15 : 0.25)
-                                        .padding(40)
-                                }
+                                Image("watchlist")
+                                    .resizable()
+                                    .renderingMode(.template)
+                                    .aspectRatio(contentMode: .fit)
+                                    .foregroundColor(Color("Blue"))
+                                    .opacity(colorScheme == ColorScheme.light ? 0.15 : 0.25)
+                                    .padding(50)
                                 VStack {
                                     Spacer()
                                     Text("Howdy!")
@@ -51,21 +49,19 @@ struct WatchlistView: View {
                                 }
                             }
                         } else if data.stockQuotes.count == 0 {
-                            VStack {
-                                Spacer()
-                                ZStack(alignment: .center) {
-                                    Text("Loading...")
-                                        .font(.title)
-                                    iActivityIndicator(style: .arcs(count: 5, width: 5, spacing: 3))
-                                        .padding(50)
-                                        .foregroundColor(Color("Blue"))
-                                }
-                                Spacer()
+                            Spacer()
+                            ZStack(alignment: .center) {
+                                Text("Loading...")
+                                    .font(.title)
+                                iActivityIndicator(style: .arcs(count: 5, width: 5, spacing: 3))
+                                    .padding(50)
+                                    .foregroundColor(Color("Blue"))
                             }
+                            Spacer()
                             
                         } else {
                             ZStack {
-                                if data.userStocksOrder.count < 2 {
+                                if data.userStocksOrder.count < 3 {
                                     VStack {
                                         Image("watchlist")
                                             .resizable()
@@ -79,21 +75,15 @@ struct WatchlistView: View {
                                 List {
                                     ForEach(data.userStocksOrder, id: \.self) { stock in
                                         let stockQuote = data.getStockQuote(stockSymbol: stock)
-                                        Button(action: {
-                                            sheetOffset = CGSize.zero
-                                            showSheet = true
-                                            selectedStock = stockQuote
-                                        }) {
-                                            WatchlistTileView(stockQuote: stockQuote)
-                                                .onTapGesture {
-                                                    sheetOffset = CGSize.zero
-                                                    showSheet = true
-                                                    selectedStock = stockQuote
-                                                }
-                                                .onLongPressGesture {
-                                                    editMode = .active
-                                                }
-                                        }
+                                        WatchlistTileView(stockQuote: stockQuote)
+                                            .onTapGesture {
+                                                sheetOffset = 0
+                                                showSheet = true
+                                                selectedStock = stockQuote
+                                            }
+                                            .onLongPressGesture {
+                                                editMode = .active
+                                            }
                                     }
                                     .onMove(perform: { indexSet, index in
                                         data.userStocksOrder.move(fromOffsets: indexSet, toOffset: index)
@@ -120,18 +110,14 @@ struct WatchlistView: View {
                                     } else {
                                         if data.userStocksOrder.count < 50 {
                                             data.userStocksOrder.append(stock.symbol)
+                                        } else {
+                                            data.showMessage(message: "Can't add more than 50 stocks to watchlist.")
                                         }
                                     }
-                                    
                                     data.saveData()
                                 }) {
-                                    if data.userStocksOrder.contains(stock.symbol) {
-                                        Image(systemName: "hand.thumbsup.fill")
-                                            .imageScale(.large)
-                                    } else {
-                                        Image(systemName: "plus.square")
-                                            .imageScale(.large)
-                                    }
+                                    Image(systemName: data.userStocksOrder.contains(stock.symbol) ? "hand.thumbsup.fill" : "plus.square")
+                                        .imageScale(.large)
                                 }
                                 .buttonStyle(BorderlessButtonStyle())
                             }
@@ -146,31 +132,29 @@ struct WatchlistView: View {
                         ZStack {
                             Rectangle()
                                 .foregroundColor(Color("Light Gray"))
-                                .frame(height: 55)
+                                .frame(height: 50)
                                 .cornerRadius(10)
                             HStack {
                                 Text(selectedStock.symbol)
-                                    .font(.title)
+                                    .font(.system(size: 25))
                                     .padding(.horizontal)
                                 Spacer()
-                                
                             }
                         }
                         .gesture(
                             DragGesture()
                                 .onChanged { gesture in
-                                    if self.sheetOffset.height > -1.0 {
-                                        self.sheetOffset = gesture.translation
+                                    if self.sheetOffset > -1.0 {
+                                        self.sheetOffset = gesture.translation.height
                                     }
                                 }
                                 .onEnded { _ in
-                                    if sheetOffset.height > 20 {
-                                        sheetOffset.height = 750
+                                    if sheetOffset > 20 {
+                                        sheetOffset = 750
                                         showSheet = false
-                                        UIApplication.shared.endEditing()
-                                        
+                                        UIApplication.shared.dismissKeyboard()
                                     } else {
-                                        sheetOffset.height = 0
+                                        sheetOffset = 0
                                     }
                                 }
                         )
@@ -179,10 +163,10 @@ struct WatchlistView: View {
                                 .animation(.none, value: sheetOffset)
                         }
                     }
-                    .frame(height: 330)
+                    .frame(height: 350)
                 }
                 .opacity(showSheet ? 1 : 0)
-                .offset(y: sheetOffset.height)
+                .offset(y: sheetOffset)
                 .animation(.easeInOut(duration: 0.6), value: sheetOffset)
                 .animation(.easeInOut(duration: 0.6), value: showSheet)
             }
@@ -208,11 +192,6 @@ struct WatchlistView: View {
                 if data.getMarketStatus() {
                     data.getStocksData()
                 }
-                if let sq = data.stockQuotes.first {
-                    if (sq.updateTime + 10.minutes) < Date.now {
-                        data.getStocksData()
-                    }
-                }
             })
         }
     }
@@ -234,8 +213,6 @@ struct WatchlistView: View {
 }
 
 
-
-
 struct WatchlistTileView: View {
     
     var stockQuote: StockQuote
@@ -246,19 +223,19 @@ struct WatchlistTileView: View {
             HStack {
                 Text(stockQuote.symbol)
                     .foregroundColor(Color("Black White"))
-                    .padding(.leading, 10)
                     .padding(.vertical, 12)
                     .font(.system(size: 19))
                 VStack {
                     HStack {
                         Spacer()
-                        Text(stockQuote.lastPrice.withCommas(withRupeeSymbol: false))
+                        Text(stockQuote.lastPrice.withCommas())
                             .font(.system(size: 17))
                     }
                     HStack {
                         Spacer()
-                        Text("\(stockQuote.pChange.withCommas(withRupeeSymbol: false))%")
+                        Text("\(stockQuote.change < 0 ? "" : "+")\(stockQuote.pChange.withCommas())%")
                             .font(.system(size: 14))
+//                            .foregroundColor(Color("Black White"))
                     }
                 }
             }

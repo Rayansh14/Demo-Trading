@@ -46,8 +46,12 @@ var testStockQuote: StockQuote {
 }
 
 
-enum OrderType: String, Codable {
+enum TransactionType: String, Codable {
     case buy, sell
+}
+
+enum OrderType: String, Codable {
+    case market, limit
 }
 
 class Order: ObservableObject, Identifiable, Codable {
@@ -55,7 +59,8 @@ class Order: ObservableObject, Identifiable, Codable {
     @Published var stockSymbol = ""
     @Published var numberOfShares: Int = 0
     @Published var sharePrice: Double = 0.0
-    @Published var type = OrderType.buy
+    @Published var transactionType = TransactionType.buy
+    @Published var orderType = OrderType.market
     @Published var time = Date()
     
     
@@ -64,7 +69,8 @@ class Order: ObservableObject, Identifiable, Codable {
         case stockSymbol
         case numberOfShares
         case sharePrice
-        case type
+        case transactionType
+        case orderType
         case time
     }
     
@@ -74,7 +80,8 @@ class Order: ObservableObject, Identifiable, Codable {
         try container.encode(stockSymbol, forKey: .stockSymbol)
         try container.encode(numberOfShares, forKey: .numberOfShares)
         try container.encode(sharePrice, forKey: .sharePrice)
-        try container.encode(type, forKey: .type)
+        try container.encode(transactionType, forKey: .transactionType)
+        try container.encode(orderType, forKey: .orderType)
         try container.encode(time, forKey: .time)
     }
     
@@ -84,7 +91,8 @@ class Order: ObservableObject, Identifiable, Codable {
         stockSymbol = try values.decode(String.self, forKey: .stockSymbol)
         numberOfShares = try values.decode(Int.self, forKey: .numberOfShares)
         sharePrice = try values.decode(Double.self, forKey: .sharePrice)
-        type = try values.decode(OrderType.self, forKey: .type)
+        transactionType = try values.decode(TransactionType.self, forKey: .transactionType)
+        orderType = try values.decode(OrderType.self, forKey: .orderType)
         time = try values.decode(Date.self, forKey: .time)
     }
     
@@ -105,7 +113,7 @@ var testOrder2: Order {
     order.stockSymbol = "RELIANCE"
     order.numberOfShares = 10
     order.sharePrice = 2002.30
-    order.type = .buy
+    order.transactionType = .buy
     order.time = Date() - 2.hours
     return order
 }
@@ -115,7 +123,7 @@ var testOrder: Order {
     order.stockSymbol = "INFY"
     order.numberOfShares = 17
     order.sharePrice = 1582.30
-    order.type = .buy
+    order.transactionType = .buy
     order.time = Date() - 1.hours - 23.minutes
     return order
 }
@@ -125,7 +133,7 @@ var testOrder3: Order {
     order.stockSymbol = "IEX"
     order.numberOfShares = 27
     order.sharePrice = 682.30
-    order.type = .sell
+    order.transactionType = .sell
     order.time = Date() - 2.hours - 47.minutes
     return order
 }
@@ -135,7 +143,7 @@ var testOrder4: Order {
     order.stockSymbol = "IEX"
     order.numberOfShares = 35
     order.sharePrice = 621.35
-    order.type = .buy
+    order.transactionType = .buy
     order.time = Date() - 2.days - 1.hours - 23.minutes
     return order
 }
@@ -148,6 +156,7 @@ class StockOwned: ObservableObject, Identifiable, Codable {
     @Published var avgPriceBought: Double = 0.0
     @Published var lastPrice: Double = 0.0
     @Published var dayChange: Double = 0.0
+    @Published var dayProfitLoss: Double = 0.0
     @Published var dayPChange: Double = 0.0
     @Published var timeBought = Date()
     
@@ -212,6 +221,7 @@ var test2: StockOwned {
     stockOwned.stockSymbol = "TCS"
     stockOwned.numberOfShares = 6
     stockOwned.avgPriceBought = 3657.65
+    stockOwned.dayProfitLoss = -76.2
     stockOwned.dayChange = -12.7
     stockOwned.dayPChange = -0.35
     stockOwned.lastPrice = 3634.45
@@ -224,6 +234,7 @@ var test3: StockOwned {
     stockOwned.numberOfShares = 1750
     stockOwned.avgPriceBought = 11.77
     stockOwned.dayChange = 0.6
+    stockOwned.dayProfitLoss = 1050
     stockOwned.dayPChange = 6
     stockOwned.lastPrice = 10.6
     return stockOwned
@@ -235,6 +246,7 @@ var test4: StockOwned {
     stockOwned.numberOfShares = 250
     stockOwned.avgPriceBought = 81.01
     stockOwned.dayChange = 2.75
+    stockOwned.dayProfitLoss = 687.5
     stockOwned.dayPChange = 3.08
     stockOwned.lastPrice = 92.15
     return stockOwned
@@ -245,6 +257,7 @@ var test5: StockOwned {
     stockOwned.stockSymbol = "LT"
     stockOwned.numberOfShares = 15
     stockOwned.avgPriceBought = 1532.72
+    stockOwned.dayProfitLoss = -590.25
     stockOwned.dayChange = -39.35
     stockOwned.dayPChange = -2.13
     stockOwned.lastPrice = 1807.5

@@ -13,7 +13,7 @@ struct SearchBar: View {
     @Binding var searchText: String
     @Binding var isEditing: Bool
     @Binding var showSheet: Bool
-    @Binding var sheetOffset: CGSize
+    @Binding var sheetOffset: CGFloat
     @FocusState var isFocused
     
     var body: some View {
@@ -49,7 +49,7 @@ struct SearchBar: View {
                     .onTapGesture {
                         self.isEditing = true
                         self.showSheet = false
-                        self.sheetOffset = CGSize(width: 0, height: 750)
+                        self.sheetOffset = 750
                         
                     }
                 

@@ -28,18 +28,24 @@ struct StockDetailView: View {
     
     
     var body: some View {
-        ZStack {
-            
             VStack {
+                
                 if !isFullScreen {
                     Spacer()
+                } else {
+                    HStack {
+                        Text(stockSymbol) // not capitalizing it because then it looks weird for stock names like Kalpatpowr
+                            .font(.system(size: 31, weight: .medium))
+                            .padding(.leading)
+                        Spacer()
+                    }
                 }
+                
                 HStack {
                     VStack {
                         Text("NSE: \(stockQuote.lastPrice.withCommas(withRupeeSymbol: true))")
-                        Text("\(Image(systemName: stockQuote.change >= 0 ? "arrow.up" : "arrow.down")) \(abs(stockQuote.pChange).withCommas(withRupeeSymbol: false))%")
+                        Text("\(Image(systemName: stockQuote.change >= 0 ? "arrow.up" : "arrow.down")) \(abs(stockQuote.pChange).withCommas())%")
                             .foregroundColor(stockQuote.pChange >= 0.0 ? .green : .red)
-                            .font(.title3)
                     }
                     Spacer()
                     if data.checkIfOwned(stockSymbol: stockQuote.symbol) {
@@ -47,8 +53,8 @@ struct StockDetailView: View {
                     }
                 }
                 .padding(.horizontal, 35)
-                .padding(.top, 15)
-                .font(.title2)
+                .padding(.top, isFullScreen ? 0 : 5)
+                .font(.system(size: 21))
                 
                 
                 HStack {
@@ -95,10 +101,10 @@ struct StockDetailView: View {
                 if !(stockQuote.symbol.contains("NIFTY")) {
                     
                     HStack {
-                        NavigationLink(destination: TransactStockView(orderType: .buy, stockSymbol: stockSymbol, isFullScreen: isFullScreen)) {
+                        NavigationLink(destination: TransactStockView(transactionType: .buy, stockSymbol: stockSymbol, isFullScreen: isFullScreen)) {
                             TransactButton(text: "Buy", color: .green)
                         }
-                        NavigationLink(destination: TransactStockView(orderType: .sell, stockSymbol: stockSymbol, isFullScreen: isFullScreen)) {
+                        NavigationLink(destination: TransactStockView(transactionType: .sell, stockSymbol: stockSymbol, isFullScreen: isFullScreen)) {
                             TransactButton(text: "Sell", color: .red)
                         }
                     }
@@ -106,8 +112,13 @@ struct StockDetailView: View {
                     
                     if isFullScreen {
                         
-                        CustomInfoView(label: "Buy Value:", info: ((stockOwned.avgPriceBought * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true)))
-                            .padding(.top)
+                        if data.checkIfInHoldings(stockSymbol: stockSymbol) {
+                            CustomInfoView(label: "Today's P/L:", info: "\(stockOwned.dayChange > 0 ? "+" : "") \(stockOwned.dayProfitLoss.withCommas(withRupeeSymbol: true))")
+                                .padding(.top)
+                        }
+                        
+                        CustomInfoView(label: "Invested Value:", info: ((stockOwned.avgPriceBought * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true)))
+                            .padding(.top, 1)
                         
                         CustomInfoView(label: "Current Value:", info: ((stockOwned.lastPrice * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true)))
                             .padding(.top, 1)
@@ -115,7 +126,7 @@ struct StockDetailView: View {
                         CustomInfoView(label: "Profit/Loss:", info: ((stockOwned.lastPrice - stockOwned.avgPriceBought) * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true))
                             .padding(.top, 1)
                         
-                        CustomInfoView(label: "Weightage in Portfolio:", info: "\((stockOwned.lastPrice * 100 * Double(stockOwned.numberOfShares) / data.getPorfolioInfo(portfolio: data.portfolio)["currentValue"]!).withCommas(withRupeeSymbol: false))%")
+                        CustomInfoView(label: "Weightage in Portfolio:", info: "\((stockOwned.lastPrice * 100 * Double(stockOwned.numberOfShares) / data.getPorfolioInfo(portfolio: data.portfolio)["currentValue"]!).withCommas())%")
                             .padding(.top, 1)
                         
                     }
@@ -126,16 +137,15 @@ struct StockDetailView: View {
                 
                 Spacer()
             }
-            
-        }
         .onDisappear(perform: {
             self.presentationMode.wrappedValue.dismiss()
         })
-        .if({
-            isFullScreen
-        }()) { view in
-            view.navigationTitle(stockSymbol)
-        }
+        //        .if({
+        //            isFullScreen
+        //        }()) { view in
+        //            view.navigationTitle(stockSymbol.capitalized)
+        //        }
+        .navigationBarTitleDisplayMode(.inline)
         .if({
             !isFullScreen
         }()) { view in
@@ -199,7 +209,7 @@ struct InfoView: View {
                 .font(.system(size: 15))
                 .foregroundColor(Color("Gray"))
                 .offset(x: 0, y: -3)
-            Text(info.withCommas(withRupeeSymbol: false))
+            Text(info.withCommas())
                 .offset(x: 0, y: 3)
                 .font(.system(size: 15.5))
         }

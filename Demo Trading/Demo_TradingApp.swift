@@ -6,14 +6,11 @@
 //
 
 import SwiftUI
-import SwiftDate
 
 @main
 struct Demo_TradingApp: App {
     
     @ObservedObject var data = DataController.shared
-    var date = Date()
-    var laterdate = Date() + 13.hours
     
     var body: some Scene {
         WindowGroup {
@@ -24,6 +21,7 @@ struct Demo_TradingApp: App {
                     .onAppear(perform: {
                         DataController.shared.getStocksData()
                         DataController.shared.loadData()
+
                     })
                 
                 VStack {
