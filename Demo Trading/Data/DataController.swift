@@ -41,6 +41,7 @@ class DataController: ObservableObject {
     var holdings: [StockOwned] {
         return portfolio.filter { $0.timeBought < Date().dateAt(.startOfDay) }
     }
+//    var holdings = [test3, test4, test5]
     
     @Published var orderList: [Order] = []
     var todayOrders: [Order] {
@@ -61,7 +62,7 @@ class DataController: ObservableObject {
     
     
     func getMarketStatus() -> Bool {
-//        return true
+        //        return true
         
         let calendar = Calendar.current
         let now = Date()
@@ -72,6 +73,35 @@ class DataController: ObservableObject {
             return true
         }
         return false
+    }
+    
+    
+    func getStocksDataFromPython() {
+        print("getting data from python api")
+        if let url = URL(string: "https://fantasytrading.pythonanywhere.com/latest") {
+            let request = URLRequest(url: url)
+            URLSession.shared.dataTask(with: request) { (data, response, error) in
+                if let webdata = data {
+                    if let json = try? JSONSerialization.jsonObject(with: webdata, options: []) as? [[String:String]] {
+                        print("python api \(json.count)")
+                        for jsonQuote in json {
+                            let stockQuote = StockQuote()
+                            stockQuote.lastPrice = Double(jsonQuote["price"]!)!
+                            stockQuote.updateTime = getDateFromAPITime(stringTime: jsonQuote["time"]!)
+                            stockQuote.symbol = jsonQuote["symbol"]!.uppercased()
+                            stockQuote.change = Double(jsonQuote["day_change"]!)!
+                            stockQuote.previousClose = stockQuote.lastPrice - stockQuote.change
+                            stockQuote.pChange = stockQuote.change / stockQuote.previousClose * 100
+                            DispatchQueue.main.async {
+                                if self.stockQuotes.firstIndex(where: {$0.symbol == stockQuote.symbol}) == nil { // this is so that when api returns incomplete stock quotes, it keeps the earlier quotes of the stocks whose quote it has not received
+                                    self.stockQuotes.append(stockQuote)
+                                }
+                            }
+                        }
+                    }
+                }
+            }.resume()
+        }
     }
     
     
@@ -119,17 +149,12 @@ class DataController: ObservableObject {
                             print(count)
                             if count == 0 {
                                 print("getting data again......")
-                                if self.stockQuotes.count == 0 {
-                                    print("instantly")
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                        self.getStocksData()
-                                        print("got new data!\n")
-                                    }
+                                if self.stockQuotes.count < 50 {
+                                    self.getStocksDataFromPython()
                                 } else {
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
                                         self.getStocksData()
                                         print("got new data!\n")
-                                        
                                     }
                                 }
                             }
@@ -271,10 +296,13 @@ class DataController: ObservableObject {
     
     
     func checkLimitOrders() {
+        print("check limit order function was called")
+        print(pendingLimitOrders.count)
         for order in pendingLimitOrders {
             if let url = URL(string: "https://fantasytrading.pythonanywhere.com/intraday?symbol=\(order.stockSymbol)") {
                 let request = URLRequest(url: url)
                 URLSession.shared.dataTask(with: request) { (data, response, error) in
+                    print("fantasytrading.pythonanywhere.com was called")
                     if let webData = data {
                         if let jsonData = try? JSONSerialization.jsonObject(with: webData, options: []) as? [[String: Any]] {
                             /*
@@ -289,7 +317,8 @@ class DataController: ObservableObject {
                             
                             for quote in jsonData {
                                 let time = getDateFromAPITime(stringTime: quote["time"] as! String)
-                                let price = quote["price"] as! Double
+                                let price = (quote["price"] as! NSString).doubleValue
+                                
                                 
                                 if time > order.time && time.compare(.isSameDay(order.time)) {
                                     if order.transactionType == .buy && price <= order.sharePrice {
@@ -383,7 +412,7 @@ class DataController: ObservableObject {
         }
         saveData()
         
-        showMessage(message: "S😎LD \(order.stockSymbol.capitalized)! You got \((Double(order.numberOfShares) * order.sharePrice).withCommas(withRupeeSymbol: true)) from that sale! You now have \(funds.withCommas(withRupeeSymbol: true)).", error: false)
+        showMessage(message: "S😎LD \(order.stockSymbol.uppercased())! You got \((Double(order.numberOfShares) * order.sharePrice).withCommas(withRupeeSymbol: true)) from that sale! You now have \(funds.withCommas(withRupeeSymbol: true)).", error: false)
     }
     
     
@@ -392,7 +421,7 @@ class DataController: ObservableObject {
             funds -= (order.sharePrice * Double(order.numberOfShares))
             if order.sharePrice < getStockQuote(stockSymbol: order.stockSymbol).lastPrice {
                 pendingLimitOrders.append(order)
-                showMessage(message: "Placed an order to buy \(order.numberOfShares) share of \(order.stockSymbol.capitalized) @ \(order.sharePrice.withCommas(withRupeeSymbol: true)).", error: false)
+                showMessage(message: "Placed an order to buy \(order.numberOfShares) share of \(order.stockSymbol.uppercased()) @ \(order.sharePrice.withCommas(withRupeeSymbol: true)).", error: false)
             } else {
                 order.sharePrice = getStockQuote(stockSymbol: order.stockSymbol).lastPrice
                 executeBuyOrder(order: order)
@@ -400,7 +429,7 @@ class DataController: ObservableObject {
         } else {
             if order.sharePrice > getStockQuote(stockSymbol: order.stockSymbol).lastPrice {
                 pendingLimitOrders.append(order)
-                showMessage(message: "Placed an order to sell \(order.numberOfShares) share of \(order.stockSymbol.capitalized) @ \(order.sharePrice.withCommas(withRupeeSymbol: true)).", error: false)
+                showMessage(message: "Placed an order to sell \(order.numberOfShares) share of \(order.stockSymbol.uppercased()) @ \(order.sharePrice.withCommas(withRupeeSymbol: true)).", error: false)
             } else {
                 order.sharePrice = getStockQuote(stockSymbol: order.stockSymbol).lastPrice
                 executeSellOrder(order: order)
@@ -501,6 +530,9 @@ class DataController: ObservableObject {
                                                                         self.userStocksOrder = jsonUserStocksOrder
                                                                         self.deliveryMargin = jsonDeliveryMargin
                                                                         self.pendingLimitOrders = jsonPendingLimitOrders
+                                                                        print("\(self.pendingLimitOrders.count) pending orders")
+                                                                        print("\(jsonPendingLimitOrders.count) pending orders")
+                                                                        self.checkLimitOrders()
                                                                     }
                                                                 }
                                                             }

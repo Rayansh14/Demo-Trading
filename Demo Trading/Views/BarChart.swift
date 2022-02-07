@@ -14,25 +14,46 @@ import SwiftUI
 struct BarChart: View {
     
     @ObservedObject var data = DataController.shared
+    @State var focus: String? = nil
+    @State var infoOffset: CGSize = CGSize.zero
+    @State var dayProfitLoss = 0.0
     
     var body: some View {
         ZStack {
+            HStack(spacing: 8) {
+                ForEach(data.holdings) { stock in
+                    BarView(stockSymbol: stock.stockSymbol, height: getHeight(dayProfitLoss: stock.dayProfitLoss), width: getWidth(), dayProfitLoss: stock.dayProfitLoss, focus: $focus, focusDayProfitLoss: $dayProfitLoss, infoOffset: $infoOffset)
+                }
+            }
             
             Rectangle()
                 .frame(height: 1)
             
-            HStack {
-                ForEach(data.holdings) { stock in
-                    BarView(stockSymbol: stock.stockSymbol, dayProfitLoss: stock.dayProfitLoss, height: getHeight(dayProfitLoss: stock.dayProfitLoss), width: getWidth())
-                }
+            VStack {
+                Text(focus ?? "")
+                    .animation(.none, value: focus)
+                Text("\(dayProfitLoss < 0 ? "" : "+")\(dayProfitLoss.withCommas())")
+                    .foregroundColor(dayProfitLoss < 0 ? .red : .green)
             }
+            .padding(10)
+            .overlay(
+                RoundedRectangle(cornerRadius: 5)
+                    .stroke(Color.black)
+            )
+            .background(
+                RoundedRectangle(cornerRadius: 5)
+                    .fill(Color("Light Gray"))
+            )
+            .animation(.none, value: infoOffset)
+            .offset(x: infoOffset.width, y: infoOffset.height)
+            .opacity(focus != nil ? 1 : 0)
             
         }
         .padding(.vertical, 100)
     }
     
     func getWidth() -> CGFloat {
-        return min(25, (UIScreen.main.bounds.width-50)/CGFloat(data.holdings.count))
+        return min(25, (UIScreen.main.bounds.width-CGFloat(data.holdings.count)*8.0)/CGFloat(data.holdings.count))
     }
     
     func getHeight(dayProfitLoss: Double) -> CGFloat {
@@ -50,12 +71,14 @@ struct BarChart: View {
 
 struct BarView: View {
     
-    @State private var infoOffsetY: CGFloat = 0
     var stockSymbol: String
-    var dayProfitLoss: Double
     var height: CGFloat
     var width: CGFloat
-    @State private var focus: Bool = false
+    var dayProfitLoss: Double
+    @Binding var focus: String?
+    @Binding var focusDayProfitLoss: Double
+    @Binding var infoOffset: CGSize
+    @ObservedObject var data = DataController.shared
     
     var body: some View {
         
@@ -70,42 +93,42 @@ struct BarView: View {
                         .onChanged { gesture in
                             // startLocation is 0 at the top of particular view
                             if dayProfitLoss < 0 {
-                                infoOffsetY = gesture.startLocation.y - 75
+                                infoOffset.height = gesture.startLocation.y - 75
                             } else {
-                                infoOffsetY = gesture.startLocation.y - height - 75
+                                infoOffset.height = gesture.startLocation.y - height - 75
                             }
                             withAnimation(.spring()) {
-                                focus = true
+                                focusDayProfitLoss = dayProfitLoss
+                                infoOffset.width = getXOffset()
+                                focus = stockSymbol
                             }
                         }
                         .onEnded { _ in
                             withAnimation(.spring()) {
-                                focus = false
+                                focus = nil
                             }
                         }
                 )
-                .offset(y: dayProfitLoss > 0 ? -height/2 - 1 : height/2 + 1)
-            
-            
-            if focus {
-                VStack {
-                    Text(stockSymbol)
-                    Text("\(dayProfitLoss < 0 ? "" : "+")\(dayProfitLoss.withCommas())")
-                        .foregroundColor(dayProfitLoss < 0 ? .red : .green)
-                }
-                .padding(8)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 5)
-                        .stroke(Color.black)
-                )
-                .background(
-                    RoundedRectangle(cornerRadius: 5)
-                        .fill(Color("Light Gray"))
-                )
-                .animation(.none, value: infoOffsetY)
-                .offset(y: infoOffsetY)
-            }
+                .offset(y: dayProfitLoss > 0 ? -height/2 : height/2)
         }
+    }
+    
+    func getXOffset() -> CGFloat {
+        if let index = data.holdings.firstIndex(where: { loopingStockOwned in
+            loopingStockOwned.stockSymbol == stockSymbol
+        }) {
+            let i = ((CGFloat(index) + 0.5) - CGFloat(data.holdings.count)/2) * (width + 8)
+            print(i)
+            let width = UIScreen.main.bounds.width-125
+            if abs(i) > width/2 {
+                if i < 0 {
+                    return -width/2
+                }
+                return width/2
+            }
+            return i
+        }
+        return 0
     }
 }
 

@@ -25,7 +25,7 @@ struct PortfolioTileView: View {
                         .foregroundColor(Color("Gray"))
                     
                     Text(stock.stockSymbol)
-                        .font(.system(size: 17.5))
+                        .font(.system(size: 17))
                     
                     Text("Qty: \(stock.numberOfShares)")
                         .font(.system(size: 13.5))
@@ -40,7 +40,7 @@ struct PortfolioTileView: View {
                         .font(.system(size: 13.5))
                     
                     Text("\(profitLoss >= 0 ? "+" : "")\(profitLoss.withCommas())")
-                        .font(.system(size: 17.5))
+                        .font(.system(size: 17))
                         .foregroundColor(profitLoss >= 0 ? .green : .red)
                     
                     HStack(spacing: 0) {

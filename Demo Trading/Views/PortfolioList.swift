@@ -53,7 +53,7 @@ struct PortfolioListView: View {
                             Spacer()
                         }
                         .padding(.bottom, 2)
-                        .font(.system(size: 26))
+                        .font(.system(size: 25))
                         
                         Rectangle()
                             .frame(height: 1)
@@ -63,10 +63,10 @@ struct PortfolioListView: View {
                         
                         HStack {
                             Text("P/L:")
-                                .font(.system(size: 24))
+                                .font(.system(size: 23))
                             Spacer()
                             Text("\(String(profitLoss.withCommas()))")
-                                .font(.system(size: 24))
+                                .font(.system(size: 23))
                                 .foregroundColor(profitLoss >= 0 ? .green : .red)
                             Text("(\(String(profitLossPercent.withCommas()))%)")
                                 .foregroundColor(profitLoss >= 0 ? .green : .red)

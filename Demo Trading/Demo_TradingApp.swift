@@ -19,9 +19,9 @@ struct Demo_TradingApp: App {
                 
                 MainTabView()
                     .onAppear(perform: {
-                        DataController.shared.getStocksData()
-                        DataController.shared.loadData()
-
+                        data.getStocksDataFromPython()
+                        data.loadData()
+                        data.getStocksData()
                     })
                 
                 VStack {
