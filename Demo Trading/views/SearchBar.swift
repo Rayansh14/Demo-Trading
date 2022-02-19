@@ -15,6 +15,7 @@ struct SearchBar: View {
     @Binding var showSheet: Bool
     @Binding var sheetOffset: CGFloat
     @FocusState var isFocused
+    @ObservedObject var data = DataController.shared
     
     var body: some View {
             HStack {
@@ -48,6 +49,7 @@ struct SearchBar: View {
                     .padding(.horizontal, 10)
                     .onTapGesture {
                         self.isEditing = true
+                        data.tabsShowing = false
                         self.showSheet = false
                         self.sheetOffset = 750
                         
@@ -56,6 +58,7 @@ struct SearchBar: View {
                 if isEditing {
                     Button(action: {
                         self.isEditing = false
+                        data.tabsShowing = true
                         self.searchText = ""
                         isFocused = false
                         
@@ -70,17 +73,12 @@ struct SearchBar: View {
                 
             }
             .animation(.easeInOut(duration: 0.5), value: isEditing)
-//            .if({
-//                !UIDevice.current.hasNotch
-//            }()) { view in
-//                view.padding(.top, 20)
-//            }
         }
 }
 
 extension UIDevice {
     var hasNotch: Bool {
-        let keyWindow = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
+    let keyWindow = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
         return keyWindow?.safeAreaInsets.bottom ?? 0 > 0
     }
     

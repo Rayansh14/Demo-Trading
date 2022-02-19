@@ -12,9 +12,6 @@ enum OrdersType: String {
 }
 
 struct OrdersView: View {
-    
-    @ObservedObject var data = DataController.shared
-    
     var body: some View {
         NavigationView {
             TabView {
@@ -65,7 +62,7 @@ struct OrderListView: View {
                                 }
                             }
                         }, label: {Text("Today").foregroundColor(Color("Black White"))})
-                            .font(.title2)
+                            .font(.custom("Poppins-Regular", size: 24))
                             .padding()
                         
                         if data.earlierOrders.count != 0 {
@@ -83,7 +80,7 @@ struct OrderListView: View {
                                         .foregroundColor(Color("Divider Gray"))
                                 }
                             }, label: {Text("Earlier").foregroundColor(Color("Black White"))})
-                                .font(.title2)
+                                .font(.custom("Poppins-Regular", size: 24))
                                 .padding()
                         }
                     } else {
@@ -125,13 +122,13 @@ struct OrderTileView: View {
         HStack {
             VStack(alignment: .leading, spacing: 3) {
                 Text(order.transactionType.rawValue.capitalized)
-                    .font(.system(size: 15))
+                    .font(.custom("Poppins-Light", size: 15))
                     .foregroundColor(order.transactionType.rawValue == "buy" ? .green : .red)
                 Text(order.stockSymbol)
                     .foregroundColor(Color("Black White"))
-                    .font(.system(size: 21))
+                    .font(.custom("Poppins-Light", size: 20))
                 Text(order.orderType.rawValue.capitalized)
-                    .font(.system(size: 15))
+                    .font(.custom("Poppins-Light", size: 15))
                     .foregroundColor(Color("Gray"))
             }
             
@@ -139,13 +136,13 @@ struct OrderTileView: View {
             
             VStack(alignment: .trailing, spacing: 3) {
                 Text("Qty: \(order.numberOfShares)")
-                    .font(.system(size: 15))
+                    .font(.custom("Poppins-Light", size: 15))
                     .foregroundColor(Color("Gray"))
                 Text("\(order.sharePrice.withCommas())")
                     .foregroundColor(Color("Black White"))
-                    .font(.system(size: 20))
+                    .font(.custom("Poppins-Light", size: 19))
                 Text("\(order.dateAsString())")
-                    .font(.system(size: 15))
+                    .font(.custom("Poppins-Light", size: 15))
                     .foregroundColor(Color("Gray"))
             }
         }

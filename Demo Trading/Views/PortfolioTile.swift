@@ -13,7 +13,8 @@ struct PortfolioTileView: View {
     @State private var profitLoss: Double = 0.0
     @State private var profitLossPercent: Double = 0.0
     @ObservedObject var data = DataController.shared
-    var timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
+    @Binding var refresh: Bool
+//    var timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
     
     var body: some View {
         NavigationLink(destination: StockDetailView(stockSymbol: stock.stockSymbol, isFullScreen: true)) {
@@ -21,14 +22,14 @@ struct PortfolioTileView: View {
                 
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Avg: \(stock.avgPriceBought.withCommas())")
-                        .font(.system(size: 13.5))
+                        .font(.custom("Poppins-Light", size: 13.5))
                         .foregroundColor(Color("Gray"))
                     
                     Text(stock.stockSymbol)
-                        .font(.system(size: 17))
+                        .font(.custom("Poppins-Light", size: 17))
                     
                     Text("Qty: \(stock.numberOfShares)")
-                        .font(.system(size: 13.5))
+                        .font(.custom("Poppins-Light", size: 13.5))
                         .foregroundColor(Color("Gray"))
                 }
                 
@@ -37,10 +38,10 @@ struct PortfolioTileView: View {
                 VStack(alignment: .trailing, spacing: 6) {
                     Text("\(String(format: "%.2f", profitLossPercent))%")
                         .foregroundColor(profitLoss >= 0 ? .green : .red)
-                        .font(.system(size: 13.5))
+                        .font(.custom("Poppins-Light", size: 13.5))
                     
                     Text("\(profitLoss >= 0 ? "+" : "")\(profitLoss.withCommas())")
-                        .font(.system(size: 17))
+                        .font(.custom("Poppins-Light", size: 17))
                         .foregroundColor(profitLoss >= 0 ? .green : .red)
                     
                     HStack(spacing: 0) {
@@ -49,7 +50,7 @@ struct PortfolioTileView: View {
                         Text(" (\(stock.dayChange >= 0 ? "+" : "")\(String(format: "%.2f", stock.dayPChange))%)")
                             .foregroundColor(stock.dayChange >= 0 ? .green : .red)
                     }
-                    .font(.system(size: 13.5))
+                    .font(.custom("Poppins-Light", size: 13.5))
                 }
                 
             }
@@ -58,10 +59,12 @@ struct PortfolioTileView: View {
         }
         .onAppear(perform: {
             updateProfitLoss()
+            refresh.toggle()
         })
-        .onReceive(timer, perform: { _ in
-            updateProfitLoss()
-        })
+//        .onReceive(timer, perform: { _ in
+//            updateProfitLoss()
+//            refresh.toggle()
+//        })
     }
     
     func updateProfitLoss() {
@@ -72,8 +75,11 @@ struct PortfolioTileView: View {
 
 
 struct PortfolioTileView_Previews: PreviewProvider {
+//    @State var refresh = false
     static var previews: some View {
-        PortfolioTileView(stock: testStockOwned)
-            .preferredColorScheme(.dark)
+        Group {
+//            PortfolioTileView(stock: testStockOwned, refresh: $refresh)
+//                .preferredColorScheme(.dark)
+        }
     }
 }
