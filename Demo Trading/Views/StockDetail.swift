@@ -28,14 +28,15 @@ struct StockDetailView: View {
     
     
     var body: some View {
-            VStack {
+//        NavigationView {
+            VStack(spacing: 10) {
                 
                 if !isFullScreen {
                     Spacer()
                 } else {
                     HStack {
                         Text(stockSymbol) // not capitalizing it because then it looks weird for stock names like Kalpatpowr
-                            .font(.system(size: 31, weight: .medium))
+                            .font(.custom("Poppins-Regular", size: 31))
                             .padding(.leading)
                         Spacer()
                     }
@@ -54,7 +55,7 @@ struct StockDetailView: View {
                 }
                 .padding(.horizontal, 35)
                 .padding(.top, isFullScreen ? 0 : 5)
-                .font(.system(size: 21))
+                .font(.custom("Poppins-Light", size: 21))
                 
                 
                 HStack {
@@ -90,7 +91,7 @@ struct StockDetailView: View {
                     }
                     
                 }
-                .font(.system(size: 16))
+                .font(.custom("Poppins-Light", size: 16))
                 .multilineTextAlignment(.center)
                 
                 if !isFullScreen {
@@ -118,16 +119,12 @@ struct StockDetailView: View {
                         }
                         
                         CustomInfoView(label: "Invested Value:", info: ((stockOwned.avgPriceBought * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true)))
-                            .padding(.top, 1)
                         
                         CustomInfoView(label: "Current Value:", info: ((stockOwned.lastPrice * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true)))
-                            .padding(.top, 1)
                         
                         CustomInfoView(label: "Profit/Loss:", info: ((stockOwned.lastPrice - stockOwned.avgPriceBought) * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true))
-                            .padding(.top, 1)
                         
                         CustomInfoView(label: "Weightage in Portfolio:", info: "\((stockOwned.lastPrice * 100 * Double(stockOwned.numberOfShares) / data.getPorfolioInfo(portfolio: data.portfolio)["currentValue"]!).withCommas())%")
-                            .padding(.top, 1)
                         
                     }
                 }
@@ -152,7 +149,7 @@ struct StockDetailView: View {
             view.navigationBarHidden(true)
         }
     }
-}
+//}
 
 
 struct TransactButton: View {
@@ -164,7 +161,7 @@ struct TransactButton: View {
         Text(text)
             .frame(width: 150)
             .foregroundColor(.white)
-            .font(.system(size: 24))
+            .font(.custom("Poppins-Light", size: 24))
             .padding(.vertical, 12)
             .background(color)
             .cornerRadius(100)
@@ -182,7 +179,7 @@ struct CustomInfoView: View {
             Spacer()
             Text(info)
         }
-        .font(.system(size: 16))
+        .font(.custom("Poppins-Light", size: 16))
         .padding(.horizontal)
     }
 }
@@ -206,12 +203,12 @@ struct InfoView: View {
     var body: some View {
         VStack {
             Text(text)
-                .font(.system(size: 15))
+                .font(.custom("Poppins-Light", size: 15))
                 .foregroundColor(Color("Gray"))
                 .offset(x: 0, y: -3)
             Text(info.withCommas())
                 .offset(x: 0, y: 3)
-                .font(.system(size: 15.5))
+                .font(.custom("Poppins-Light", size: 15.5))
         }
     }
 }
@@ -222,4 +219,5 @@ struct CustomDivider: View {
             .frame(width: 1, height: 70)
             .foregroundColor(Color("Divider Gray"))
     }
+}
 }

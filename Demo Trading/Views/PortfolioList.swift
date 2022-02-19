@@ -14,7 +14,7 @@ enum PortfolioType: String {
 struct PortfolioListView: View {
     
     @ObservedObject var data = DataController.shared
-    let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
+//    let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
     var portfolioType: PortfolioType
     @State private var buyValue = 0.0
     @State private var currentValue: Double = 0
@@ -38,7 +38,7 @@ struct PortfolioListView: View {
                             VStack {
                                 Text("\(buyValue.withCommas())")
                                 Text("Invested Amount")
-                                    .font(.system(size: 15))
+                                    .font(.custom("Poppins-Light", size: 15))
                             }
                             .offset(x: -5)
                             
@@ -47,26 +47,26 @@ struct PortfolioListView: View {
                             VStack {
                                 Text("\(currentValue.withCommas())")
                                 Text("Current Value")
-                                    .font(.system(size: 15))
+                                    .font(.custom("Poppins-Light", size: 15))
                             }
                             
                             Spacer()
                         }
                         .padding(.bottom, 2)
-                        .font(.system(size: 25))
+                        .font(.custom("Poppins-Regular", size: 25))
                         
                         Rectangle()
                             .frame(height: 1)
-                            .foregroundColor(Color("Blue"))
+                            .foregroundColor(Color.blue)
                         //                        .padding(.horizontal, 20)
                         
                         
                         HStack {
                             Text("P/L:")
-                                .font(.system(size: 23))
+                                .font(.custom("Poppins-Regular", size: 23))
                             Spacer()
                             Text("\(String(profitLoss.withCommas()))")
-                                .font(.system(size: 23))
+                                .font(.custom("Poppins-Regular", size: 23))
                                 .foregroundColor(profitLoss >= 0 ? .green : .red)
                             Text("(\(String(profitLossPercent.withCommas()))%)")
                                 .foregroundColor(profitLoss >= 0 ? .green : .red)
@@ -87,7 +87,7 @@ struct PortfolioListView: View {
                             Image("share-certificate-png")
                                 .resizable()
                                 .renderingMode(.template)
-                                .foregroundColor(Color("Blue"))
+                                .foregroundColor(Color.blue)
                                 .opacity(0.9)
                                 .padding(.vertical, 15)
                                 .padding(.horizontal, 30)
@@ -105,7 +105,7 @@ struct PortfolioListView: View {
                                 Rectangle()
                                     .frame(height: 1)
                                     .foregroundColor(Color("Divider Gray"))
-                                PortfolioTileView(stock: stock)
+                                PortfolioTileView(stock: stock, refresh: $refresh)
                             }
                             Rectangle()
                                 .frame(height: 1)
@@ -113,7 +113,7 @@ struct PortfolioListView: View {
                             
                             Spacer()
                             if portfolioType == .holdings {
-                                BarChart()
+                                BarChart(refresh: $refresh)
                             }
                         }
                     }
@@ -127,7 +127,7 @@ struct PortfolioListView: View {
                         Text("\(dayProfitLoss.withCommas(withRupeeSymbol: true)) (\(dayProfitLossPercent.withCommas())%)")
                             .foregroundColor(dayProfitLoss >= 0 ? .green : .red)
                     }
-                    .font(.system(size: 16))
+                    .font(.custom("Poppins-Light", size: 16))
                     .padding(.vertical, 6)
                     .padding(.horizontal, 18)
                     .background(Color("Light Gray"))
@@ -139,8 +139,8 @@ struct PortfolioListView: View {
             //            .toolbar {
             //                ToolbarItem(placement: ToolbarItemPlacement.navigation) {
             //                    Text(portfolioType.rawValue.capitalized)
-            //                        .font(.system(size: 38, weight: .bold))
-            //                        .foregroundColor(Color("Blue"))
+            //                        .font(.custom("Poppins-Light", size: 38, weight: .bold))
+            //                        .foregroundColor(Color.blue)
             //                }
             //            }
             .navigationTitle(portfolioType == .holdings ? "Holdings" : "Positions")
@@ -152,15 +152,16 @@ struct PortfolioListView: View {
                 Image(systemName: "gobackward")
             })
         }
-        .onReceive(timer, perform: { _ in
-            updateAllPortfolioData()
-        })
+//        .onReceive(timer, perform: { _ in
+//            updateAllPortfolioData()
+//        })
         .onAppear(perform: {
             updateAllPortfolioData()
         })
     }
     
     func updateAllPortfolioData() {
+        refresh.toggle()
         data.updateAllStockPricesInPortfolio()
         let portfolioInfo = data.getPorfolioInfo(portfolio: portfolioType == .holdings ? data.holdings : data.positions)
         buyValue = portfolioInfo["buyValue"]!
@@ -173,7 +174,6 @@ struct PortfolioListView: View {
         } else {
             profitLossPercent = portfolioInfo["profitLossPercent"]!
         }
-        refresh.toggle()
     }
 }
 

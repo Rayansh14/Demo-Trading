@@ -17,6 +17,7 @@ struct BarChart: View {
     @State var focus: String? = nil
     @State var infoOffset: CGSize = CGSize.zero
     @State var dayProfitLoss = 0.0
+    @Binding var refresh: Bool
     
     var body: some View {
         ZStack {
@@ -35,6 +36,7 @@ struct BarChart: View {
                 Text("\(dayProfitLoss < 0 ? "" : "+")\(dayProfitLoss.withCommas())")
                     .foregroundColor(dayProfitLoss < 0 ? .red : .green)
             }
+            .font(.custom("Poppins-Light", size: 17))
             .padding(10)
             .overlay(
                 RoundedRectangle(cornerRadius: 5)
@@ -136,7 +138,7 @@ struct BarChart_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             //            BarView(stockSymbol: "RELIANCE", dayProfitLoss: 127.3, height: 127.3, width: 30)
-            BarChart()
+//            BarChart(, refresh: /)
         }
     }
 }

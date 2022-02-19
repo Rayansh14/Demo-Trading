@@ -10,9 +10,9 @@ import SwiftUI
 struct MainTabView: View {
     
     @ObservedObject var data = DataController.shared
+//    private let timer = Timer.publish(every: 30, tolerance: 5, on: .main, in: .common).autoconnect()
     
     var body: some View {
-        
         
         TabView {
             WatchlistView()
@@ -41,6 +41,14 @@ struct MainTabView: View {
                     Text("Funds")
                 }
         }
+        .onAppear {
+            data.getStocksData()
+        }
+//        .onReceive(timer, perform: { _ in
+//            if data.getMarketStatus() {
+//                data.getStocksData()
+//            }
+//        })
     }
 }
 

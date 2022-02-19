@@ -146,7 +146,7 @@ struct TransactStockView: View {
                     .font(.title)
                     .overlay(
                         RoundedRectangle(cornerRadius: 100)
-                            .stroke(transactionType == .buy ? Color("Blue") : Color.red, lineWidth: 1)
+                            .stroke(transactionType == .buy ? Color.blue : Color.red, lineWidth: 1)
                             .offset(x: -5)
                     )
                     .padding(.horizontal)
@@ -159,7 +159,7 @@ struct TransactStockView: View {
                     .font(.title)
                     .overlay(
                         RoundedRectangle(cornerRadius: 100)
-                            .stroke(transactionType == .buy ? Color("Blue") : Color.red, lineWidth: 1)
+                            .stroke(transactionType == .buy ? Color.blue : Color.red, lineWidth: 1)
                             .offset(x: -5)
                     )
                     .padding(.horizontal)
@@ -173,6 +173,7 @@ struct TransactStockView: View {
                     Button(action: {
                         if let intNumberOfShares = Int(numberOfShares) {
                             if intNumberOfShares > 0 {
+                                presentationMode.wrappedValue.dismiss()
                                 order.transactionType = transactionType
                                 order.sharePrice = stockQuote.lastPrice
                                 order.stockSymbol = stockQuote.symbol
@@ -200,7 +201,7 @@ struct TransactStockView: View {
                             .font(.system(size: 25, weight: .medium, design: .serif))
                             .padding(.vertical, 12)
                             .padding(.horizontal, 20)
-                            .background(transactionType == .buy ? Color("Blue") : Color.red)
+                            .background(transactionType == .buy ? Color.blue : Color.red)
                             .cornerRadius(100)
                     }
                     .padding(.bottom)

@@ -14,7 +14,7 @@ struct FundsView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
+            VStack(spacing: 8) {
                 HStack(spacing: 0) {
                     Rectangle()
                         .frame(height: 1)
@@ -22,7 +22,7 @@ struct FundsView: View {
                     VStack {
                         Text("\(data.funds.withCommas(withRupeeSymbol: true))")
                         //                        Text("21,356.85")
-                            .font(.title)
+                            .font(.custom("Poppins-Regular", size: 28))
                         Text("Available Funds")
                     }
                     .frame(minWidth: 200)
@@ -57,7 +57,6 @@ struct FundsView: View {
                     Text("\(getDeliveryMargin().withCommas(withRupeeSymbol: true))")
                 }
                 .padding(.horizontal)
-                .padding(.top, 1)
                 
                 HStack {
                     Button(action: {
@@ -71,19 +70,18 @@ struct FundsView: View {
                         }
                     }
                     Spacer()
-                    // definitely some performace improvements by not calling functions 4 times
-                    Text("\(getTotalNetWorth().withCommas(withRupeeSymbol: true))\n\(changeInNetWorth() > 0 ? "+" : "" )\(changeInNetWorth().withCommas()) %")
-                        .foregroundColor(changeInNetWorth() >= 0 ? .green : .red)
+                    let changeInNetWorth = changeInNetWorth()
+                    Text("\(getTotalNetWorth().withCommas(withRupeeSymbol: true))\n\(changeInNetWorth > 0 ? "+" : "" )\(changeInNetWorth.withCommas()) %")
+                        .foregroundColor(changeInNetWorth >= 0 ? .green : .red)
                         .multilineTextAlignment(.trailing)
                     
                 }
                 .padding(.horizontal)
-                .padding(.top, 1)
                 
                 HStack {
                     Button(action: {data.showMessage(message: getOPExplanation(), error: false, duration: 8)}) {
                         HStack {
-                            Text("Performance relative to nifty: ")
+                            Text("Performance relative to Nifty: ")
                                 .foregroundColor(Color("Black White"))
                             Image(systemName: "info.circle.fill")
                             
@@ -94,7 +92,6 @@ struct FundsView: View {
                         .foregroundColor(getOverperformance() >= 0 ? .green : .red)
                 }
                 .padding(.horizontal)
-                .padding(.top, 1)
                 
                 Spacer()
                 Image("money")
@@ -104,6 +101,7 @@ struct FundsView: View {
                 Spacer()
                 Spacer()
             }
+            .font(.custom("Poppins-Regular", size: 15.5))
             .padding(.top)
             .navigationTitle("Funds")
             .navigationBarItems(trailing: Button(action: {refresh.toggle()}) {
@@ -126,6 +124,12 @@ struct FundsView: View {
         totalValue += positionsInfo["currentValue"]!
         totalValue += getDeliveryMargin()
         totalValue += data.funds
+        
+        for order in data.pendingLimitOrders {
+            if order.transactionType == .buy {
+                totalValue += order.sharePrice * Double(order.numberOfShares)
+            }
+        }
         
         return totalValue
     }
