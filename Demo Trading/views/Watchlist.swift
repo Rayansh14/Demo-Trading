@@ -82,7 +82,7 @@ struct WatchlistView: View {
                 }
             }
             .navigationTitle("Watchlist")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.automatic)
             
         }
     }
@@ -167,6 +167,9 @@ struct WatchlistChildView: View {
                                     let stockQuote = data.getStockQuote(stockSymbol: stock)
                                     WatchlistTileView(stockQuote: stockQuote)
                                         .onTapGesture {
+                                            withAnimation(.spring()) {
+                                            data.tabsShowing = false
+                                            }
                                             sheetOffset = 0
                                             showSheet = true
                                             selectedStock = stockQuote
@@ -243,6 +246,9 @@ struct WatchlistChildView: View {
                                     sheetOffset = 750
                                     showSheet = false
                                     UIApplication.shared.dismissKeyboard()
+                                    withAnimation(.spring()) {
+                                    data.tabsShowing = true
+                                    }
                                 } else {
                                     sheetOffset = 0
                                 }
@@ -261,10 +267,7 @@ struct WatchlistChildView: View {
             .animation(.easeInOut(duration: 0.6), value: showSheet)
         }
         
-        .navigationBarItems(leading: NavigationLink(destination: Guides()) {
-            Image(systemName: "lightbulb.fill")
-                .foregroundColor(.yellow)
-        }, trailing: Button(action: {
+        .navigationBarItems(trailing: Button(action: {
             if editMode == .active {
                 editMode = .inactive
             } else {

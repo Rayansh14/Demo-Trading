@@ -12,9 +12,7 @@ struct PortfolioTileView: View {
     var stock: StockOwned
     @State private var profitLoss: Double = 0.0
     @State private var profitLossPercent: Double = 0.0
-    @ObservedObject var data = DataController.shared
     @Binding var refresh: Bool
-//    var timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
     
     var body: some View {
         NavigationLink(destination: StockDetailView(stockSymbol: stock.stockSymbol, isFullScreen: true)) {
@@ -61,10 +59,6 @@ struct PortfolioTileView: View {
             updateProfitLoss()
             refresh.toggle()
         })
-//        .onReceive(timer, perform: { _ in
-//            updateProfitLoss()
-//            refresh.toggle()
-//        })
     }
     
     func updateProfitLoss() {

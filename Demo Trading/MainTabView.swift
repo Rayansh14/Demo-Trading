@@ -10,11 +10,16 @@ import SwiftUI
 struct MainTabView: View {
     
     @ObservedObject var data = DataController.shared
-//    private let timer = Timer.publish(every: 30, tolerance: 5, on: .main, in: .common).autoconnect()
     
     var body: some View {
         
         TabView {
+            Guides()
+                .tabItem {
+                    Image(systemName: "lightbulb.fill")
+                    Text("Guides")
+                }
+            
             WatchlistView()
                 .tabItem {
                     Image(systemName: "list.bullet")
@@ -25,15 +30,10 @@ struct MainTabView: View {
                     Image(systemName: "text.book.closed")
                     Text("Orders")
                 }
-            PortfolioListView(portfolioType: .holdings)
+            PortfolioView()
                 .tabItem {
                     Image(systemName: "bag.fill")
                     Text("Holdings")
-                }
-            PortfolioListView(portfolioType: .positions)
-                .tabItem {
-                    Image(systemName: "location.fill")
-                    Text("Positions")
                 }
             FundsView()
                 .tabItem {
@@ -44,11 +44,6 @@ struct MainTabView: View {
         .onAppear {
             data.getStocksData()
         }
-//        .onReceive(timer, perform: { _ in
-//            if data.getMarketStatus() {
-//                data.getStocksData()
-//            }
-//        })
     }
 }
 

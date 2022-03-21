@@ -9,9 +9,10 @@
 /* Begin PBXBuildFile section */
 		44032890262ACB8F0039A0E6 /* ErrorTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4403288F262ACB8F0039A0E6 /* ErrorTile.swift */; };
 		44032893262D92910039A0E6 /* PortfolioList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44032892262D92910039A0E6 /* PortfolioList.swift */; };
+		44172F6627E8ECDB00B7AF52 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44172F6527E8ECDB00B7AF52 /* MainView.swift */; };
 		44336BDC2626CD0A00C12CE0 /* StockDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44336BDB2626CD0A00C12CE0 /* StockDetail.swift */; };
 		44336BDF26272EB800C12CE0 /* Orders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44336BDE26272EB800C12CE0 /* Orders.swift */; };
-		4434C84F27B82A7300F89E3B /* GuidesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4434C84E27B82A7300F89E3B /* GuidesList.swift */; };
+		4434C84F27B82A7300F89E3B /* Guides.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4434C84E27B82A7300F89E3B /* Guides.swift */; };
 		4434C85127B833AD00F89E3B /* QuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4434C85027B833AD00F89E3B /* QuizView.swift */; };
 		4438747126416AD400A35820 /* SwiftDate in Frameworks */ = {isa = PBXBuildFile; productRef = 4438747026416AD400A35820 /* SwiftDate */; };
 		443874732643E3A000A35820 /* PortfolioTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443874722643E3A000A35820 /* PortfolioTile.swift */; };
@@ -20,6 +21,7 @@
 		444283B727B108E900D9BA18 /* Poppins-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 444283B627B108E900D9BA18 /* Poppins-Light.ttf */; };
 		444283BA27B15B3200D9BA18 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 444283B927B15B3200D9BA18 /* Poppins-Regular.ttf */; };
 		444879BB2632E6A8000601BF /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444879BA2632E6A8000601BF /* NetworkMonitor.swift */; };
+		4460A5EA27C2D4BE00D1115F /* PortfolioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4460A5E927C2D4BE00D1115F /* PortfolioView.swift */; };
 		447941A02721517A009B1500 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4479419F2721517A009B1500 /* Launch Screen.storyboard */; };
 		44921B4B27C1169C0007CE3C /* BasicsGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44921B4A27C1169C0007CE3C /* BasicsGuide.swift */; };
 		44921B4D27C116B20007CE3C /* TechnicalAnalysisGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44921B4C27C116B20007CE3C /* TechnicalAnalysisGuide.swift */; };
@@ -55,9 +57,10 @@
 /* Begin PBXFileReference section */
 		4403288F262ACB8F0039A0E6 /* ErrorTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorTile.swift; sourceTree = "<group>"; };
 		44032892262D92910039A0E6 /* PortfolioList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioList.swift; sourceTree = "<group>"; };
+		44172F6527E8ECDB00B7AF52 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		44336BDB2626CD0A00C12CE0 /* StockDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetail.swift; sourceTree = "<group>"; };
 		44336BDE26272EB800C12CE0 /* Orders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Orders.swift; sourceTree = "<group>"; };
-		4434C84E27B82A7300F89E3B /* GuidesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuidesList.swift; sourceTree = "<group>"; };
+		4434C84E27B82A7300F89E3B /* Guides.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Guides.swift; sourceTree = "<group>"; };
 		4434C85027B833AD00F89E3B /* QuizView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizView.swift; sourceTree = "<group>"; };
 		443874722643E3A000A35820 /* PortfolioTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioTile.swift; sourceTree = "<group>"; };
 		4438748226468D9100A35820 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
@@ -65,6 +68,7 @@
 		444283B627B108E900D9BA18 /* Poppins-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Light.ttf"; sourceTree = "<group>"; };
 		444283B927B15B3200D9BA18 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Regular.ttf"; sourceTree = "<group>"; };
 		444879BA2632E6A8000601BF /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
+		4460A5E927C2D4BE00D1115F /* PortfolioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PortfolioView.swift; path = "Demo Trading/views/PortfolioView.swift"; sourceTree = "<group>"; };
 		4479419F2721517A009B1500 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		44921B4A27C1169C0007CE3C /* BasicsGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicsGuide.swift; sourceTree = "<group>"; };
 		44921B4C27C116B20007CE3C /* TechnicalAnalysisGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TechnicalAnalysisGuide.swift; sourceTree = "<group>"; };
@@ -112,6 +116,7 @@
 		44A79A25262451E100652F17 = {
 			isa = PBXGroup;
 			children = (
+				4460A5E927C2D4BE00D1115F /* PortfolioView.swift */,
 				44A79A30262451E100652F17 /* Demo Trading */,
 				44A79A2F262451E100652F17 /* Products */,
 			);
@@ -131,6 +136,7 @@
 			children = (
 				44A79A31262451E100652F17 /* Demo_TradingApp.swift */,
 				44A79A33262451E100652F17 /* MainTabView.swift */,
+				44172F6527E8ECDB00B7AF52 /* MainView.swift */,
 				4479419F2721517A009B1500 /* Launch Screen.storyboard */,
 				444283B627B108E900D9BA18 /* Poppins-Light.ttf */,
 				444283B927B15B3200D9BA18 /* Poppins-Regular.ttf */,
@@ -154,7 +160,7 @@
 		44A79A502626C25300652F17 /* views */ = {
 			isa = PBXGroup;
 			children = (
-				4434C84E27B82A7300F89E3B /* GuidesList.swift */,
+				4434C84E27B82A7300F89E3B /* Guides.swift */,
 				44921B4927C1168F0007CE3C /* Guides */,
 				4434C85027B833AD00F89E3B /* QuizView.swift */,
 				4403288F262ACB8F0039A0E6 /* ErrorTile.swift */,
@@ -271,7 +277,8 @@
 				44A79A34262451E100652F17 /* MainTabView.swift in Sources */,
 				44A79A4626255EEB00652F17 /* Classes.swift in Sources */,
 				44921B4F27C116BE0007CE3C /* FundamentalAnalysisGuide.swift in Sources */,
-				4434C84F27B82A7300F89E3B /* GuidesList.swift in Sources */,
+				4460A5EA27C2D4BE00D1115F /* PortfolioView.swift in Sources */,
+				4434C84F27B82A7300F89E3B /* Guides.swift in Sources */,
 				44AAFC0027063653001289E2 /* Tips.swift in Sources */,
 				44336BDF26272EB800C12CE0 /* Orders.swift in Sources */,
 				44F25F7627046C0E00BB69DD /* Transact.swift in Sources */,
@@ -282,6 +289,7 @@
 				44921B4D27C116B20007CE3C /* TechnicalAnalysisGuide.swift in Sources */,
 				44A79A5D2626C2C900652F17 /* Funds.swift in Sources */,
 				44A79A42262451F200652F17 /* DataController.swift in Sources */,
+				44172F6627E8ECDB00B7AF52 /* MainView.swift in Sources */,
 				44336BDC2626CD0A00C12CE0 /* StockDetail.swift in Sources */,
 				44032890262ACB8F0039A0E6 /* ErrorTile.swift in Sources */,
 				44A79A32262451E100652F17 /* Demo_TradingApp.swift in Sources */,
