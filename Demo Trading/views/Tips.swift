@@ -93,7 +93,7 @@ struct TipsPageView: View {
         }
         .padding(15)
         .padding(.horizontal, 5)
-        .padding(.bottom, 50)
+        .padding(.bottom, 30)
     }
 }
 

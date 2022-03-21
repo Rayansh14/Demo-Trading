@@ -29,6 +29,7 @@ class DataController: ObservableObject {
     @ObservedObject var monitor = NetworkMonitor()
     @Published var niftyWhenStarted = 0.0
     @Published var tabsShowing = true //this is so that the watchlist tabs disappear when user is searching for stock to add in a watchlist
+    @Published var faltu = false
     
     @Published var stockQuotes: [StockQuote] = []
     @Published var watchlist: [[String]] = [[], [], []]

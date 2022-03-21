@@ -49,9 +49,7 @@ struct SearchBar: View {
                     .padding(.horizontal, 10)
                     .onTapGesture {
                         self.isEditing = true
-                        withAnimation(.spring()) {
                         data.tabsShowing = false
-                        }
                         self.showSheet = false
                         self.sheetOffset = 750
                         
@@ -60,9 +58,7 @@ struct SearchBar: View {
                 if isEditing {
                     Button(action: {
                         self.isEditing = false
-                        withAnimation(.spring()) {
                         data.tabsShowing = true
-                        }
                         self.searchText = ""
                         isFocused = false
                         

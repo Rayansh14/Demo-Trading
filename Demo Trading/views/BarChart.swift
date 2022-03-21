@@ -23,7 +23,7 @@ struct BarChart: View {
         ZStack {
             HStack(spacing: 8) {
                 ForEach(data.holdings) { stock in
-                    BarView(stockSymbol: stock.stockSymbol, height: getHeight(dayProfitLoss: stock.dayProfitLoss), width: getWidth(), dayProfitLoss: stock.dayProfitLoss, refresh: $refresh, focus: $focus, focusDayProfitLoss: $dayProfitLoss, infoOffset: $infoOffset)
+                    BarView(stockSymbol: stock.stockSymbol, height: getHeight(dayProfitLoss: stock.dayProfitLoss), width: getWidth(), dayProfitLoss: stock.dayProfitLoss, focus: $focus, focusDayProfitLoss: $dayProfitLoss, infoOffset: $infoOffset)
                 }
             }
             
@@ -36,7 +36,7 @@ struct BarChart: View {
                 Text("\(dayProfitLoss < 0 ? "" : "+")\(dayProfitLoss.withCommas())")
                     .foregroundColor(dayProfitLoss < 0 ? .red : .green)
             }
-            .font(.custom("Poppins-Light", size: 16.5))
+            .font(.custom("Poppins-Light", size: 17))
             .padding(10)
             .overlay(
                 RoundedRectangle(cornerRadius: 5)
@@ -77,7 +77,6 @@ struct BarView: View {
     var height: CGFloat
     var width: CGFloat
     var dayProfitLoss: Double
-    @Binding var refresh: Bool
     @Binding var focus: String?
     @Binding var focusDayProfitLoss: Double
     @Binding var infoOffset: CGSize
