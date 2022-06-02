@@ -116,8 +116,8 @@ struct FundsView: View {
     
     func getTotalNetWorth() -> Double {
         //        return 107856.40
-        let holdingsInfo = data.getPorfolioInfo(portfolio: data.holdings)
-        let positionsInfo = data.getPorfolioInfo(portfolio: data.positions)
+        let holdingsInfo = data.portfolioInfo[1]
+        let positionsInfo = data.portfolioInfo[0]
         var totalValue = 0.0
         
         totalValue += holdingsInfo["currentValue"]!
@@ -139,7 +139,7 @@ struct FundsView: View {
             return 0
         }
         
-        let nifty = data.getStockQuote(stockSymbol: "NIFTY 50").lastPrice
+        let nifty = data.getStockQuote(stockSymbol: "NIFTY 50").displayPrice
         let niftyReturn = (nifty-data.niftyWhenStarted) / data.niftyWhenStarted * 100
         return changeInNetWorth() - niftyReturn
     }

@@ -82,7 +82,7 @@ struct WatchlistView: View {
                 }
             }
             .navigationTitle("Watchlist")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.automatic)
             
         }
     }
@@ -105,7 +105,7 @@ struct WatchlistChildView: View {
     var watchlistIndex: Int
     @ObservedObject var data = DataController.shared
     @State private var showSheet = false
-    @State private var selectedStock = StockQuote()
+    @State private var selectedStock = ""
     @State private var sheetOffset: CGFloat = 750
     @State private var isAdding = false
     @State private var searchText = ""
@@ -132,7 +132,7 @@ struct WatchlistChildView: View {
                                 Spacer()
                                 Text("Howdy!")
                                     .font(.title3)
-                                Text("Welcome to Demo Trading! To get started, tap on the light bulb in the top left corner. ↖")
+                                Text("Welcome to Demo Trading! To get started, check out the guides on the tab to the left 👈")
                                     .multilineTextAlignment(.center)
                                     .padding(.horizontal)
                                 Spacer()
@@ -164,12 +164,14 @@ struct WatchlistChildView: View {
                             }
                             List {
                                 ForEach(data.watchlist[watchlistIndex], id: \.self) { stock in
-                                    let stockQuote = data.getStockQuote(stockSymbol: stock)
-                                    WatchlistTileView(stockQuote: stockQuote)
+                                    WatchlistTileView(stockSymbol: stock)
                                         .onTapGesture {
+                                            withAnimation(.spring()) {
+                                                data.tabsShowing = false
+                                            }
                                             sheetOffset = 0
                                             showSheet = true
-                                            selectedStock = stockQuote
+                                            selectedStock = stock
                                         }
                                         .onLongPressGesture {
                                             editMode = .active
@@ -180,7 +182,8 @@ struct WatchlistChildView: View {
                                     data.saveData()
                                 })
                                 .onDelete { indexSet in
-                                    delete(at: indexSet)
+                                    data.watchlist[watchlistIndex].remove(atOffsets: indexSet)
+                                    data.saveData()
                                 }
                             }
                             .environment(\.editMode, $editMode)
@@ -225,7 +228,7 @@ struct WatchlistChildView: View {
                             .frame(height: 50)
                             .cornerRadius(10)
                         HStack {
-                            Text(selectedStock.symbol)
+                            Text(selectedStock)
                                 .font(.custom("Poppins-Light", size: 25))
                                 .padding(.horizontal)
                             Spacer()
@@ -243,13 +246,16 @@ struct WatchlistChildView: View {
                                     sheetOffset = 750
                                     showSheet = false
                                     UIApplication.shared.dismissKeyboard()
+                                    withAnimation(.spring()) {
+                                        data.tabsShowing = true
+                                    }
                                 } else {
                                     sheetOffset = 0
                                 }
                             }
                     )
                     NavigationView {
-                        StockDetailView(stockSymbol: selectedStock.symbol, isFullScreen: false)
+                        StockDetailView(stockSymbol: selectedStock, isFullScreen: false)
                             .animation(.none, value: sheetOffset)
                     }
                 }
@@ -261,10 +267,7 @@ struct WatchlistChildView: View {
             .animation(.easeInOut(duration: 0.6), value: showSheet)
         }
         
-        .navigationBarItems(leading: NavigationLink(destination: Guides()) {
-            Image(systemName: "lightbulb.fill")
-                .foregroundColor(.yellow)
-        }, trailing: Button(action: {
+        .navigationBarItems(trailing: Button(action: {
             if editMode == .active {
                 editMode = .inactive
             } else {
@@ -280,15 +283,10 @@ struct WatchlistChildView: View {
     }
     
     
-    func delete(at offsets: IndexSet) {
-        data.watchlist[watchlistIndex].remove(atOffsets: offsets)
-        data.saveData()
-    }
-    
-    
     func d2(symbol: String) {
-        if let index = data.watchlist[watchlistIndex].firstIndex(where: { loopingSymbol -> Bool in
-            return symbol == loopingSymbol
+        if let index = data.watchlist[watchlistIndex].firstIndex(where: { loopingSymbol in
+            symbol == loopingSymbol
+            
         }) {
             data.watchlist[watchlistIndex].remove(at: index)
         }
@@ -298,7 +296,17 @@ struct WatchlistChildView: View {
 
 struct WatchlistTileView: View {
     
-    var stockQuote: StockQuote
+    var stockSymbol: String = ""
+    var stockQuote = StockQuote()
+    @ObservedObject var data = DataController.shared
+//    {
+//        let q = DataController.shared.getStockQuote(stockSymbol: stockSymbol)
+//        return q
+//    }
+    
+    init(stockSymbol: String) {
+        self.stockQuote = data.getStockQuote(stockSymbol: stockSymbol)
+    }
     
     var body: some View {
         ZStack {
@@ -311,7 +319,7 @@ struct WatchlistTileView: View {
                 VStack {
                     HStack {
                         Spacer()
-                        Text(stockQuote.lastPrice.withCommas())
+                        Text(stockQuote.displayPrice.withCommas())
                             .font(.custom("Poppins-Light", size: 17))
                     }
                     HStack {
@@ -332,7 +340,7 @@ struct WatchlistView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             WatchlistView()
-            WatchlistTileView(stockQuote: testStockQuote)
+            WatchlistTileView(stockSymbol: "RELIANCE")
         }
     }
 }

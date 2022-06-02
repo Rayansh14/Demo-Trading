@@ -15,6 +15,7 @@ struct TransactStockView: View {
     var stockSymbol: String = ""
     var isFullScreen: Bool = true
     var stockQuote = StockQuote()
+    @State private var sharePrice = ""
     
     init(transactionType: TransactionType, stockSymbol: String, isFullScreen: Bool) {
         self.transactionType = transactionType
@@ -24,11 +25,12 @@ struct TransactStockView: View {
     }
     
     @State private var isMarket = true
+    @State private var scaleValue: CGFloat = 1
     @ObservedObject var data = DataController.shared
     @StateObject var order = Order()
     @State private var numberOfShares = ""
-    @State private var sharePrice = ""
-    @FocusState var textFieldFocused: Bool
+    @FocusState var numberTextFieldFocused: Bool
+    @FocusState var priceTextFieldFocused: Bool
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
@@ -42,70 +44,42 @@ struct TransactStockView: View {
                         HStack {
                             Text(stockSymbol)
                                 .font(.system(size: 28, weight: .regular, design: .serif))
-                            if let stockOwned = data.getStockOwned(stockSymbol: stockSymbol) {
+                            if data.getTotalSharesOwned(stockSymbol: stockSymbol) > 0 {
                                 Spacer()
-                                Text("\(Image(systemName: "briefcase.fill")) \(stockOwned.numberOfShares)")
+                                Text("\(Image(systemName: "briefcase.fill")) \(data.getTotalSharesOwned(stockSymbol: stockSymbol))")
                             }
                         }
                     }
                     
-                    Text("NSE: \(stockQuote.lastPrice.withCommas(withRupeeSymbol: true))")
+                    Text("NSE: \(stockQuote.displayPrice.withCommas(withRupeeSymbol: true))")
                         .font(.system(size: 18, weight: .regular, design: .serif))
                         .padding(.bottom, isFullScreen ? 10 : 0)
                     
-                    HStack {
-                        Text(transactionType.rawValue.capitalized)
-                            .font(.system(size: 25, weight: .regular, design: .serif))
-                        Spacer()
+                    if isFullScreen {
+                        // hstack is there so that when image shrinks, it still stays in the middle of the screen.
+                        HStack {
+                            Spacer()
+                            Image("handshake")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .padding(.horizontal, -30)
+                            Spacer()
+                        }
                     }
                     
-                    HStack {
-                        Button(action: {
-                            numberOfShares = percentShares(percent: 0.25)
-                        }) {
-                            PercentageText(text: "25%")
-                        }
-                        
-                        Spacer()
-                        
-                        Button(action: {
-                            numberOfShares = percentShares(percent: 0.50)
-                        }) {
-                            PercentageText(text: "50%")
-                        }
-                        
-                        Spacer()
-                        
-                        Button(action: {
-                            numberOfShares = percentShares(percent: 0.75)
-                        }) {
-                            PercentageText(text: "75%")
-                        }
-                        
-                        Spacer()
-                        
-                        Button(action: {
-                            numberOfShares = percentShares(percent: 1)
-                        }) {
-                            PercentageText(text: "100%")
-                        }
-                    }
+                    //                    HStack {
+                    //                        Text(transactionType.rawValue.capitalized)
+                    //                            .font(.system(size: 25, weight: .regular, design: .serif))
+                    //                        Spacer()
+                    //                    }
+                    
+                    
+                    
                 }
                 .padding(.horizontal, 20)
                 
                 Spacer()
                 
-                if isFullScreen {
-                    // hstack is there so that when image shrinks, it still stays in the middle of the screen.
-                    HStack {
-                        Spacer()
-                        Image("handshake")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .padding(.horizontal, -30)
-                        Spacer()
-                    }
-                }
                 
                 HStack {
                     Text("Order Type")
@@ -119,7 +93,7 @@ struct TransactStockView: View {
                     Spacer()
                     Button(action: {
                         isMarket = true
-                        textFieldFocused = true
+                        numberTextFieldFocused = true
                         sharePrice = ""
                     }) {
                         Text("Market")
@@ -139,7 +113,10 @@ struct TransactStockView: View {
                 }
                 
                 TextField("Number of shares", text: $numberOfShares)
-                    .focused($textFieldFocused)
+                    .onChange(of: numberOfShares, perform: { _ in
+                        sharePrice = String(data.getStockQuote(stockSymbol: stockSymbol).displayPrice)
+                    })
+                    .focused($numberTextFieldFocused)
                     .font(.system(size: 20, weight: .regular, design: .serif))
                     .padding(7)
                     .keyboardType(.numberPad)
@@ -152,7 +129,23 @@ struct TransactStockView: View {
                     .padding(.horizontal)
                     .padding(.bottom, 10)
                 
+                HStack {
+                    ForEach(1..<5) { num in
+                        Button(action: {
+                            numberOfShares = percentShares(percent: (Double(num)*0.25))
+                        }) {
+                            Spacer()
+                            Text("\(num*25)%")
+                                .foregroundColor(Color("Gray"))
+                                .font(.system(size: 18, weight: .regular, design: .serif))
+                            Spacer()
+                        }
+                    }
+                }
+                .padding(.top, -10)
+                
                 TextField("Price", text: $sharePrice)
+                    .focused($priceTextFieldFocused)
                     .font(.system(size: 20, weight: .regular, design: .serif))
                     .padding(7)
                     .keyboardType(.decimalPad)
@@ -166,58 +159,96 @@ struct TransactStockView: View {
                     .padding(.bottom, 10)
                     .disabled(isMarket)
                     .opacity(isMarket ? 0.5 : 1)
+                    .onTapGesture {
+                        isMarket = false
+                    }
                 
                 HStack {
                     Spacer()
                     
-                    Button(action: {
-                        if let intNumberOfShares = Int(numberOfShares) {
-                            if intNumberOfShares > 0 {
-                                presentationMode.wrappedValue.dismiss()
-                                order.transactionType = transactionType
-                                order.sharePrice = stockQuote.lastPrice
-                                order.stockSymbol = stockQuote.symbol
-                                order.orderType = isMarket ? .market : .limit
-                                if !isMarket {
-                                    if let doubleSharePrice = Double(sharePrice) {
-                                        if (transactionType == .buy && doubleSharePrice < stockQuote.lastPrice) || (transactionType == .sell && doubleSharePrice > stockQuote.lastPrice) {
-                                            order.sharePrice = doubleSharePrice
+                    Text("Execute")
+                        .foregroundColor(.white)
+                        .font(.system(size: 25, weight: .medium, design: .serif))
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 20)
+                        .background(transactionType == .buy ? Color.blue : Color.red)
+                        .cornerRadius(100)
+                        .scaleEffect(scaleValue)
+                        .gesture(DragGesture(minimumDistance: 0)
+                            .onChanged { _ in
+                                withAnimation(.spring()) {
+                                    self.scaleValue = 0.8
+                                }
+                            }
+                            .onEnded { gesture in
+                                withAnimation(.spring()) {
+                                    self.scaleValue = 1
+                                }
+                                if numberOfShares != "" && stockQuote.displayPrice > 0 {
+                                    if let intNumberOfShares = Int(numberOfShares) {
+                                        if intNumberOfShares > 0 {
+                                            presentationMode.wrappedValue.dismiss()
+                                            order.transactionType = transactionType
+                                            order.sharePrice = stockQuote.displayPrice
+                                            order.stockSymbol = stockQuote.symbol
+                                            order.orderType = isMarket ? .market : .limit
+                                            if !isMarket {
+                                                if let doubleSharePrice = Double(sharePrice) {
+                                                    if (transactionType == .buy && doubleSharePrice < stockQuote.displayPrice) || (transactionType == .sell && doubleSharePrice > stockQuote.displayPrice) {
+                                                        order.sharePrice = doubleSharePrice
+                                                    }
+                                                }
+                                            }
+                                            order.numberOfShares = intNumberOfShares
+                                            data.processOrder(order: order, quoteUpdateTime: stockQuote.updateTime)
+                                            presentationMode.wrappedValue.dismiss()
+                                            
+                                        } else {
+                                            data.showMessage(message: "LOL")
                                         }
+                                    } else {
+                                        data.showMessage(message: "Please enter a valid number of shares.")
                                     }
                                 }
-                                order.numberOfShares = intNumberOfShares
-                                data.processOrder(order: order, quoteUpdateTime: stockQuote.updateTime)
-                                presentationMode.wrappedValue.dismiss()
-                                
-                            } else {
-                                data.showMessage(message: "LOL")
-                            }
-                        } else {
-                            data.showMessage(message: "Please enter a valid number of shares.")
-                        }
-                    }) {
-                        Text("Execute")
-                            .foregroundColor(.white)
-                            .font(.system(size: 25, weight: .medium, design: .serif))
-                            .padding(.vertical, 12)
-                            .padding(.horizontal, 20)
-                            .background(transactionType == .buy ? Color.blue : Color.red)
-                            .cornerRadius(100)
-                    }
-                    .padding(.bottom)
-                    .disabled(numberOfShares == "" ? true : false)
-                    .disabled(stockQuote.lastPrice == 0 ? true : false)
+                            })
                     Spacer()
                 }
             }
+            .safeAreaInset(edge: .bottom) {
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        if transactionType == .buy {
+                            Text("Available Funds: \(data.funds.withCommas(withRupeeSymbol: true))")
+                        }
+                        Text("\(transactionType == .buy ? "Funds required" : "Sale Amount"): \(((Double(numberOfShares) ?? 0) * (Double(sharePrice) ?? 0)).withCommas(withRupeeSymbol: true))")
+                    }
+                    Spacer()
+                    
+                    if numberTextFieldFocused || priceTextFieldFocused || true {
+                        Button(action: {
+                            numberTextFieldFocused = false
+                            priceTextFieldFocused = false
+                        }) {
+                            Image(systemName: "keyboard.chevron.compact.down")
+                                .font(.title2)
+                        }
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.vertical, 11)
+                .background(Color("Light Gray"))
+            }
+            .padding(.bottom, 1)
         }
         .onDisappear(perform: {
-            textFieldFocused = false
+            numberTextFieldFocused = false
             presentationMode.wrappedValue.dismiss()
         })
         .onAppear(perform: {
+            self.sharePrice = String(data.getStockQuote(stockSymbol: stockSymbol).displayPrice)
+            print(data.getStockQuote(stockSymbol: stockSymbol).displayPrice)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                textFieldFocused = true
+                numberTextFieldFocused = true
             }
         })
         .navigationBarBackButtonHidden(true)
@@ -241,24 +272,14 @@ struct TransactStockView: View {
     
     func percentShares(percent: Double) -> String {
         if transactionType == .buy {
-            if stockQuote.lastPrice > 0 {
-                return String(Int(data.funds/stockQuote.lastPrice*percent))
+            if stockQuote.displayPrice > 0 {
+                return String(Int(data.funds/stockQuote.displayPrice*percent))
             }
         } else {
-            if let stockOwned = data.getStockOwned(stockSymbol: stockSymbol) {
-                return String(Int(Double(stockOwned.numberOfShares)*percent))
-            }
+            let numberOfShares = data.getTotalSharesOwned(stockSymbol: stockSymbol)
+            return String(Int(Double(numberOfShares)*percent))
         }
         return "0"
-    }
-}
-
-struct PercentageText: View {
-    var text: String
-    var body: some View {
-        Text(text)
-            .foregroundColor(Color("Gray"))
-            .font(.system(size: 20, weight: .regular, design: .serif))
     }
 }
 
@@ -268,7 +289,6 @@ struct TransactView_Preview: PreviewProvider {
         Group {
             NavigationView {
                 TransactStockView(transactionType: .buy, stockSymbol: "RELIANCE", isFullScreen: true)
-                //                    .preferredColorScheme(.dark)
             }
         }
     }

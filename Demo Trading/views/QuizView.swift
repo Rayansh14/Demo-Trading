@@ -31,13 +31,13 @@ struct QuizView: View {
                 
                 Text(explanation)
                     .padding(.horizontal)
-                    .font(.custom("Poppins-Light", size: 16))
+                    .font(.custom("Poppins-Light", size: 15))
                     .multilineTextAlignment(.leading)
                     .opacity(selectedOption != nil ? 1 : 0)
                 
                 Spacer()
             }
-            .padding(.bottom, 50)
+            .guidePadding()
         }
     }
 }
@@ -53,7 +53,7 @@ struct AnswerRow: View {
     var body: some View {
         HStack {
             Text(text)
-                .font(.custom("Poppins-Light", size: 16))
+                .font(.custom("Poppins-Light", size: 15))
                 .padding()
             Spacer()
             Image(systemName: isCorrectOption ? "checkmark.circle.fill" : "xmark.circle.fill")

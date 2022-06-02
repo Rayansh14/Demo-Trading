@@ -23,20 +23,21 @@ struct BarChart: View {
         ZStack {
             HStack(spacing: 8) {
                 ForEach(data.holdings) { stock in
-                    BarView(stockSymbol: stock.stockSymbol, height: getHeight(dayProfitLoss: stock.dayProfitLoss), width: getWidth(), dayProfitLoss: stock.dayProfitLoss, focus: $focus, focusDayProfitLoss: $dayProfitLoss, infoOffset: $infoOffset)
+                    BarView(stockSymbol: stock.stockSymbol, height: getHeight(dayProfitLoss: getDayProfitLoss(stockSymbol: stock.stockSymbol)), width: getWidth(), dayProfitLoss: getDayProfitLoss(stockSymbol: stock.stockSymbol), refresh: $refresh, focus: $focus, focusDayProfitLoss: $dayProfitLoss, infoOffset: $infoOffset)
                 }
             }
-            
+            if refresh || !refresh {}
+
             Rectangle()
                 .frame(height: 1)
-            
+
             VStack {
                 Text(focus ?? "")
                     .animation(.none, value: focus)
                 Text("\(dayProfitLoss < 0 ? "" : "+")\(dayProfitLoss.withCommas())")
                     .foregroundColor(dayProfitLoss < 0 ? .red : .green)
             }
-            .font(.custom("Poppins-Light", size: 17))
+            .font(.custom("Poppins-Light", size: 16.5))
             .padding(10)
             .overlay(
                 RoundedRectangle(cornerRadius: 5)
@@ -54,15 +55,25 @@ struct BarChart: View {
         .padding(.vertical, 100)
     }
     
+    func getDayProfitLoss(stockSymbol: String) -> Double {
+        if let num_shares = data.getStockOwned(stockSymbol: stockSymbol, portfolioType: .holdings)?.numberOfShares {
+            let change = data.getStockQuote(stockSymbol: stockSymbol).change
+            return Double(num_shares) * change
+        }
+        return 0
+    }
+    
     func getWidth() -> CGFloat {
         return min(25, (UIScreen.main.bounds.width-CGFloat(data.holdings.count)*8.0)/CGFloat(data.holdings.count))
     }
-    
+
     func getHeight(dayProfitLoss: Double) -> CGFloat {
         if data.holdings.count > 0 {
-            let ratio = data.holdings.sorted { one, two in
-                return abs(one.dayProfitLoss) > abs(two.dayProfitLoss) // returns list sorted from most absolute change to least absolute change
-            }[0].dayProfitLoss / 150
+            let maxStockChange = data.holdings.sorted { one, two in
+                return abs(getDayProfitLoss(stockSymbol: one.stockSymbol)) > abs(getDayProfitLoss(stockSymbol: two.stockSymbol)) // returns list sorted from most absolute change to least absolute change
+            }[0]
+            
+            let ratio = getDayProfitLoss(stockSymbol: maxStockChange.stockSymbol) / 150
             if ratio != 0 {
                 return abs(dayProfitLoss/ratio)
             }
@@ -72,20 +83,21 @@ struct BarChart: View {
 }
 
 struct BarView: View {
-    
+
     var stockSymbol: String
     var height: CGFloat
     var width: CGFloat
     var dayProfitLoss: Double
+    @Binding var refresh: Bool
     @Binding var focus: String?
     @Binding var focusDayProfitLoss: Double
     @Binding var infoOffset: CGSize
     @ObservedObject var data = DataController.shared
-    
+
     var body: some View {
-        
+
         ZStack {
-            
+
             Rectangle()
                 .foregroundColor(dayProfitLoss > 0 ? .green : .red)
                 .frame(width: width, height: height)
@@ -99,14 +111,14 @@ struct BarView: View {
                             } else {
                                 infoOffset.height = gesture.startLocation.y - height - 75
                             }
-                            withAnimation(.spring()) {
+                            withAnimation(.spring(blendDuration: 0.1)) {
                                 focusDayProfitLoss = dayProfitLoss
                                 infoOffset.width = getXOffset()
                                 focus = stockSymbol
                             }
                         }
                         .onEnded { _ in
-                            withAnimation(.spring()) {
+                            withAnimation(.spring(blendDuration: 0.1)) {
                                 focus = nil
                             }
                         }
@@ -114,7 +126,7 @@ struct BarView: View {
                 .offset(y: dayProfitLoss > 0 ? -height/2 : height/2)
         }
     }
-    
+
     func getXOffset() -> CGFloat {
         if let index = data.holdings.firstIndex(where: { loopingStockOwned in
             loopingStockOwned.stockSymbol == stockSymbol
@@ -137,7 +149,7 @@ struct BarView: View {
 struct BarChart_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            //            BarView(stockSymbol: "RELIANCE", dayProfitLoss: 127.3, height: 127.3, width: 30)
+//                        BarView(stockSymbol: "RELIANCE", dayProfitLoss: 127.3, height: 127.3, width: 30)
 //            BarChart(, refresh: /)
         }
     }

@@ -14,167 +14,158 @@ enum PortfolioType: String {
 struct PortfolioListView: View {
     
     @ObservedObject var data = DataController.shared
-//    let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
+    //    let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
     var portfolioType: PortfolioType
-    @State private var buyValue = 0.0
-    @State private var currentValue: Double = 0
-    @State private var profitLoss: Double = 0
-    @State private var profitLossPercent: Double = 0
-    @State private var dayProfitLoss: Double = 0
-    @State private var dayProfitLossPercent: Double = 0
+    var id: Int {
+        return portfolioType == .positions ? 0 : 1
+    }
+    var investedValue: Double { return (data.portfolioInfo[id]["investedValue"] ?? 0.0) }
+    var currentValue: Double { return (data.portfolioInfo[id]["currentValue"] ?? 0.0) }
+    var profitLoss: Double { return (data.portfolioInfo[id]["profitLoss"] ?? 0.0) }
+    var profitLossPercent: Double { return (data.portfolioInfo[id]["profitLossPercent"] ?? 0.0) }
+    var dayProfitLoss: Double { return (data.portfolioInfo[id]["dayProfitLoss"] ?? 0.0) }
+    var dayProfitLossPercent: Double { return dayProfitLoss * 100 / currentValue }
     @State private var refresh = false
     
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
-        NavigationView {
-            VStack(spacing: 0) {
-                
-                ScrollView {
-                    VStack {
-                        HStack {
-                            Spacer()
-                            
-                            VStack {
-                                Text("\(buyValue.withCommas())")
-                                Text("Invested Amount")
-                                    .font(.custom("Poppins-Light", size: 15))
-                            }
-                            .offset(x: -5)
-                            
-                            Spacer()
-                            
-                            VStack {
-                                Text("\(currentValue.withCommas())")
-                                Text("Current Value")
-                                    .font(.custom("Poppins-Light", size: 15))
-                            }
-                            
-                            Spacer()
-                        }
-                        .padding(.bottom, 2)
-                        .font(.custom("Poppins-Regular", size: 25))
+        VStack(spacing: 0) {
+            
+            ScrollView {
+                VStack {
+                    HStack {
+                        Spacer()
                         
-                        Rectangle()
-                            .frame(height: 1)
-                            .foregroundColor(Color.blue)
-                        //                        .padding(.horizontal, 20)
-                        
-                        
-                        HStack {
-                            Text("P/L:")
-                                .font(.custom("Poppins-Regular", size: 23))
-                            Spacer()
-                            Text("\(String(profitLoss.withCommas()))")
-                                .font(.custom("Poppins-Regular", size: 23))
-                                .foregroundColor(profitLoss >= 0 ? .green : .red)
-                            Text("(\(String(profitLossPercent.withCommas()))%)")
-                                .foregroundColor(profitLoss >= 0 ? .green : .red)
-                        }
-                        .padding(.horizontal, 30)
-                    }
-                    .padding(.vertical)
-                    .background(
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(Color("bg"))
-                    )
-                    .padding(.horizontal)
-                    .padding(.bottom)
-                    
-                    if (portfolioType == .holdings ? data.holdings : data.positions).count == 0 {
-                        ZStack {
-                            
-                            Image("share-certificate-png")
-                                .resizable()
-                                .renderingMode(.template)
-                                .foregroundColor(Color.blue)
-                                .opacity(0.9)
-                                .padding(.vertical, 15)
-                                .padding(.horizontal, 30)
-                                .aspectRatio(contentMode: .fit)
-                            VStack {
-                                Spacer()
-                                Spacer()
-                            }
-                            
-                        }
-                    } else {
                         VStack {
-                            
-                            ForEach(portfolioType == .holdings ? data.holdings : data.positions) { stock in
-                                Rectangle()
-                                    .frame(height: 1)
-                                    .foregroundColor(Color("Divider Gray"))
-                                PortfolioTileView(stock: stock, refresh: $refresh)
-                            }
+                            Text("\(investedValue.withCommas())")
+                            Text("Invested Amount")
+                                .font(.custom("Poppins-Light", size: 15))
+                        }
+                        .offset(x: -5)
+                        
+                        Spacer()
+                        
+                        VStack {
+                            Text("\(currentValue.withCommas())")
+                            Text("Current Value")
+                                .font(.custom("Poppins-Light", size: 15))
+                        }
+                        
+                        Spacer()
+                    }
+                    .padding(.bottom, 2)
+                    .font(.custom("Poppins-Regular", size: 25))
+                    
+                    Rectangle()
+                        .frame(height: 1)
+                        .foregroundColor(Color.blue)
+                    //                        .padding(.horizontal, 20)
+                    
+                    
+                    HStack {
+                        Text("P/L:")
+                            .font(.custom("Poppins-Regular", size: 23))
+                        Spacer()
+                        Text("\(String(profitLoss.withCommas()))")
+                            .font(.custom("Poppins-Regular", size: 23))
+                            .foregroundColor(profitLoss >= 0 ? .green : .red)
+                        Text("(\(String(profitLossPercent.withCommas()))%)")
+                            .foregroundColor(profitLoss >= 0 ? .green : .red)
+                    }
+                    .padding(.horizontal, 30)
+                }
+                .padding(.vertical)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color("bg"))
+                )
+                .padding(.horizontal)
+                .padding(.bottom)
+                
+                if (portfolioType == .holdings ? data.holdings : data.positions).count == 0 {
+                    ZStack {
+                        
+                        Image("share-certificate-png")
+                            .resizable()
+                            .renderingMode(.template)
+                            .foregroundColor(Color.blue)
+                            .opacity(0.9)
+                            .padding(.vertical, 15)
+                            .padding(.horizontal, 30)
+                            .aspectRatio(contentMode: .fit)
+                        VStack {
+                            Spacer()
+                            Spacer()
+                        }
+                        
+                    }
+                } else {
+                    VStack {
+                        
+                        ForEach(portfolioType == .holdings ? data.holdings : data.positions) { stock in
                             Rectangle()
                                 .frame(height: 1)
                                 .foregroundColor(Color("Divider Gray"))
-                            
-                            Spacer()
-                            if portfolioType == .holdings {
-                                BarChart(refresh: $refresh)
+                            NavigationLink(destination: StockDetailView(stockSymbol: stock.stockSymbol, isFullScreen: true, portfolioType: portfolioType)) {
+                            PortfolioTileView(stockSymbol: stock.stockSymbol, portfolioType: portfolioType)
                             }
+                        }
+                        Rectangle()
+                            .frame(height: 1)
+                            .foregroundColor(Color("Divider Gray"))
+                        
+                        Spacer()
+                        if portfolioType == .holdings {
+                            BarChart(refresh: $refresh)
                         }
                     }
                 }
-                
-                
-                if portfolioType == .holdings {
-                    HStack {
-                        Text("Today's P/L:")
-                        Spacer()
-                        Text("\(dayProfitLoss.withCommas(withRupeeSymbol: true)) (\(dayProfitLossPercent.withCommas())%)")
-                            .foregroundColor(dayProfitLoss >= 0 ? .green : .red)
-                    }
-                    .font(.custom("Poppins-Light", size: 16))
-                    .padding(.vertical, 6)
-                    .padding(.horizontal, 18)
-                    .background(Color("Light Gray"))
-                    .padding(.bottom, 1)
-                }
-                
             }
-            .padding(.top, 20)
-            //            .toolbar {
-            //                ToolbarItem(placement: ToolbarItemPlacement.navigation) {
-            //                    Text(portfolioType.rawValue.capitalized)
-            //                        .font(.custom("Poppins-Light", size: 38, weight: .bold))
-            //                        .foregroundColor(Color.blue)
-            //                }
-            //            }
-            .navigationTitle(portfolioType == .holdings ? "Holdings" : "Positions")
-            //            .navigationBarColor(colorScheme == .dark ? .black : .white , textColor: .systemBlue)
-            //            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(trailing: Button(action: {
-                updateAllPortfolioData()
-            }) {
-                Image(systemName: "gobackward")
-            })
+            
+            
+            if portfolioType == .holdings {
+                HStack {
+                    Text("Today's P/L:")
+                    Spacer()
+                    Text("\(dayProfitLoss.withCommas(withRupeeSymbol: true)) (\(dayProfitLossPercent.withCommas())%)")
+                        .foregroundColor(dayProfitLoss >= 0 ? .green : .red)
+                }
+                .font(.custom("Poppins-Light", size: 16))
+                .padding(.vertical, 6)
+                .padding(.horizontal, 18)
+                .background(Color("Light Gray"))
+                .padding(.bottom, 1)
+            }
+            
         }
-//        .onReceive(timer, perform: { _ in
-//            updateAllPortfolioData()
-//        })
-        .onAppear(perform: {
-            updateAllPortfolioData()
+        .navigationTitle("Portfolio")
+        .navigationBarItems(
+            trailing: Button(action: {
+        }) {
+            Image(systemName: "gobackward")
         })
+        .onAppear {
+            data.updateHoldingsPositions()
+        }
     }
     
-    func updateAllPortfolioData() {
-        refresh.toggle()
-        data.updateAllStockPricesInPortfolio()
-        let portfolioInfo = data.getPorfolioInfo(portfolio: portfolioType == .holdings ? data.holdings : data.positions)
-        buyValue = portfolioInfo["buyValue"]!
-        currentValue = portfolioInfo["currentValue"]!
-        profitLoss = portfolioInfo["profitLoss"]!
-        dayProfitLoss = portfolioInfo["dayProfitLoss"]!
-        dayProfitLossPercent = dayProfitLoss*100/currentValue
-        if buyValue == 0 {
-            dayProfitLossPercent = 0
-        } else {
-            profitLossPercent = portfolioInfo["profitLossPercent"]!
-        }
-    }
+//    func updateAllPortfolioData() {
+//        refresh.toggle()
+//        let id = portfolioType == .positions ? 0 : 1
+////        data.updateAllStockPricesInPortfolio()
+////        let portfolioInfo = data.getPorfolioInfo(portfolio: portfolioType == .holdings ? data.holdings : data.positions)
+//        investedValue = data.portfolioInfo[id]["buyValue"]!
+//        currentValue = data.portfolioInfo[id]["currentValue"]!
+//        profitLoss = data.portfolioInfo[id]["profitLoss"]!
+//        dayProfitLoss = data.portfolioInfo[id]["dayProfitLoss"]!
+//        dayProfitLossPercent = dayProfitLoss*100/currentValue
+//        if investedValue == 0 {
+//            dayProfitLossPercent = 0
+//        } else {
+//            profitLossPercent = data.portfolioInfo[id]["profitLossPercent"]!
+//        }
+//    }
 }
 
 

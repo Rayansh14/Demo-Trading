@@ -9,21 +9,19 @@ import SwiftUI
 
 struct StockDetailView: View {
     
-    var stockSymbol = ""
     var isFullScreen = false
     var stockQuote = StockQuote()
+    var stockOwned = StockOwned()
+    @ObservedObject var data = DataController.shared
     
-    init(stockSymbol: String, isFullScreen: Bool) {
-        self.stockSymbol = stockSymbol
+    init(stockSymbol: String, isFullScreen: Bool, portfolioType: PortfolioType = .holdings) {
         self.isFullScreen = isFullScreen
         self.stockQuote = data.getStockQuote(stockSymbol: stockSymbol)
-        if let owned = data.getStockOwned(stockSymbol: stockSymbol) {
+        if let owned = data.getStockOwned(stockSymbol: stockSymbol, portfolioType: portfolioType) {
             self.stockOwned = owned
         }
     }
     
-    @ObservedObject var data = DataController.shared
-    var stockOwned = StockOwned()
     @Environment(\.presentationMode) var presentationMode
     
     
@@ -35,7 +33,7 @@ struct StockDetailView: View {
                     Spacer()
                 } else {
                     HStack {
-                        Text(stockSymbol) // not capitalizing it because then it looks weird for stock names like Kalpatpowr
+                        Text(stockQuote.symbol) // not lowercasing it because then it looks weird for stock names like Kalpatpowr
                             .font(.custom("Poppins-Regular", size: 31))
                             .padding(.leading)
                         Spacer()
@@ -44,7 +42,7 @@ struct StockDetailView: View {
                 
                 HStack {
                     VStack {
-                        Text("NSE: \(stockQuote.lastPrice.withCommas(withRupeeSymbol: true))")
+                        Text("NSE: \(stockQuote.displayPrice.withCommas(withRupeeSymbol: true))")
                         Text("\(Image(systemName: stockQuote.change >= 0 ? "arrow.up" : "arrow.down")) \(abs(stockQuote.pChange).withCommas())%")
                             .foregroundColor(stockQuote.pChange >= 0.0 ? .green : .red)
                     }
@@ -102,10 +100,10 @@ struct StockDetailView: View {
                 if !(stockQuote.symbol.contains("NIFTY")) {
                     
                     HStack {
-                        NavigationLink(destination: TransactStockView(transactionType: .buy, stockSymbol: stockSymbol, isFullScreen: isFullScreen)) {
+                        NavigationLink(destination: TransactStockView(transactionType: .buy, stockSymbol: stockQuote.symbol, isFullScreen: isFullScreen)) {
                             TransactButton(text: "Buy", color: .green)
                         }
-                        NavigationLink(destination: TransactStockView(transactionType: .sell, stockSymbol: stockSymbol, isFullScreen: isFullScreen)) {
+                        NavigationLink(destination: TransactStockView(transactionType: .sell, stockSymbol: stockQuote.symbol, isFullScreen: isFullScreen)) {
                             TransactButton(text: "Sell", color: .red)
                         }
                     }
@@ -113,18 +111,18 @@ struct StockDetailView: View {
                     
                     if isFullScreen {
                         
-                        if data.checkIfInHoldings(stockSymbol: stockSymbol) {
-                            CustomInfoView(label: "Today's P/L:", info: "\(stockOwned.dayChange > 0 ? "+" : "") \(stockOwned.dayProfitLoss.withCommas(withRupeeSymbol: true))")
+                        if data.checkIfInHoldings(stockSymbol: stockQuote.symbol) { // this is so that it doesn't display incorrect information when user accesses it by tapping on a positions tile.
+                            CustomInfoView(label: "Today's P/L:", info: "\(stockQuote.change > 0 ? "+" : "") \((stockQuote.change * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true))")
                                 .padding(.top)
                         }
                         
-                        CustomInfoView(label: "Invested Value:", info: ((stockOwned.avgPriceBought * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true)))
+                        CustomInfoView(label: "Invested Value:", info: stockOwned.investedAmt.withCommas(withRupeeSymbol: true))
                         
-                        CustomInfoView(label: "Current Value:", info: ((stockOwned.lastPrice * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true)))
+                        CustomInfoView(label: "Current Value:", info: ((stockQuote.displayPrice * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true)))
                         
-                        CustomInfoView(label: "Profit/Loss:", info: ((stockOwned.lastPrice - stockOwned.avgPriceBought) * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true))
+                        CustomInfoView(label: "Profit/Loss:", info: ((stockQuote.displayPrice - stockOwned.avgPriceBought) * Double(stockOwned.numberOfShares)).withCommas(withRupeeSymbol: true))
                         
-                        CustomInfoView(label: "Weightage in Portfolio:", info: "\((stockOwned.lastPrice * 100 * Double(stockOwned.numberOfShares) / data.getPorfolioInfo(portfolio: data.portfolio)["currentValue"]!).withCommas())%")
+                        CustomInfoView(label: "Weightage in Portfolio:", info: "\((stockQuote.displayPrice * 100 * Double(stockOwned.numberOfShares) / (data.portfolioInfo[0]["currentValue"]! + data.portfolioInfo[1]["currentValue"]!)).withCommas())%")
                         
                     }
                 }

@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct FundamentalAnalysisGuide: View {
+    
+    var chapterIndex: Int
+    
     var body: some View {
         Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
@@ -15,6 +18,6 @@ struct FundamentalAnalysisGuide: View {
 
 struct FundamentalAnalysisGuide_Previews: PreviewProvider {
     static var previews: some View {
-        FundamentalAnalysisGuide()
+        FundamentalAnalysisGuide(chapterIndex: 0)
     }
 }

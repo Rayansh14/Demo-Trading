@@ -10,6 +10,8 @@ import SwiftUI
 struct MainTabView: View {
     
     @ObservedObject var data = DataController.shared
+    @State var counter = 0
+    var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
         
@@ -33,7 +35,7 @@ struct MainTabView: View {
             PortfolioView()
                 .tabItem {
                     Image(systemName: "bag.fill")
-                    Text("Holdings")
+                    Text("Portfolio")
                 }
             FundsView()
                 .tabItem {
@@ -41,9 +43,15 @@ struct MainTabView: View {
                     Text("Funds")
                 }
         }
-        .onAppear {
-            data.getStocksData()
-        }
+        .onReceive(timer, perform: { _ in
+            data.randomIncrement()
+            
+            counter += 1
+            if counter >= 15 {
+                data.getStocksData()
+                counter  = 0
+            }
+        })
     }
 }
 

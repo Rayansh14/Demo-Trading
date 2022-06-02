@@ -1,43 +1,29 @@
 import SwiftUI
-
-
+//
+//
+//var basicGuide: Guide {
+//    let guide = Guide()
+//    guide.title = "Stock Market Basics"
+//    guide.imageName = "stock-market-animation"
+//    guide.views = [
+////        ScrollView{Text("View zfdb 1")}.self, ScrollView{Text("View ch 2")}.self
+//    ]
+//    return guide
+//}
+//
+//
+//
 struct TestView: View {
-    enum Field: Hashable {
-        case username
-        case password
-    }
-    
-    @State private  var username = ""
-    @State private  var password = ""
-    @FocusState private var focusedField: Field?
-    
     var body: some View {
-        Form {
-            TextField("Username", text: $username)
-                .focused($focusedField, equals: .username)
-            
-            SecureField("Password", text: $password)
-                .focused($focusedField, equals: .password)
-            
-            Button("Sign In") {
-                if username.isEmpty {
-                    focusedField = .username
-                } else if password.isEmpty {
-                    focusedField = .password
-                } else {
-                    
-                }
-            }
-        }
+        Rectangle()
+            .padding()
+            .foregroundColor(.green)
+            .cornerRadius(200, corners: [.topRight, .bottomRight])
     }
-    
 }
 
-
-struct TestViewPreview: PreviewProvider {
+struct TestView_Preview: PreviewProvider {
     static var previews: some View {
-        Group {
-            TestView()
-        }
+        TestView()
     }
 }
