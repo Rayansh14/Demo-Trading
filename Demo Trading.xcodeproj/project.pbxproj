@@ -18,15 +18,17 @@
 		443874732643E3A000A35820 /* PortfolioTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443874722643E3A000A35820 /* PortfolioTile.swift */; };
 		4438748326468D9100A35820 /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4438748226468D9100A35820 /* Test.swift */; };
 		44387488265054CF00A35820 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44387487265054CF00A35820 /* SearchBar.swift */; };
+		4442638028199FAE00632E97 /* GettingStartedGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4442637F28199FAE00632E97 /* GettingStartedGuide.swift */; };
 		444283B727B108E900D9BA18 /* Poppins-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 444283B627B108E900D9BA18 /* Poppins-Light.ttf */; };
 		444283BA27B15B3200D9BA18 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 444283B927B15B3200D9BA18 /* Poppins-Regular.ttf */; };
 		444879BB2632E6A8000601BF /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444879BA2632E6A8000601BF /* NetworkMonitor.swift */; };
 		4460A5EA27C2D4BE00D1115F /* PortfolioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4460A5E927C2D4BE00D1115F /* PortfolioView.swift */; };
+		4476CEDD27EEE6710027BC20 /* GuideChaptersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4476CEDC27EEE6710027BC20 /* GuideChaptersView.swift */; };
+		4476CEE027EEEFC50027BC20 /* UIColorHexSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4476CEDF27EEEFC50027BC20 /* UIColorHexSwift */; };
 		447941A02721517A009B1500 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4479419F2721517A009B1500 /* Launch Screen.storyboard */; };
 		44921B4B27C1169C0007CE3C /* BasicsGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44921B4A27C1169C0007CE3C /* BasicsGuide.swift */; };
 		44921B4D27C116B20007CE3C /* TechnicalAnalysisGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44921B4C27C116B20007CE3C /* TechnicalAnalysisGuide.swift */; };
 		44921B4F27C116BE0007CE3C /* FundamentalAnalysisGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44921B4E27C116BE0007CE3C /* FundamentalAnalysisGuide.swift */; };
-		44921B5127C116C80007CE3C /* MutualFundsGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44921B5027C116C80007CE3C /* MutualFundsGuide.swift */; };
 		449CD48C27030627000C3567 /* iActivityIndicator in Frameworks */ = {isa = PBXBuildFile; productRef = 449CD48B27030627000C3567 /* iActivityIndicator */; };
 		44A79A32262451E100652F17 /* Demo_TradingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A79A31262451E100652F17 /* Demo_TradingApp.swift */; };
 		44A79A34262451E100652F17 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A79A33262451E100652F17 /* MainTabView.swift */; };
@@ -65,15 +67,16 @@
 		443874722643E3A000A35820 /* PortfolioTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioTile.swift; sourceTree = "<group>"; };
 		4438748226468D9100A35820 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
 		44387487265054CF00A35820 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
+		4442637F28199FAE00632E97 /* GettingStartedGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GettingStartedGuide.swift; sourceTree = "<group>"; };
 		444283B627B108E900D9BA18 /* Poppins-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Light.ttf"; sourceTree = "<group>"; };
 		444283B927B15B3200D9BA18 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Regular.ttf"; sourceTree = "<group>"; };
 		444879BA2632E6A8000601BF /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
-		4460A5E927C2D4BE00D1115F /* PortfolioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PortfolioView.swift; path = "Demo Trading/views/PortfolioView.swift"; sourceTree = "<group>"; };
+		4460A5E927C2D4BE00D1115F /* PortfolioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioView.swift; sourceTree = "<group>"; };
+		4476CEDC27EEE6710027BC20 /* GuideChaptersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideChaptersView.swift; sourceTree = "<group>"; };
 		4479419F2721517A009B1500 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		44921B4A27C1169C0007CE3C /* BasicsGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicsGuide.swift; sourceTree = "<group>"; };
 		44921B4C27C116B20007CE3C /* TechnicalAnalysisGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TechnicalAnalysisGuide.swift; sourceTree = "<group>"; };
 		44921B4E27C116BE0007CE3C /* FundamentalAnalysisGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FundamentalAnalysisGuide.swift; sourceTree = "<group>"; };
-		44921B5027C116C80007CE3C /* MutualFundsGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MutualFundsGuide.swift; sourceTree = "<group>"; };
 		44A79A2E262451E100652F17 /* Demo Trading.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo Trading.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		44A79A31262451E100652F17 /* Demo_TradingApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Demo_TradingApp.swift; sourceTree = "<group>"; };
 		44A79A33262451E100652F17 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
@@ -94,6 +97,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4476CEE027EEEFC50027BC20 /* UIColorHexSwift in Frameworks */,
 				4438747126416AD400A35820 /* SwiftDate in Frameworks */,
 				449CD48C27030627000C3567 /* iActivityIndicator in Frameworks */,
 			);
@@ -105,10 +109,11 @@
 		44921B4927C1168F0007CE3C /* Guides */ = {
 			isa = PBXGroup;
 			children = (
+				4476CEDC27EEE6710027BC20 /* GuideChaptersView.swift */,
+				4442637F28199FAE00632E97 /* GettingStartedGuide.swift */,
 				44921B4A27C1169C0007CE3C /* BasicsGuide.swift */,
 				44921B4C27C116B20007CE3C /* TechnicalAnalysisGuide.swift */,
 				44921B4E27C116BE0007CE3C /* FundamentalAnalysisGuide.swift */,
-				44921B5027C116C80007CE3C /* MutualFundsGuide.swift */,
 			);
 			path = Guides;
 			sourceTree = "<group>";
@@ -116,7 +121,6 @@
 		44A79A25262451E100652F17 = {
 			isa = PBXGroup;
 			children = (
-				4460A5E927C2D4BE00D1115F /* PortfolioView.swift */,
 				44A79A30262451E100652F17 /* Demo Trading */,
 				44A79A2F262451E100652F17 /* Products */,
 			);
@@ -171,6 +175,7 @@
 				44336BDE26272EB800C12CE0 /* Orders.swift */,
 				44032892262D92910039A0E6 /* PortfolioList.swift */,
 				44D335702767364700F3301B /* BarChart.swift */,
+				4460A5E927C2D4BE00D1115F /* PortfolioView.swift */,
 				443874722643E3A000A35820 /* PortfolioTile.swift */,
 				44A79A5C2626C2C900652F17 /* Funds.swift */,
 				44387487265054CF00A35820 /* SearchBar.swift */,
@@ -209,6 +214,7 @@
 			packageProductDependencies = (
 				4438747026416AD400A35820 /* SwiftDate */,
 				449CD48B27030627000C3567 /* iActivityIndicator */,
+				4476CEDF27EEEFC50027BC20 /* UIColorHexSwift */,
 			);
 			productName = "Demo Trading";
 			productReference = 44A79A2E262451E100652F17 /* Demo Trading.app */;
@@ -240,6 +246,7 @@
 			packageReferences = (
 				4438746F26416AD400A35820 /* XCRemoteSwiftPackageReference "SwiftDate" */,
 				449CD48A27030627000C3567 /* XCRemoteSwiftPackageReference "iActivityIndicator" */,
+				4476CEDE27EEEFC50027BC20 /* XCRemoteSwiftPackageReference "UIColor-Hex-Swift" */,
 			);
 			productRefGroup = 44A79A2F262451E100652F17 /* Products */;
 			projectDirPath = "";
@@ -283,9 +290,9 @@
 				44336BDF26272EB800C12CE0 /* Orders.swift in Sources */,
 				44F25F7627046C0E00BB69DD /* Transact.swift in Sources */,
 				443874732643E3A000A35820 /* PortfolioTile.swift in Sources */,
+				4476CEDD27EEE6710027BC20 /* GuideChaptersView.swift in Sources */,
 				4434C85127B833AD00F89E3B /* QuizView.swift in Sources */,
 				44387488265054CF00A35820 /* SearchBar.swift in Sources */,
-				44921B5127C116C80007CE3C /* MutualFundsGuide.swift in Sources */,
 				44921B4D27C116B20007CE3C /* TechnicalAnalysisGuide.swift in Sources */,
 				44A79A5D2626C2C900652F17 /* Funds.swift in Sources */,
 				44A79A42262451F200652F17 /* DataController.swift in Sources */,
@@ -294,6 +301,7 @@
 				44032890262ACB8F0039A0E6 /* ErrorTile.swift in Sources */,
 				44A79A32262451E100652F17 /* Demo_TradingApp.swift in Sources */,
 				44032893262D92910039A0E6 /* PortfolioList.swift in Sources */,
+				4442638028199FAE00632E97 /* GettingStartedGuide.swift in Sources */,
 				44921B4B27C1169C0007CE3C /* BasicsGuide.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -493,6 +501,14 @@
 				minimumVersion = 6.3.1;
 			};
 		};
+		4476CEDE27EEEFC50027BC20 /* XCRemoteSwiftPackageReference "UIColor-Hex-Swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/yeahdongcn/UIColor-Hex-Swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
 		449CD48A27030627000C3567 /* XCRemoteSwiftPackageReference "iActivityIndicator" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MojtabaHs/iActivityIndicator.git";
@@ -508,6 +524,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4438746F26416AD400A35820 /* XCRemoteSwiftPackageReference "SwiftDate" */;
 			productName = SwiftDate;
+		};
+		4476CEDF27EEEFC50027BC20 /* UIColorHexSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4476CEDE27EEEFC50027BC20 /* XCRemoteSwiftPackageReference "UIColor-Hex-Swift" */;
+			productName = UIColorHexSwift;
 		};
 		449CD48B27030627000C3567 /* iActivityIndicator */ = {
 			isa = XCSwiftPackageProductDependency;
