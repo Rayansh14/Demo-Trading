@@ -48,22 +48,23 @@ struct SearchBar: View {
                     )
                     .padding(.horizontal, 10)
                     .onTapGesture {
-                        self.isEditing = true
-                        withAnimation(.spring()) {
-                        data.tabsShowing = false
+                        isEditing = true
+                        isFocused = true
+                        withAnimation(.easeInOut) {
+                            data.tabsShowing = false
                         }
-                        self.showSheet = false
-                        self.sheetOffset = 750
+                        showSheet = false
+                        sheetOffset = 750
                         
                     }
                 
                 if isEditing {
                     Button(action: {
-                        self.isEditing = false
-                        withAnimation(.spring()) {
-                        data.tabsShowing = true
+                        isEditing = false
+                        withAnimation(.easeInOut) {
+                            data.tabsShowing = true
                         }
-                        self.searchText = ""
+                        searchText = ""
                         isFocused = false
                         
                     }) {
@@ -77,13 +78,6 @@ struct SearchBar: View {
                 
             }
             .animation(.easeInOut(duration: 0.5), value: isEditing)
-        }
-}
-
-extension UIDevice {
-    var hasNotch: Bool {
-    let keyWindow = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
-        return keyWindow?.safeAreaInsets.bottom ?? 0 > 0
-    }
     
+        }
 }

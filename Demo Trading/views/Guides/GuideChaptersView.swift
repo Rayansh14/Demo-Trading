@@ -38,6 +38,7 @@ struct GuideDirectorView: View {
 
 struct GuideChaptersView: View {
     
+    @Environment(\.colorScheme) var colorScheme
     var guide: Guide
     
     var body: some View {
@@ -83,7 +84,7 @@ struct GuideChaptersView: View {
                                 .padding(15)
                                 .padding(.bottom, 15)
                                 .background(
-                                    LinearGradient(colors: [Color("White Black"), Color("White Black"), Color("Gradient Gray")], startPoint: .top, endPoint: .bottom)
+                                    LinearGradient(colors: getGradientColors(), startPoint: .top, endPoint: .bottom)
                                         .cornerRadius(25, corners: [.topLeft, .topRight])
                                         .foregroundColor(.white)
                                 )
@@ -95,10 +96,18 @@ struct GuideChaptersView: View {
                         }
                     }
                 }
+                
             }
         }
         .navigationBarTitleDisplayMode(.inline)
         //        .navigationTitle(guide.title)
+    }
+    
+    func getGradientColors() -> [Color] {
+        if colorScheme == .light {
+            return [Color("White Black"), Color("White Black"), Color("Gradient Gray")]
+        }
+        return [Color("White Black"), Color("Light Gray")]
     }
     
     func getIndexOrDefault(array: [Any], index: Int, defaultVal: Any) -> Any {
@@ -108,11 +117,18 @@ struct GuideChaptersView: View {
         return array[index]
     }
 }
-
+//[Color("White Black"), Color("White Black"), Color("Gradient Gray")]
 struct GuideChaptersView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
-            GuideChaptersView(guide: basicsGuide)
+        Group {
+            NavigationView {
+                GuideChaptersView(guide: basicsGuide)
+            }
+            NavigationView {
+                GuideChaptersView(guide: basicsGuide)
+            }
+            .preferredColorScheme(.dark)
         }
+        
     }
 }

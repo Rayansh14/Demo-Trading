@@ -20,7 +20,7 @@ let heading1 = Font.custom("Poppins-Regular", size: 23)
 
 func getOPExplanation() -> String {
     if DataController.shared.niftyWhenStarted > 0 {
-        return overperformaceExplanation + "\nWhen you started, Nifty 50 was at \(DataController.shared.niftyWhenStarted)"
+        return overperformaceExplanation + "\nWhen you started, Nifty 50 was at \(DataController.shared.niftyWhenStarted.withCommas())"
     }
     return overperformaceExplanation
 }
@@ -412,7 +412,7 @@ class DataController: ObservableObject {
     func updatePorfolioInfo() {
         resetPortfolioInfo()
         for x in 0...1 {
-            print(x)
+//            print(x)
             for stock in x == 0 ? positions : holdings {
                 let quote = getStockQuote(stockSymbol: stock.stockSymbol)
                 portfolioInfo[x]["investedValue"]! += (stock.avgPriceBought * Double(stock.numberOfShares))
@@ -686,15 +686,19 @@ class DataController: ObservableObject {
 
 
 extension Double {
-    func withCommas(withRupeeSymbol: Bool = false) -> String {
+    func withCommas(withCommas: Bool = true, withRupeeSymbol: Bool = false) -> String {
         let numberFormatter = NumberFormatter()
-        numberFormatter.locale = Locale(identifier: "en_IN")
+        numberFormatter.minimumFractionDigits = 2
+        numberFormatter.maximumFractionDigits = 2
+        numberFormatter.numberStyle = .decimal
+        
+        if !withCommas {
+            return numberFormatter.string(from: NSNumber(value: self))!
+        }
+        
         if withRupeeSymbol {
+            numberFormatter.locale = Locale(identifier: "en_IN")
             numberFormatter.numberStyle = .currency
-        } else {
-            numberFormatter.numberStyle = .decimal
-            numberFormatter.minimumFractionDigits = 2
-            numberFormatter.maximumFractionDigits = 2
         }
         numberFormatter.groupingSize = 3
         numberFormatter.secondaryGroupingSize = 2

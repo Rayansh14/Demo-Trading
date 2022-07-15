@@ -41,7 +41,7 @@ struct StockDetailView: View {
                 }
                 
                 HStack {
-                    VStack {
+                    VStack(alignment: .leading) {
                         Text("NSE: \(stockQuote.displayPrice.withCommas(withRupeeSymbol: true))")
                         Text("\(Image(systemName: stockQuote.change >= 0 ? "arrow.up" : "arrow.down")) \(abs(stockQuote.pChange).withCommas())%")
                             .foregroundColor(stockQuote.pChange >= 0.0 ? .green : .red)

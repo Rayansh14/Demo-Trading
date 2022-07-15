@@ -52,6 +52,13 @@ struct MainTabView: View {
                 counter  = 0
             }
         })
+        .onAppear {
+            let appearence = UITabBarAppearance()
+            appearence.configureWithOpaqueBackground()
+            if #available(iOS 15.0, *) {
+                UITabBar.appearance().scrollEdgeAppearance = appearence // otherwise tab bar becomes transparent when scrolled to bottom
+            }
+        }
     }
 }
 

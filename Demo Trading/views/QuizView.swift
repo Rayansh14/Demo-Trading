@@ -25,7 +25,7 @@ struct QuizView: View {
                     .padding(.horizontal, 10)
                 
                 ForEach(optionsList, id:\.self) {option in
-                    AnswerRow(text: option, isCorrectOption: optionsList.firstIndex(of: option) == correctOption, index: optionsList.firstIndex(of: option)!, selectedOption: $selectedOption)
+                    AnswerRow(text: option, isCorrectOption: optionsList.firstIndex(of: option) == correctOption, index: optionsList.firstIndex(of: option) ?? 0, selectedOption: $selectedOption)
                         .padding(7)
                 }
                 
@@ -80,11 +80,11 @@ struct AnswerRow: View {
     }
     
     func getShadowColor() -> Color {
-        if selectedOption != nil {
+        if let selectedOption = selectedOption {
             if isCorrectOption {
                 return .green
             }
-            if selectedOption! == index {
+            if selectedOption == index {
                 return .red
             }
         }

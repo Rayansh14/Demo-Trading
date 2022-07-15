@@ -109,14 +109,16 @@ struct WatchlistChildView: View {
     @State private var sheetOffset: CGFloat = 750
     @State private var isAdding = false
     @State private var searchText = ""
-    @State private var editMode: EditMode = .inactive
+    @State private var editMode: EditMode = .active
+    @State private var isEditing = false
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         ZStack {
             VStack {
                 SearchBar(placeholderText: "Add stocks...", searchText: $searchText, isEditing: $isAdding, showSheet: $showSheet, sheetOffset: $sheetOffset)
-                    .padding(.top, isAdding && !UIDevice.current.hasNotch ? 25 : 0)
+                    .padding(.top, isAdding ? 20 : 0)
+                    .animation(.none, value: isAdding)
                 
                 if !isAdding {
                     if data.watchlist[watchlistIndex].count == 0 {
@@ -132,7 +134,7 @@ struct WatchlistChildView: View {
                                 Spacer()
                                 Text("Howdy!")
                                     .font(.title3)
-                                Text("Welcome to Demo Trading! To get started, check out the guides on the tab to the left 👈")
+                                Text((data.watchlist[0].count + data.watchlist[1].count + data.watchlist[2].count) == 0 ? "Welcome to Demo Trading! To get started, check out the guides tab to the left 👈" : "Add a stock using the search bar above 👆 or check out the guides in the first tab 👈 to understand how the stock market works.")
                                     .multilineTextAlignment(.center)
                                     .padding(.horizontal)
                                 Spacer()
@@ -143,9 +145,9 @@ struct WatchlistChildView: View {
                         ZStack(alignment: .center) {
                             Text("Loading...")
                                 .font(.title)
-                            iActivityIndicator(style: .arcs(count: 5, width: 5, spacing: 3))
-                                .padding(50)
-                                .foregroundColor(Color.blue)
+//                            iActivityIndicator(style: .arcs(count: 5, width: 5, spacing: 3))
+//                                .padding(50)
+//                                .foregroundColor(Color.blue)
                         }
                         Spacer()
                         
@@ -159,36 +161,60 @@ struct WatchlistChildView: View {
                                         .aspectRatio(contentMode: .fit)
                                         .foregroundColor(Color.blue)
                                         .opacity(0.9)
-                                        .padding(40)
+                                        .padding(50)
                                 }
                             }
-                            List {
-                                ForEach(data.watchlist[watchlistIndex], id: \.self) { stock in
-                                    WatchlistTileView(stockSymbol: stock)
-                                        .onTapGesture {
-                                            withAnimation(.spring()) {
-                                                data.tabsShowing = false
+                            if !isEditing {
+                                ScrollView {
+                                    LazyVStack(spacing: 0) {
+                                        ForEach(data.watchlist[watchlistIndex], id: \.self) { stock in
+                                            WatchlistTileNew(stockSymbol: stock)
+                                                .onTapGesture {
+                                                    withAnimation(.easeInOut) {
+                                                        data.tabsShowing = false
+                                                    }
+                                                    sheetOffset = 0
+                                                    showSheet = true
+                                                    selectedStock = stock
+                                                }
+                                                .onLongPressGesture {
+                                                    editMode = .active
+                                                    withAnimation(.spring()) {
+                                                        isEditing = true
+                                                    }
+                                                }
+                                        }
+                                    }
+                                }
+                            } else {
+                                List {
+                                    ForEach(data.watchlist[watchlistIndex], id: \.self) { stock in
+                                        WatchlistTileView(stockSymbol: stock)
+                                            .onTapGesture {
+                                                withAnimation(.easeInOut) {
+                                                    data.tabsShowing = false
+                                                }
+                                                sheetOffset = 0
+                                                showSheet = true
+                                                selectedStock = stock
                                             }
-                                            sheetOffset = 0
-                                            showSheet = true
-                                            selectedStock = stock
-                                        }
-                                        .onLongPressGesture {
-                                            editMode = .active
-                                        }
+//                                            .onLongPressGesture {
+//                                                editMode = .active
+//                                            }
+                                    }
+                                    .onMove(perform: { indexSet, index in
+                                        data.watchlist[watchlistIndex].move(fromOffsets: indexSet, toOffset: index)
+                                        data.saveData()
+                                    })
+                                    .onDelete { indexSet in
+                                        data.watchlist[watchlistIndex].remove(atOffsets: indexSet)
+                                        data.saveData()
+                                    }
                                 }
-                                .onMove(perform: { indexSet, index in
-                                    data.watchlist[watchlistIndex].move(fromOffsets: indexSet, toOffset: index)
-                                    data.saveData()
-                                })
-                                .onDelete { indexSet in
-                                    data.watchlist[watchlistIndex].remove(atOffsets: indexSet)
-                                    data.saveData()
-                                }
-                            }
-                            .environment(\.editMode, $editMode)
-                            .listStyle(PlainListStyle())
-                            .animation(.default, value: editMode)
+                                .environment(\.editMode, $editMode)
+                                .listStyle(InsetListStyle())
+                                .animation(.default, value: editMode)
+                        }
                         }
                     }
                     
@@ -224,7 +250,7 @@ struct WatchlistChildView: View {
                 VStack(spacing: 0) {
                     ZStack {
                         Rectangle()
-                            .foregroundColor(Color("Light Gray"))
+                            .foregroundColor(Color("Gradient Gray"))
                             .frame(height: 50)
                             .cornerRadius(10)
                         HStack {
@@ -246,7 +272,7 @@ struct WatchlistChildView: View {
                                     sheetOffset = 750
                                     showSheet = false
                                     UIApplication.shared.dismissKeyboard()
-                                    withAnimation(.spring()) {
+                                    withAnimation(.easeInOut) {
                                         data.tabsShowing = true
                                     }
                                 } else {
@@ -259,7 +285,7 @@ struct WatchlistChildView: View {
                             .animation(.none, value: sheetOffset)
                     }
                 }
-                .frame(height: 350)
+                .frame(height: 400)
             }
             .opacity(showSheet ? 1 : 0)
             .offset(y: sheetOffset)
@@ -270,11 +296,14 @@ struct WatchlistChildView: View {
         .navigationBarItems(trailing: Button(action: {
             if editMode == .active {
                 editMode = .inactive
+                withAnimation(.spring()) {
+                    isEditing = false
+                }
             } else {
                 data.getStocksData()
             }
         }) {
-            if editMode == .active {
+            if isEditing {
                 Text("Done")
             } else {
                 Image(systemName: "gobackward")

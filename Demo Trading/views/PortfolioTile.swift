@@ -47,7 +47,7 @@ struct PortfolioTileView: View {
             Spacer()
             
             VStack(alignment: .trailing, spacing: 6) {
-                Text("\(String(format: "%.2f", profitLossPercent))%")
+                Text("\(profitLossPercent.withCommas())%")
                     .foregroundColor(profitLoss >= 0 ? .green : .red)
                     .font(.custom("Poppins-Light", size: 13.5))
                 
@@ -58,7 +58,7 @@ struct PortfolioTileView: View {
                 HStack(spacing: 0) {
                     Text("LTP: \(stockQuote.displayPrice.withCommas())")
                         .foregroundColor(Color("Gray"))
-                    Text(" (\(stockQuote.change >= 0 ? "+" : "")\(String(format: "%.2f", stockQuote.pChange))%)")
+                    Text(" (\(stockQuote.change >= 0 ? "+" : "")\(stockQuote.pChange.withCommas())%)")
                         .foregroundColor(stockQuote.change >= 0 ? .green : .red)
                 }
                 .font(.custom("Poppins-Light", size: 13.5))

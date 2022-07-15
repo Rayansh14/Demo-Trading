@@ -17,16 +17,14 @@ struct BarChart: View {
     @State var focus: String? = nil
     @State var infoOffset: CGSize = CGSize.zero
     @State var dayProfitLoss = 0.0
-    @Binding var refresh: Bool
     
     var body: some View {
         ZStack {
             HStack(spacing: 8) {
                 ForEach(data.holdings) { stock in
-                    BarView(stockSymbol: stock.stockSymbol, height: getHeight(dayProfitLoss: getDayProfitLoss(stockSymbol: stock.stockSymbol)), width: getWidth(), dayProfitLoss: getDayProfitLoss(stockSymbol: stock.stockSymbol), refresh: $refresh, focus: $focus, focusDayProfitLoss: $dayProfitLoss, infoOffset: $infoOffset)
+                    BarView(stockSymbol: stock.stockSymbol, height: getHeight(dayProfitLoss: getDayProfitLoss(stockSymbol: stock.stockSymbol)), width: getWidth(), dayProfitLoss: getDayProfitLoss(stockSymbol: stock.stockSymbol), focus: $focus, focusDayProfitLoss: $dayProfitLoss, infoOffset: $infoOffset)
                 }
             }
-            if refresh || !refresh {}
 
             Rectangle()
                 .frame(height: 1)
@@ -88,7 +86,6 @@ struct BarView: View {
     var height: CGFloat
     var width: CGFloat
     var dayProfitLoss: Double
-    @Binding var refresh: Bool
     @Binding var focus: String?
     @Binding var focusDayProfitLoss: Double
     @Binding var infoOffset: CGSize
@@ -132,7 +129,7 @@ struct BarView: View {
             loopingStockOwned.stockSymbol == stockSymbol
         }) {
             let i = ((CGFloat(index) + 0.5) - CGFloat(data.holdings.count)/2) * (width + 8)
-            print(i)
+//            print(i)
             let width = UIScreen.main.bounds.width-125
             if abs(i) > width/2 {
                 if i < 0 {

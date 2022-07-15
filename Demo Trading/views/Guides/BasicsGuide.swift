@@ -30,7 +30,7 @@ struct BasicsGuide: View {
                         Text("Why invest?")
                             .font(heading1)
                         
-                        Text("Before talking about the stock market, let's talk about why one should invest in the first place. Let us consider two scenarios- One where a person invests his savings and another where he doesn't.\nTo drive the point across, let us make a few simple assumptions.")
+                        Text("Before talking about the stock market, let's talk about why one should invest in the first place. Let us consider two scenarios- One where a person invests his savings and another where he doesn't.\n\nAssume that there is a 25 year old person named Rishi. Rishi earns ₹50,000 per month, out of which he spends 20,000. He is hoping to retire by the age of 55, which leaves him with 30 more years to earn.\n\nTo drive the point across, let us make a few simple assumptions about the inflation rate, Rishi's yearly salary hike, and the rate of return of the scheme which he invests in (how much does his invested money grow each year).")
                         
                         HStack {
                             CustomRectangleLeft()
@@ -46,9 +46,9 @@ struct BasicsGuide: View {
                                         Text("Monthly Salary")
                                         Text("Monthly Expenses")
                                         Text("Monthly Savings")
-                                        Text("Yearly salary hike")
-                                        Text("Yearly inflation")
-                                        Text("Annual Return of scheme")
+                                        Text("Yearly Salary Hike")
+                                        Text("Yearly Inflation")
+                                        Text("Annual Return of Scheme")
                                     }
                                     .font(.custom("Poppins-Regular", size: 15.5))
                                     
@@ -85,7 +85,7 @@ struct BasicsGuide: View {
                                 Text("With Investing")
                                     .font(.custom("Poppins-Regualr", size: 18))
                                 
-                                Text("If, instead of letting his money sit idle in a bank account, he had invested his savings into a scheme that offered 13% return per year, he would have an astounding Rs. 25.3 Cr at the end of his working life! This is the benefit of investment. With the decision to invest the surplus cash, your cash balance has increased significantly. This translates to you being in a much better situation to deal with your post retirement life.")
+                                Text("If, instead of letting his money sit idle in a bank account, he had invested his savings into a scheme that offered 13% return per year, he would have an astounding Rs. 25.3 Cr at the end of his working life! This is the benefit of investing. With the decision to invest the surplus cash, your cash balance has increased significantly. This translates to you being in a much better situation to deal with your post retirement life.")
                             }
                         }
                     }
@@ -99,13 +99,13 @@ struct BasicsGuide: View {
                         
                         Text("Now that we've established why one should invest, the next obvious question is what to invest in. When trying to make this decision, one has to choose an asset class that suits his risk profile and return expectation.\nAn asset class is a category of investment with particular risk and return characteristics.\nThere are 4 main asset classes:\n")
                         
-                        AssetClassView(title: "Fixed Income", imageName: "piggy-bank", text: "Fixed income assests offer, as the name suggests, a fixed rate of return. These have almost no risk, and offer moderate returns consistently. However, the schemes offering the highest returns are generally not liquid and can only be redeemed after a set period of time i.e when your investment 'matures'. Liquidity refers to how easily an asset can be converted in cash without affecting its value.\n8% CAGR is a good estimate for what you can expect to receive. (CAGR stands for 'Compounded Annual Growth Rate' and refers to how much the value of an asset increases every year.")
+                        AssetClassView(title: "Fixed Income", imageName: "piggy-bank", text: "Fixed income assests offer, as the name suggests, a fixed rate of return. These have almost no risk, and offer moderate returns consistently. However, the schemes offering the highest returns are generally not liquid and can only be redeemed after a set period of time i.e when your investment 'matures'. Liquidity refers to how easily an asset can be sold and converted into cash without affecting its value.\n8% CAGR is a good estimate for what you can expect to receive. (CAGR stands for 'Compounded Annual Growth Rate' and refers to how much the value of an asset increases every year.")
                         
                         AssetClassView(title: "Equity", imageName: "stock-market-animation-1", text: "Investing in equites means buying shares of publicly listed company. Unlike in fixed income, there is no capital guarantee and the risk is quite high. However, this means that they can generate handsome returns.\nThe Indian Stock Market has generated a CAGR of around 14% over the last 15-20 years.")
                         
                         AssetClassView(title: "Real Estate", imageName: "real-estate-animation", text: "Investing in real estate means buying plots of land, either commercial or residential. There are two income sources from this category - rental and capital appreciation.\nTransacting in real estate is usually a long and tedious process. The cash required in such an investment is generally large. One cannot estimate the growth in real estate prices as they vary drastically from one area to another.")
                         
-                        AssetClassView(title: "Gold", imageName: "gold-animation", text: "Precious metals are some of the most popular investment avenues. Most households have a significant amount of gold and silver in the form of jewellery.\nGold has given an average return of 11% CAGR over the past 20 years.")
+                        AssetClassView(title: "Gold", imageName: "gold-animation", text: "Precious metals are some of the most popular investment avenues. Most households own a significant amount of gold and silver in the form of jewellery.\nGold has given an average return of 11% CAGR over the past 20 years.")
                         
                         Image(imageRotated ? "asset-class-comparison-rotated" : "asset-class-comparison")
                             .resizable()
@@ -123,7 +123,7 @@ struct BasicsGuide: View {
                     VStack(alignment: .leading) {
                         Text("Some things to remember")
                             .font(heading1)
-                        Text("1. Risk and Return go hand in hand. Higher the risk, higher the return. Lower the risk; lower is the return.\n\n2. Investment in fixed income is a good option if you want to protect your principal amount. It is relatively less risky. However, you have the risk of losing money when you adjust the inflation return. Example – A fixed deposit which gives you 9% when the inflation is 10% means you are losing a net 1% per annum. Fixed-income investment is best suited for ultra risk-averse investors.\n\n3. Investment in Equities is a great option. It is known to beat inflation over a long period of time. Historically equity investment has generated returns close to 14-15%. However, equity investments can be risky.\n\n4. Real Estate investment requires a large outlay of cash and cannot be done with smaller amounts. Liquidity is another issue with real estate investment – you cannot buy or sell whenever you want. You always have to wait for the right time and the right buyer or seller to transact with you.\n\n5. Gold and silver are relatively safer, but the historical return on such investment has not been very encouraging.\n\n6. An optimal portfolio would consist of a mix of different asset classes to optimise returns and reduce risk. The amount invested in different assets would depend on one's risk profile, goals and time horizon. For example, a 25 year old employed individual will probably be willing to take more risk than a 60 year old individual nearing his retirement. Therefore, the younger person might allocate more of his portfolio to equity, as it is a high-risk, high-reward asset class.")
+                        Text("1. Risk and Return go hand in hand. Higher the risk, higher the return. Lower the risk; lower is the return.\n\n2. Investment in fixed income is a good option if you want to protect your principal amount. It is relatively less risky. However, you have the risk of losing money when you adjust for the inflation rate. Example – A fixed deposit which gives you 9% when the inflation is 10% means you are losing a net 1% per annum. Fixed-income investment is best suited for ultra risk-averse investors.\n\n3. Investment in Equities is a great option. It is known to beat inflation over a long period of time. Historically equity investment has generated returns close to 14-15%. However, equity investments can be risky.\n\n4. Real Estate investment requires a large outlay of cash and cannot be done with smaller amounts. Liquidity is another issue with real estate investment – you cannot buy or sell whenever you want. You always have to wait for the right time and the right buyer or seller to transact with you.\n\n5. Gold and silver are relatively safer, but the historical return on such investment has not been very encouraging.\n\n6. An optimal portfolio would consist of a mix of different asset classes to optimise returns and reduce risk. The amount invested in different assets would depend on one's risk profile, goals and time horizon. For example, a 25 year old employed individual will probably be willing to take more risk than a 60 year old individual nearing his retirement. Therefore, the younger person might allocate more of his portfolio to equity, as it is a high-risk, high-reward asset class.")
                     }
                     .guidePadding()
                 }
@@ -139,7 +139,7 @@ struct BasicsGuide: View {
                         Text("Shares")
                             .font(heading1)
                         
-                        Text("To understand the stock market, first you will have to understand shares.\nShares represent a percentage of ownership in a company.")
+                        Text("To understand the stock market, first one has to understand shares.\nShares represent a percentage of ownership in a company.")
                         HStack {
                             CustomRectangleLeft()
                             VStack(alignment: .leading) {
@@ -164,7 +164,7 @@ struct BasicsGuide: View {
                         Image("public-vs-pvt-company")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                        Text("I'm sure you must have heard of public and private companies before and wondered what they are. Public companies are those companies whose shares are traded publicly on stock exchanges, and can be bought by the general public. Shares of private companies, on the other hand, are not traded publicly.")
+                        Text("I'm sure you must have heard of public and private companies before and wondered what they are.\n\nPublic companies are those companies whose shares are traded publicly on stock exchanges, and can be bought by the general public. Shares of private companies, on the other hand, are not traded publicly.")
                         HStack {
                             CustomRectangleLeft()
                             VStack(alignment: .leading) {
@@ -178,7 +178,7 @@ struct BasicsGuide: View {
                     .guidePadding()
                 }
                 
-                QuizView(question: "What is a public company?", optionsList: ["A company that has shares", "A company whose shares are not traded publicly", "A company whose shares can be traded by the general public", "A company that gives away its shares for free"], correctOption: 2, explanation: "")
+                QuizView(question: "What is a public company?", optionsList: ["A company that has shares", "A company whose shares are not traded publicly", "A company whose shares can be traded by the general public", "A company that gives away its shares for free"], correctOption: 2, explanation: "Public companies are those companies whose shares are traded publicly on stock exchanges, and can be bought by the general public.")
                 
                 QuizView(question: "Company XYZ has 500 shares. Mani buys 50 shares of that company. What percentage of the company does he own?", optionsList: ["10%", "15%", "2%", "1%"], correctOption: 0, explanation: "Company XYZ has 500 shares, so each share represents 0.2% ownership in the company. 0.2 X 50 = 10%")
             case 2:
@@ -283,20 +283,21 @@ struct BasicsGuide: View {
                         
                         Text("4. Book Building")
                             .font(.custom("Poppins-Regular", size: 17))
-                        Text("Once the roadshow is done and the price band fixed, the company now has to officially open the window during which the public can subscribe for shares. For example, if the price band is between Rs.100 and Rs.120, then the public can actually choose a price they think is fair enough for the issue. A person offering to buy shares in an IPO is referred to as 'subscribing' to the IPO. In an IPO, a person can only bid for lots, not for individual shares. Usually, the combined value of number of shares in a lot is around ₹15,000.")
+                        Text("Once the roadshow is done and the price band fixed, the company now has to officially open the window during which the public can subscribe for shares. For example, if the price band is between Rs.100 and Rs.120, then the public can actually choose a price they think is fair enough for the issue. A person offering to buy shares in an IPO is referred to as 'subscribing' to the IPO.")
                         
                         HStack {
                             CustomRectangleLeft()
                             VStack(alignment: .leading) {
                                 Text("Example")
                                     .font(.custom("Poppins-Regular", size: 18))
-                                Text("A company ASD decides to raise capital for business expansion by making the company public. Of course, they hire a merchant banker who analyzes the company’s future prospects and its net worth, among other things to evaluate what price band would be suitable for the IPO, i.e., how much investors would be willing to pay for a share.\n\nASD has decided to issue 10,000 shares in its IPO. After a thorough analysis by the merchant banker, the price band is decided to be in the Rs. 100-Rs. 110 range. Investors interested in buying the shares of ASD are requested to send in their bids within a predetermined time period. The bids received by investors are above or equal to the floor price, i.e., Rs. 100.\n\nBids for 3,000 shares are received at Rs. 100, for 6,000 shares at Rs. 105 and for 4,000 shares at Rs. 110.\n\nAfter the bid window is closed, the final price, i.e., the cut-off price depends on the number of bids received at each price. In ASD's case, to issue all 10,000 shares, the minimum price will be Rs. 105, because bids for 6,000 and 4,000 shares (which adds up to 10,000 shares) were received at or above Rs. 105. The company will refund money to those who bid at Rs. 100, and it will refund the balance amount to those who bid at Rs. 110.")
+                                Text("A company ASD decides to raise capital for business expansion by making the company public. Of course, they hire a merchant banker who analyzes the company’s future prospects and its net worth, among other things, to evaluate what price band would be suitable for the IPO, i.e. how much investors would be willing to pay for a share.\n\nASD has decided to issue 10,000 shares in its IPO. After a thorough analysis by the merchant banker, the price band is decided to be in the Rs. 100-Rs. 110 range. Investors interested in buying the shares of ASD are requested to send in their bids within a predetermined time period. The bids received by investors are above or equal to the floor price, i.e., Rs. 100.\n\nBids for 3,000 shares are received at Rs. 100, for 6,000 shares at Rs. 105 and for 4,000 shares at Rs. 110.\n\nAfter the bid window is closed, the final price, i.e., the cut-off price depends on the number of bids received at each price. In ASD's case, to issue all 10,000 shares, the minimum price will be Rs. 105, because bids for 6,000 and 4,000 shares (which adds up to 10,000 shares) were received at or above Rs. 105. The company will refund money to those who bid at Rs. 100, and it will refund the balance amount to those who bid at Rs. 110.")
                             }
                         }
+                        Text("In an IPO, a person can only bid for lots, not for individual shares. Usually, the combined value of the shares in a lot is around ₹15,000.\n")
                         
                         Text("5. Allotment of shares")
                             .font(.custom("Poppins-Regular", size: 17))
-                        Text("When a company receives bids for more shares than it is selling, the issue is said to be oversubsribed. In this case, shares are allocated using a lucky draw system. Every investor will get no more than one lot, regardless of the number of lots he bid for. Also, an investor will always receive a complete lot, never one which has been split.\n")
+                        Text("When a company receives bids for more shares than it is selling, the issue is said to be oversubsribed. In this case, shares are allocated using a lucky draw system. Every investor will get no more than one lot, regardless of the number of lots he bid for. Also, an investor will always receive a complete lot as lots cannot be split in an IPO.\n")
                         
                         Text("6. Listing Day")
                             .font(.custom("Poppins-Regular", size: 17))
@@ -317,7 +318,7 @@ struct BasicsGuide: View {
                         Text("Stock Exchanges")
                             .font(heading1)
                         
-                        Text("This is where the shares of companies are traded. Stock exchanges are the platforms which connect the buyers and the sellers and allow for the easy and seamless transaction of shares. All major countries have their own stock exchanges. Some large countries, like the USA, even have multiple stock exchanges.\n\nThere are two stock exchanges in India – NSE (National Stock Exchange) and BSE (Bombay Stock Exchange). In India, the stock market is often referred to as 'Dalal Street' because that's where the BSE, India's oldest stock exchange, is located.")
+                        Text("This is where the shares of companies are traded. Stock exchanges are the platforms which connect the buyers and the sellers and allow for the easy and seamless transaction of shares. Like Whatsapp is a platform for you to talk to your friends, the same way stock exchanges are platforms for you to make transactions with buyers and sellers.\n\nAll major countries have their own stock exchanges. Some large countries, like the USA, even have multiple stock exchanges.\n\nThere are two stock exchanges in India – NSE (National Stock Exchange) and BSE (Bombay Stock Exchange). In India, the stock market is often referred to as 'Dalal Street' because that's where the BSE, India's oldest stock exchange, is located.")
                         
                         HStack {
                             Image("nse")
@@ -344,7 +345,7 @@ struct BasicsGuide: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                         
-                        Text("A stockbroker is a middleman who has the authority to buy and sell stocks and securities in a stock exchange on the investor’s behalf.\n\nStocks are traded through exchanges. However, an investor cannot directly interact with stock exchanges. To buy a stock or sell a stock through an exchange, you need an intermediary who will help you with the transaction. Such a person or a company is known as a stockbroker.For providing this service, a stockbroker charges a commission or a fee. In India, there are many stockbrokers like Zerodha, Angel Broking, Groww, etc.")
+                        Text("A stockbroker is your gateway to stock exchanges. It is an intermediary who has the authority to buy and sell stocks and securities in a stock exchange on the investor’s behalf.\n\nStocks are traded through exchanges. However, an investor cannot directly interact with stock exchanges. To buy a stock or sell a stock through an exchange, you need an intermediary who will help you with the transaction. Such a company is known as a stockbroker. A stockbroker is registered as a trading member with the stock exchange and holds a stockbroking license. For providing this service, a stockbroker charges a commission or a fee. In India, there are many stockbrokers like Zerodha, Angel Broking, Groww, etc.")
                     }
                     .guidePadding()
                 }
@@ -354,7 +355,7 @@ struct BasicsGuide: View {
                         Text("Depository")
                             .font(heading1)
                         
-                        Text("When you buy shares, these shares sit in your Depository account, usually referred to as the DEMAT account. This is maintained electronically by only 2 companies in India: Central Depository Services Limited (CDSL) and National Securities Depository Limited (NDSL). The depositories act like a vault for the shares that you buy.")
+                        Text("When you buy shares, these shares sit in your Depository account, usually referred to as the DEMAT account. This is maintained electronically by only 2 companies in India: Central Depository Services Limited (CDSL) and National Securities Depository Limited (NSDL). The depositories act like a vault for the shares that you buy.")
                         Image("vault-animation")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
@@ -368,14 +369,14 @@ struct BasicsGuide: View {
                         Text("Clearance and Settlement")
                             .font(heading1)
                         
-                        Text("In India, it takes 1 business day for a transaction to be completed. This is known as T+1 settlement.")
+                        Text("In India, it used to take 2 business days for a transaction to be completed. This is known as T+2 settlement. However, both the NSE and BSE are gradually shifting to T+1 settlement, which means that it will only take 1 business day to settle a transaction. The following is and example of how T+1 settlement works.")
                         
                         HStack {
                             CustomRectangleLeft()
                             VStack(alignment: .leading) {
                                 Text("Example")
                                     .font(heading2)
-                                Text("You buy 1 share of Reliance on 16 May, 2022 (Monday) for Rs. 2500. This is called trade day or ‘T’. As soon as you buy the share, the amount is debited from your account. However, you will only receive the share in your depository account (demat account) the next day i.e Tuesday. This is called T+1 settlement.\nf you are selling a share, you will only be able to withdraw the money earned from the sale the next day. However, you can use 80% of the money received instantly for new trades. The remaining 20% (known as delivery margin) will be available the next day.\nFor example, I sell 10 shares of Infosys @ Rs.1500 each on 23 May, 2022 (Monday). The total sale value is Rs. 15,000. In this case, I am able to use 80% of the amount i.e Rs. 12,000 for buying more shares instantly after the sale. I will be able to use the remaining 20% i.e Rs. 3000 the next day (Tuesday). However, if I want to withdraw the money to my bank account, I will have to wait until the day after the transaction (t+1), when I will be able to withdraw 100% of my money.")
+                                Text("You buy 1 share of Reliance on Monday for Rs. 2500. This is called trade day or ‘T’. As soon as you buy the share, the amount is debited from your account. However, you will only receive the share in your depository account (demat account) the next day i.e Tuesday. This is called T+1 settlement.\n\nIf you are selling a share, you will only be able to withdraw the money earned from the sale the next day. However, you can use 80% of the money received instantly for new trades. The remaining 20% (known as delivery margin) will be available the next day.\n\nFor example, I sell 10 shares of Infosys @ Rs.1500 each on Thursday. The total sale value is Rs. 15,000. In this case, I am able to use 80% of the amount i.e Rs. 12,000 for buying more shares instantly after the sale. I will be able to use the remaining 20% i.e Rs. 3000 the next day (Friday). However, if I want to withdraw the money to my bank account, I will have to wait until the day after the transaction (t+1), when I will be able to withdraw 100% of my money.")
                             }
                         }
                     }
@@ -390,7 +391,7 @@ struct BasicsGuide: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .padding(.horizontal, 25)
-                        Text("More specifically, these indices depend on the free float market cap of their constituents. The free float market cap is calculated by multiplying the share price by the number of shares readily available in the market. Rather than using all of the shares (both active and inactive shares), as is the case with the full-market capitalization method, the free-float method excludes locked-in shares, such as those held by insiders, promoters, and governments.\n\nThis is why HDFC Bank has a higher weightage in Nifty than TCS. Even though TCS's market cap is higher, HDFC Bank has more shares readily available in the market, which leads to a higher free float market capitalisation.\n\nApart from Nifty50 and Sensex, there are also sectoral indices like Nifty IT, which comprises of major IT companies, and broad indices like Nifty 500, which comprises of the top 500 companies of India by market cap.")
+                        Text("More specifically, these indices depend on the free float market cap of their constituents. The free float market cap is calculated by multiplying the share price by the number of shares readily available in the market. Rather than using all of the shares, as is the case with the full-market capitalization method, the free-float method excludes locked-in shares, such as those held by insiders, promoters, and governments.\n\nThis is why HDFC Bank has a higher weightage in Nifty than TCS. Even though TCS's market cap is higher, HDFC Bank has more shares readily available in the market, which leads to a higher free float market capitalisation.\n\nApart from Nifty50 and Sensex, there are also sectoral indices like Nifty IT, which comprises of major IT companies, and broad indices like Nifty 500, which comprises of the top 500 companies of India by market cap.")
                     }
                     .guidePadding()
                 }
@@ -409,16 +410,16 @@ struct BasicsGuide: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                         
-                        Text("Dividends are payments made by the company to its shareholders. The dividends are paid to distribute the profits made by the company and to reward shareholders for their confidence in the stock.\nIt is not mandatory for a company to pay dividends. If it feels that it is better off utilising the cash to fund expansion or capital expenditure, it can do so.\nA company is also not required to pay dividends from its profits only. Even a loss making company can pay a dividend from its cash reserves if it chooses to.\nUsually, the share price of a company decreases by the dividend amount after it has been paid. This is because the money that it used to pay the dividend is no longer with the company, so it is deducted from its value.\n\nThe following are some important dates regarding a dividend:\n\n")
-                        + Text("Dividend Declaration Date:")
+                        Text("Dividends are payments made by the company to its shareholders. The dividends are paid to distribute the profits made by the company and to reward shareholders for their confidence in the stock.\n\nIt is not mandatory for a company to pay dividends. If it feels that it is better off utilising the cash to fund expansion or capital expenditure, it can do so.\n\nA company is also not required to pay dividends from its profits only. Even a loss making company can pay a dividend from its cash reserves if it chooses to.\n\nUsually, the share price of a company decreases by the dividend amount after it has been paid. This is because the money that it used to pay the dividend is no longer with the company, so it is deducted from its value. For example, if TCS gives a dividend of Rs. 70 per share, you can expect its share price to go down by around Rs. 70 as well.\n\nThe following are some important dates regarding a dividend:\n\n")
+                        + Text("Dividend Declaration Date: ")
                             .font(.custom("Poppins-Regular", size: 17))
-                        + Text(" This is the date when the board of the company approves the dividend.\n")
+                        + Text("This is the date when the board of the company approves the dividend.\n\n")
                         + Text("Record Date: ")
                             .font(.custom("Poppins-Regular", size: 17))
-                        + Text("This is the date when the company decides to check the list of shareholders who will receive the dividend.\n")
+                        + Text("This is the date when the company decides to check the list of shareholders who will receive the dividend.\n\n")
                         + Text("Ex-Date:")
                             .font(.custom("Poppins-Regular", size: 17))
-                        + Text(" In India, this is set 2 business days before the record date because of T+2 settlement. Only shareholders who own the stock before this day will be eligible for the dividend.\n")
+                        + Text(" In India, this is set 2 business days before the record date because of T+2 settlement. Only shareholders who own the stock before this day will be eligible for the dividend.\n\n")
                         + Text("Dividend Payout Date:")
                             .font(.custom("Poppins-Regular", size: 17))
                         + Text(" This is the date when the dividend is paid to the eligible shareholders.")
@@ -482,6 +483,7 @@ struct BasicsGuide: View {
                     .guidePadding()
                 }
                 
+                /*
                 ScrollView {
                     VStack(alignment: .leading) {
                         Text("Budget")
@@ -491,16 +493,17 @@ struct BasicsGuide: View {
                     .guidePadding()
                 }
                 
-                //                ScrollView {
-                //                    VStack(alignment: .leading) {
-                //                        Text("Monetary Policy")
-                //                            .font(heading1)
-                //                    }
-                //                    .guidePadding()
-                //                }
+                ScrollView {
+                    VStack(alignment: .leading) {
+                        Text("Monetary Policy")
+                            .font(heading1)
+                    }
+                    .guidePadding()
+                }
+                 */
                 
-                QuizView(question: "", optionsList: [], correctOption: 0, explanation: "")
-                QuizView(question: "", optionsList: [], correctOption: 0, explanation: "")
+                QuizView(question: "What impact does a buyback have on the company's share price?", optionsList: ["Share prices generally go down", "Share prices generally go up", "Share prices are not affected by buybacks"], correctOption: 1, explanation: "A buyback is seen as a very positive sign as it reflects the company’s confidence in its share price and ability to grow.")
+                QuizView(question: "The profit made by a company is distributed to its shareholders by", optionsList: ["Rights Issue", "Stock Split", "Dividend", "None of these"], correctOption: 2, explanation: "Dividends are payments made by the company to its shareholders. The dividends are paid to distribute the profits made by the company and to reward shareholders for their confidence in the stock.")
                 
                 
             case 5:
@@ -510,7 +513,13 @@ struct BasicsGuide: View {
                         Text("What is a Mutual Fund?")
                             .font(heading1)
                         
-                        Text("A mutual fund is made up of a pool of money collected from many investors to invest in stocks, bonds, and other assets. Mutual funds are operated by professional money managers, who allocate the fund's assets and attempt to produce capital gains or income for the fund's investors.\n\nMost people prefer to invest in mutual funds because it requires little effort or knowledge from the investor, and it is managed by experts.\n\nIn return for providing their expertise and allocating, managing and advertising the fund to maximise returns and manage risks, mutual funds charge a fee called the expense ratio. The expense ratio varies drastically from one fund to another. Usually, it is in the range of 1-2.5% of the amount per year.\n\nExpense ratios are often not given enough importance and their effect on returns is underestimated. For example, you invest 1 lakh each in two mutual funds - one has an expense ratio that is 1% higher than the other. Both of them have the exact same portfolio composition, and the one with a lower expense ratio gives a return of 15% per year, while the other returns 14% per year. After 25 years, the value of your investment in the higher expense ratio fund would be 26.4 Lakh, while your investment in the fund with a lower expense ratio would be 32.9 Lakh. That is a huge gap, especially considering that fact that the only difference between the two is a 1% higher expense ratio.")
+                        Text("A mutual fund is made up of a pool of money collected from many investors to invest in stocks, bonds, and other assets. Mutual funds are operated by professional money managers, who allocate the fund's assets and attempt to produce capital gains or income for the fund's investors.\n\nMost people prefer to invest in mutual funds because it requires little effort or knowledge from the investor, and it is managed by experts.")
+                        
+                        Image("mutual-fund-workings")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                        
+                        Text("In return for providing their expertise and allocating, managing and advertising the fund to maximise returns and manage risks, mutual funds charge a fee called the expense ratio. The expense ratio varies drastically from one fund to another. Usually, it is in the range of 1-2.5% of the amount per year.\n\nExpense ratios are often not given enough importance and their effect on returns is underestimated. For example, you invest 1 lakh each in two mutual funds - one has an expense ratio that is 1% higher than the other. Both of them have the exact same portfolio composition, and the one with a lower expense ratio gives a return of 15% per year, while the other returns 14% per year. After 25 years, the value of your investment in the higher expense ratio fund would be 26.4 Lakh, while your investment in the fund with a lower expense ratio would be 32.9 Lakh. That is a huge gap, especially considering that fact that the only difference between the two is a 1% higher expense ratio.")
                     }
                     .guidePadding()
                 }
@@ -527,19 +536,24 @@ struct BasicsGuide: View {
                             
                             Text("Equity Funds")
                                 .font(.custom("Poppins-Regular", size: 18))
-                            Text("Equity funds primarily invest in stocks, and hence go by the name of stock funds as well. The gains and losses associated with these funds depend solely on how the invested shares perform in the stock market. Also, equity funds have the potential to generate significant returns over a period. Hence, the risk associated with these funds also tends to be comparatively higher.\n")
+                            Text("Equity funds primarily invest in stocks, and hence go by the name of stock funds as well. The gains and losses associated with these funds depend solely on how the invested shares perform in the stock market. Equity funds have the potential to generate significant returns over a period. Hence, the risk associated with these funds also tends to be comparatively higher.\n")
                             
                             Text("Debt Funds")
                                 .font(.custom("Poppins-Regular", size: 18))
-                            Text("Debt funds invest primarily in fixed-income securities such as bonds, securities and treasury bills. Since the investments come with a fixed interest rate and maturity date, it can be a great option for passive investors looking for regular income with minimal risks.\n")
+                            Text("Debt funds invest primarily in fixed-income securities such as bonds and treasury bills. Since the investments come with a fixed interest rate and maturity date, it can be a great option for passive investors looking for regular income with minimal risks.\n")
                             
                             Text("Hybrid Funds")
                                 .font(.custom("Poppins-Regular", size: 18))
-                            Text("As the name suggests, hybrid funds are an optimum mix of bonds and stocks, thereby bridging the gap between equity funds and debt funds.\n\n")
+                            Text("As the name suggests, hybrid funds are an optimum mix of bonds and stocks, thereby bridging the gap between equity funds and debt funds.")
+                            
+                            Image("mf-asset-class")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .padding(.horizontal, 50)
                         }
                         
                         Group {
-                            Text("Direct and Regular Plans")
+                            Text("\nDirect and Regular Plans")
                                 .font(heading2)
                             
                             Text("Direct Mutual Funds")
@@ -561,7 +575,7 @@ struct BasicsGuide: View {
                             
                             Text("IDCW Funds")
                                 .font(.custom("Poppins-Regular", size: 18))
-                            Text("IDCW stands for 'Income Distribution cum Capital Withdrawal'. Here, a part of one's investment is paid to out to investors, as dividends, at pre-decided intervals. This option is suitable for people who have no current source of income and are looking to live off their investments.\n")
+                            Text("IDCW stands for 'Income Distribution cum Capital Withdrawal'. Here, a part of a person's investment is paid to out to him as dividends, at pre-decided intervals. This option is suitable for people who have no current source of income and are looking to live off their investments.\n")
                             
                             Text("Growth Funds")
                                 .font(.custom("Poppins-Regular", size: 18))
@@ -582,7 +596,7 @@ struct BasicsGuide: View {
                         
                         Text("Benefits of SIP")
                             .font(.custom("Poppins-Regular", size: 17))
-                        Text("SIP has been gaining popularity among Indian MF investors, as it helps in investing in a disciplined manner without worrying about market volatility and timing the market. It reduces the risk as one is buying both when the market is high and when it is low. Systematic Investment Plans offered by Mutual Funds are easily the best way to enter the world of investments for the long term.\n\n")
+                        Text("SIP has been gaining popularity among MF investors, as it helps in investing in a disciplined manner without worrying about market volatility and timing the market. It reduces the risk as one is buying both when the market is high and when it is low. Systematic Investment Plans offered by Mutual Funds are easily the best way to enter the world of investments for the long term.\n\n")
                         
                         Text("STP")
                             .font(heading2)
@@ -595,6 +609,9 @@ struct BasicsGuide: View {
                     }
                     .guidePadding()
                 }
+                
+                QuizView(question: "SIP is a ", optionsList: ["Name of a Mutual Fund", "Method of regular investment", "Brand of tea stock", "None of these"], correctOption: 1, explanation: "SIP stands for 'Sytematic Investment Plan'. It is an investment plan in which a fixed amount is invested into a mutual fund at regular intervals")
+                QuizView(question: "The fees charged by the mutual fund company to manage money on your behalf is called ", optionsList: ["Corpus", "Fees", "Load", "Expense Ratio"], correctOption: 3, explanation: "In return for providing their expertise and allocating, managing and advertising the fund to maximise returns and manage risks, mutual funds charge a fee called the expense ratio.")
                 
             default:
                 Text("Error 404 Not Found.\nGo back to the previous page.")

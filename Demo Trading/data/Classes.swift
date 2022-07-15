@@ -18,7 +18,10 @@ class StockQuote: ObservableObject, Identifiable {
         return displayPrice - previousClose
     }
     var pChange: Double {
-        return change * 100 / previousClose
+        if previousClose > 0 {
+            return change * 100 / previousClose
+        }
+        return 0
     }
     @Published var dayHigh = 0.0
     @Published var dayLow = 0.0

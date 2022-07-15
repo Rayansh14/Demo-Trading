@@ -10,7 +10,6 @@ import SwiftUI
 struct FundsView: View {
     
     @ObservedObject var data = DataController.shared
-    @State private var refresh = true
     
     var body: some View {
         NavigationView {
@@ -104,9 +103,6 @@ struct FundsView: View {
             .font(.custom("Poppins-Regular", size: 15.5))
             .padding(.top)
             .navigationTitle("Funds")
-            .navigationBarItems(trailing: Button(action: {refresh.toggle()}) {
-                Image(systemName: "gobackward")
-            })
         }
     }
     

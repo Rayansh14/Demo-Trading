@@ -38,8 +38,11 @@ struct Guides: View {
                                 GuideTitleView(guide: guide)
                             }
 //                            RoundedRectangle(cornerRadius: 313)
-//                                .strokeBorder(.blue, lineWidth: 5)
-//                                .frame(width: 200, height: 300)
+                                if data.isFirstTime {
+                                Ellipse()
+                                .strokeBorder(.blue, lineWidth: 3)
+                                .frame(width: 185, height: 225)
+                                }
                             }
                         }
                         
@@ -74,7 +77,7 @@ struct GuideTitleView: View {
         ZStack {
             Rectangle()
                 .fill(.white)
-                .frame(width: 150)
+                .frame(width: 150, height: 178)
                 .cornerRadius(10)
                 .shadow(color: .gray, radius: 5)
             VStack(spacing: 0) {
@@ -93,6 +96,7 @@ struct GuideTitleView: View {
                     .font(.custom("Poppins-Light", size: 18))
                     .foregroundColor(.black)
                     .multilineTextAlignment(.center)
+                    .padding(.vertical, guide.title == "Derivatives" ? 10 : 0)
                     .padding(8)
                     .background(
                         Rectangle()
@@ -102,7 +106,7 @@ struct GuideTitleView: View {
                     )
             }
         }
-        .frame(width: 150)
+        .frame(width: 150, height: 178)
         .padding(8)
     }
 }
